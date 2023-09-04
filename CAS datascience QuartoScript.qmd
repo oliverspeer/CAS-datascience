@@ -1,0 +1,45 @@
+---
+title: "CAS datascience script"
+author: "Oliver Speer"
+date: 6.9.2023
+format: html
+editor: visual
+---
+
+## ZHAW web-Umgebung
+
+Lerninhalte an der ZHAW werden in moodle <https://moodle.zhaw.ch/enrol/index.php?id=15611> bereitgestellt. Zugangs-Management via edu-ID <https://login.eduid.ch/idp/profile/SAML2/Redirect/SSO?execution=e1s4>.
+
+Zugangsadmin für ZHAW Umgebung: <https://selfservice.zhaw.ch/index.html>.
+
+## Installation R und RStudio
+
+<https://moodle.zhaw.ch/pluginfile.php/1344143/mod_resource/content/3/Einstieg_in_R_und_RStudio.pdf>
+
+## Kursdaten
+
+<https://moodle.zhaw.ch/pluginfile.php/1344144/mod_resource/content/3/CAS-DA2023-18_Kursdaten_HS.pdf>
+
+## Modul A - Statistische Grundlagen der Datenanalyse
+
+
+## Modul B - Multiple Regression, die Basis der Datenanalyse und Prognose
+
+## Modul C - Data Mining mit Schwerpunkt Clustering und Klassifikation
+
+
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
