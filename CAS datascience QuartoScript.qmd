@@ -143,28 +143,79 @@ typeof(dat$Gruppe)
 head(dat, n = 2)
 str(dat)
 ```
+
 Absolute Häufigkeiten:
+
 ```{r}
 table(dat$Q02_Haarfarbe)
 
 ```
+
 Relative Häufigkeiten
+
 ```{r}
 rel.hairc <- table(dat$Q02_Haarfarbe)/length(dat$Q02_Haarfarbe)
 round(rel.hairc, 2)
 ```
+
 Kummulierte Summe
+
 ```{r}
 cumsum(table(dat$Q02_Haarfarbe))
 
 ```
+
 Grafische Darstellungen
+
 ```{r}
 tab <- table(dat$Q02_Haarfarbe)
 barplot(sort(tab, decreasing = T), col = "blue", las = 2)
 
-```
+tab_SW <- table(dat$Q09_Stockwerk)
+bp <- barplot(sort(tab_SW, decreasing = T),
+        main = "Stockwerke der Schlafzimmer",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        yaxt = "n"
+          )
+axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
 
+tab_plz <- table(dat$Q08_Postleitzahl)
+bp_plz <- barplot(sort(tab_plz, decreasing = T),
+        main = "Postleitzahlen",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        cex.names = 0.5
+          )
+
+tab_time <- table(dat$Q14_Fahrzeit)
+bp_time <- barplot(sort(tab_time, decreasing = T),
+        main = "Fahrzeiten",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        cex.names = 1
+          )
+
+dat$Q10_beruf
+
+
+bodysize <- dat$Q04_Koerpergroesse
+handsize <- dat$Q06_Handspanne
+plot(bodysize, handsize, main = "Scatter Plot Körpergrösse vs. Handspanne",
+     xlab = "Körpergrösse [cm]", ylab = "Handspanne [cm]", pch = 19, col = "blue")
+
+# Fit a linear model to the data
+ #fit <- lm(handsize ~ bodysize)
+
+# Add a trend line to the scatter plot
+# abline(fit, col = "red")
+```
 
 ## Modul B - Multiple Regression, die Basis der Datenanalyse und Prognose
 
