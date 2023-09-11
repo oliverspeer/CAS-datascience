@@ -20,9 +20,9 @@ Zugangsadmin für ZHAW Umgebung: <https://selfservice.zhaw.ch/index.html>.
 
 <https://moodle.zhaw.ch/pluginfile.php/1344144/mod_resource/content/3/CAS-DA2023-18_Kursdaten_HS.pdf>
 
-## Modul A - Statistische Grundlagen der Datenanalyse
+# Modul A - Statistische Grundlagen der Datenanalyse
 
-Erste R-Übungen:
+## Erste R-Übungen:
 
 ```{r}
 3+3
@@ -50,14 +50,18 @@ summary_vec3 <- c(min(vec3), max(vec3), sum(vec3))
 
 ```
 
-Übungsblatt 1 berechne die Summe der natürlichen Zahlen 1 bis 100 2b)
+## Übungsblatt 1
+
+### 2b)
+
+#### Berechne die Summe der natürlichen Zahlen 1 bis 100
 
 ```{r}
 sum(1:100)
 
 ```
 
-3a)
+### 3a)
 
 ```{r}
 v <- 1:12
@@ -66,7 +70,9 @@ m1 <- matrix(data = v, nrow = 3, ncol = 4, byrow = F)
 
 ```
 
-Übungsblatt 2 1a)
+## Übungsblatt 2
+
+### 1a)
 
 ```{r}
 w <- c(1:5, 2)
@@ -90,7 +96,7 @@ z_f <- as.factor(z)
 
 ```
 
-1b)
+### 1b)
 
 ```{r}
 u <- (w <= 2)
@@ -106,7 +112,7 @@ unique(w)
 ?unique
 ```
 
-2a)
+### 2a)
 
 ```{r}
 seq(95,-5,-5)
@@ -118,7 +124,7 @@ rep(zz, times = zz)
 matrix(seq(3, 75, 3), nrow = 5, ncol = 5, byrow = T)
 ```
 
-3a)
+### 3a)
 
 ```{r}
 dat <- data.frame(
@@ -132,7 +138,7 @@ dim(dat)
 nrow(dat)*ncol(dat)
 ```
 
-Aufgabe 4
+### Aufgabe 4 = Aufgabe 2 Übungsblatt zur Vorlesung
 
 ```{r}
 library(readxl)
@@ -144,31 +150,73 @@ head(dat, n = 2)
 str(dat)
 ```
 
-Absolute Häufigkeiten:
+### Absolute Häufigkeiten Haarfarbe:
 
 ```{r}
 table(dat$Q02_Haarfarbe)
 
 ```
 
-Relative Häufigkeiten
+### Relative Häufigkeiten Haarfarbe
 
 ```{r}
 rel.hairc <- table(dat$Q02_Haarfarbe)/length(dat$Q02_Haarfarbe)
 round(rel.hairc, 2)
 ```
 
-Kummulierte Summe
+### Kummulierte Summe
 
 ```{r}
 cumsum(table(dat$Q02_Haarfarbe))
 
 ```
 
-Grafische Darstellungen
+### Absolute Häufigkeiten "Stunden für Sport":
 
 ```{r}
-tab <- table(dat$Q02_Haarfarbe)
+table(dat$Q05_Sport)
+
+```
+
+### Relative Häufigkeiten "Stunden für Sport":
+
+```{r}
+rel.sporth <- table(dat$Q05_Sport)/length(dat$Q05_Sport)
+round(rel.sporth, 2)
+```
+
+### Arbeitsblatt 2
+
+### 4)
+
+```{r}
+leisure.time <- c(
+  rep("sports", 5), 
+  rep("cooking", 2), 
+  rep("shopping", 1), 
+  rep("WWW", 7), 
+  rep("reading", 3), 
+  rep("music", 4)
+                   )
+
+tab.leisure.time <- table(leisure.time, useNA = "always")
+tab.leisure.time
+tab.rel.leisure.time.length <- table(leisure.time, useNA = "always")/length(leisure.time)
+tab.rel.leisure.time.length
+tab.rel.leisure.time <- table(leisure.time, useNA = "always")/sum(!is.na(leisure.time))
+tab.rel.leisure.time
+barplot(sort(tab.leisure.time, decreasing = T), col = "green", las = 2)
+barplot(sort(tab.rel.leisure.time, decreasing = T), col = "blue", las = 2)
+pie(table(leisure.time, useNA = "always"))
+
+
+
+```
+
+## Grafische Darstellungen
+
+```{r}
+tab <- table(dat$Q02_Haarfarbe, useNA = "always")
 barplot(sort(tab, decreasing = T), col = "blue", las = 2)
 
 tab_SW <- table(dat$Q09_Stockwerk)
