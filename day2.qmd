@@ -1,0 +1,177 @@
+# Day 02 13.09.2023 {.unnumbered}
+
+### logische Operationen
+
+```{r}
+a <- c(T, T, F, F)
+b <- c(T, F, T, F)
+
+sum(a)
+sum(b)
+5*a
+5*b
+a+b
+a & b
+a | b
+!a | b
+b | !a
+!a
+(a|b)+(a&b)
+
+v <- c(160, 145, 195, 173, 181)
+min(v - 150)
+max(log(v - 150)) < 1
+min(v - 150) > 0 && max(log(v - 150)) < 1
+```
+
+### Arbeitsblatt 3
+
+#### Aufgabe 1
+
+```{r}
+file.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\imports85.txt"
+imports85 <- read.table(file.path, header = T)
+table(imports85$cyl, imports85$wheels)
+imports85$cyl <- factor(imports85$cyl, levels = c("two", "three", "four", "five", "six", "eight", "twelve"))
+prop.cyl.wheel <- round(prop.table(table(imports85$cyl, imports85$wheels)), 2)
+print(prop.cyl.wheel*100)
+mosaicplot(prop.cyl.wheel, color = 2:9)
+barplot(prop.cyl.wheel)
+barplot(prop.cyl.wheel, beside = T)
+
+# Aufgabe 1c
+# DDarstellung der Beziehung zwischen Preis und Zylinderzahl
+table(imports85$price, imports85$cyl)
+barplot(table(imports85$price, imports85$cyl))
+plot(imports85$cyl, imports85$price)
+plot(imports85$price, imports85$cyl)
+plot(ecdf(imports85$price))
+plot(ecdf(imports85$cyl))
+plot(ecdf(imports85$city.mpg))
+hist(imports85$city.mpg)
+```
+
+befehle um Tabell/Daten anzuscheun
+
+```{r}
+head(imports85)
+dim(imports85)
+ncol(imports85)
+nrow(imports85)
+colnames(imports85)
+str(imports85)
+
+```
+
+Farben einstellen über hex code: html-color.codes oder "colors" oder im www R colors
+
+read.table liest generisch ein, read.csv etc sind wrapper, die dann read.table aufrufen.
+
+Working direktory
+
+setwd() getwd()
+
+zum löschen rm()
+
+## R Übungsblatt 3
+
+#### Aufgabe 1
+
+```{r}
+path.csv <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.csv"
+path.txt <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.txt"
+
+
+dat.csv <- read.table(path.csv, header = T, sep = ",")
+dat.txt <- read.table(path.txt, header = T, sep = "\t")
+all.equal.character(dat.csv, dat.txt)
+
+path.xls <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.xlsx"
+dat.x <- read.table(path.xls)
+
+
+
+```
+
+#### Aufgabe 1 Kibitze \@ ZRH
+
+```{r}
+path.kib <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\kiebitz.txt"
+kibitze.zrh <- read.table(path.kib, header = T, sep = ",")
+str(kibitze.zrh)
+#selektion anhand der Zeilen Nr
+kibitze.zrh[c(1,3,7),]
+
+#Selektion über Booleschen Vektor
+vsel <- kibitze.zrh$Feld.Nr == 1411
+kibitze.1411 <- kibitze.zrh[vsel,]
+kibitze.1411
+#Anzahl Kibitze auf Feld 1411
+sum(kibitze.1411$Anzahl)
+
+#davon Anzahl fressender Vögel
+vsel.fr <- kibitze.1411$Taetigkeit == "fr"
+kibitze.1411.fr <- kibitze.1411[vsel.fr]
+sum(kibitze.1411.fr$Anzahl)
+
+#insgesamt ruhende Vögel
+vsel.ru <- kibitze.zrh$Taetigkeit == "ru"
+kibitze.ru <- kibitze.zrh[vsel.ru, ]
+table(kibitze.ru$Feld.Nr)
+
+```
+
+###R-Übungsblatt 3 ####Aufgabe 3
+
+```{r}
+#a
+sleep.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\sleep.txt"
+sleep.zhaw <- read.table(sleep.path, header = T, sep = "\t")
+
+#b
+nrow(sleep.zhaw)
+
+#c
+sleep.zhaw$diff <- sleep.zhaw$Schlafmittel - sleep.zhaw$Placebo
+plot(ecdf(sleep.zhaw$diff))
+```
+
+##R-Übungsblatt 4 ###Aufgabe 1 ist Teil der Kibitz Aufgabe oben
+
+###Aufgabe 2
+
+```{r}
+#Einlesen der Daten
+library(readxl)
+path.CAS <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx"
+dat.CAS <- read_excel(path.CAS) |> as.data.frame()
+
+#Entfernen der ersten 7 Spalten
+dat.CAS <- dat.CAS[, -c(1:7)]
+
+#Entfernen der ersten 4 Zeichen Q.._
+colnames(dat.CAS) <-  substring(colnames(dat.CAS), 5)
+
+#umwandeln der Körpergrössen in numerische Angaben
+dat.CAS$Koerpergroesse <- as.numeric(dat.CAS$Koerpergroesse)
+
+#boxplot der Körpergrössenverteilung zwischen W und M in Kombination mit der Haarfarbe
+par(mar =c(8, 5, 1, 2))
+boxplot(Koerpergroesse ~ Geschlecht + Haarfarbe, 
+        data = dat.CAS, 
+        las = 2, 
+        xlab = "")
+
+#Wie gross ist die relative Häufigkeit aller Studierenden 
+#mit einer Körpergrösse > 180cm?
+rel.hauf.ü180 <- round(nrow(subset(dat.CAS, Koerpergroesse > 180))/nrow(dat.CAS), 2)*100
+print(paste("Relative Häufigkeit von Studierenden mit einer 
+            Körpergröße über 180 cm:", rel.hauf.ü180,"%"))
+
+#Berchnung der absoluten Median Abweichung
+# Median absolute Deviation MAD
+mad.KG <- round(mad(dat.CAS$Koerpergroesse), 3)
+sd.KG <- round(sd(dat.CAS$Koerpergroesse), 2)
+print(paste("Vergleich MAD:", mad.KG, "vs SD:", sd.KG))
+```
+

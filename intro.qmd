@@ -1,0 +1,18 @@
+# ZHAW Web-Umgebung {.unnumbered}
+
+
+## Moodle & Selfservice
+
+Lerninhalte an der ZHAW werden in moodle <https://moodle.zhaw.ch/enrol/index.php?id=15611> bereitgestellt. Zugangs-Management via edu-ID <https://login.eduid.ch/idp/profile/SAML2/Redirect/SSO?execution=e1s4>.
+
+Zugangsadmin für ZHAW Umgebung: <https://selfservice.zhaw.ch/index.html>.
+
+## Installation R und RStudio
+
+<https://moodle.zhaw.ch/pluginfile.php/1344143/mod_resource/content/3/Einstieg_in_R_und_RStudio.pdf>
+
+
+
+This is a book created from markdown and executable code.
+
+See @knuth84 for additional discussion of literate programming.

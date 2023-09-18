@@ -1,0 +1,50 @@
+project:
+  type: book
+
+book:
+  title: "CAS_datascience_book"
+  author: "Oliver Speer"
+  date: "06.9.2023"
+  cover-image: zhaw.png
+  repo-url: https://github.com/oliverspeer/CAS-datascience.git
+  repo-branch: branch
+  repo-actions: [edit, issue]
+  
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - part: ModulA.qmd
+      chapters: 
+        - day1.qmd
+        - day2.qmd
+        - day3.qmd
+    
+    - part: ModulA2.qmd
+      chapters: 
+        - day4.qmd
+        - day5.qmd
+        
+    - part: ModulB.qmd
+      chapters: 
+        - day6.qmd
+        
+    - part: ModulB2.qmd
+    
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    
+    code-link: true
+  pdf:
+    documentclass: scrreprt
+    
+    author-meta: "Oliver Speer"
+    callout-appearance: simple
+
+editor: visual
+

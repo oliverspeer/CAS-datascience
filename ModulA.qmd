@@ -1,0 +1,9 @@
+# Modul A - Statistische Grundlagen der Datenanalyse {.unnumbered}
+
+<https://rstudio.github.io/cheatsheets/rstudio-ide.pdf>
+![Cheatsheet RStudio](RStudio_CheetSheet.png)
+
+
+<https://geomoer.github.io/moer-base-r/assets/data/cheatsheets/base-r.pdf>
+![Cheatsheet BaseR 1](BaseR_CS1.png)
+![Cheatsheet BaseR 2](BaseR_CS2.png)

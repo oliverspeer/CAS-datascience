@@ -1,0 +1,241 @@
+# Day 01 06.09.2023 {.unnumbered}
+
+## Erste R-Übungen:
+
+```{r}
+3+3
+sqrt(9)
+exp(2)
+log(90)
+1/0
+sqrt(-9)
+
+v <- 1:5
+v
+1:5
+vec1 <- 1:3
+vec2 <- 4:6
+vec3 <- 7:10
+vec3 + vec2
+
+sqrt(vec2)
+range(vec2)
+
+summary_vec3 <- c(min(vec3), max(vec3), sum(vec3))
+
+
+
+
+```
+
+## Übungsblatt 1
+
+### 2b)
+
+#### Berechne die Summe der natürlichen Zahlen 1 bis 100
+
+```{r}
+sum(1:100)
+
+```
+
+### 3a)
+
+```{r}
+v <- 1:12
+m1 <- matrix(data = v, nrow = 3, ncol = 4, byrow = F)
+
+
+```
+
+## Übungsblatt 2
+
+### 1a)
+
+```{r}
+w <- c(1:5, 2)
+mode(w)
+w
+typeof(w)
+x <- c(6:13)/3
+mode(x)
+typeof(x)
+y <- c(TRUE, FALSE, TRUE, TRUE)
+mode(y)
+typeof(y)
+
+
+z <- c("Marie", "Betty", "Peter", "Peter")
+
+mode(z)
+typeof(z)
+
+z_f <- as.factor(z)
+
+```
+
+### 1b)
+
+```{r}
+u <- (w <= 2)
+u
+mode(u)
+as.numeric(u)
+as.character(u)
+as.character(z_f)
+as.numeric(z_f)
+as.numeric(z)
+unique(z_f)
+unique(w)
+?unique
+```
+
+### 2a)
+
+```{r}
+seq(95,-5,-5)
+rep(letters,each = 2)
+
+zz <- c(1:10)
+rep(zz, times = zz)
+
+matrix(seq(3, 75, 3), nrow = 5, ncol = 5, byrow = T)
+```
+
+### 3a)
+
+```{r}
+dat <- data.frame(
+  Name = c("Ruedi", "Hans", "Peter", "Stefan", "Julia", "Maria"),
+    Alter = c(27, 34, 21, 25, 39, 25),
+  Note = c(5, 4, 4, 3, 6, 5), 
+  Studium = c(F, T, T, F, F, T))
+
+nrow(dat)
+dim(dat)
+nrow(dat)*ncol(dat)
+```
+
+### Aufgabe 4 = Aufgabe 2 Übungsblatt zur Vorlesung
+
+```{r}
+library(readxl)
+dat <- read_xlsx("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx")
+
+mode(dat$Gruppe)
+typeof(dat$Gruppe)
+head(dat, n = 2)
+str(dat)
+```
+
+## Absolute Häufigkeiten:
+
+```{r}
+table(dat$Q02_Haarfarbe)
+
+```
+
+### Absolute Häufigkeiten "Stunden für Sport":
+
+```{r}
+table(dat$Q05_Sport)
+
+```
+
+## Relative Häufigkeiten
+
+```{r}
+rel.hairc <- table(dat$Q02_Haarfarbe)/length(dat$Q02_Haarfarbe)
+round(rel.hairc, 2)
+```
+
+
+## Kummulierte Summe
+
+```{r}
+cumsum(table(dat$Q02_Haarfarbe))
+
+```
+
+
+
+## Arbeitsblatt 2
+
+### 4)
+
+```{r}
+leisure.time <- c(
+  rep("sports", 5), 
+  rep("cooking", 2), 
+  rep("shopping", 1), 
+  rep("WWW", 7), 
+  rep("reading", 3), 
+  rep("music", 4)
+                   )
+
+tab.leisure.time <- table(leisure.time, useNA = "always")
+round(tab.leisure.time, 2)
+tab.rel.leisure.time.length <- table(leisure.time, useNA = "always")/length(leisure.time)
+round(tab.rel.leisure.time.length, 2)
+tab.rel.leisure.time <- table(leisure.time, useNA = "always")/sum(!is.na(leisure.time))
+round(tab.rel.leisure.time, 2)
+barplot(sort(tab.leisure.time, decreasing = T), col = "green", las = 2)
+barplot(sort(tab.rel.leisure.time, decreasing = T), col = "blue", las = 2)
+pie(table(leisure.time, useNA = "always"))
+
+
+
+```
+
+## Grafische Darstellungen
+
+```{r}
+tab <- table(dat$Q02_Haarfarbe, useNA = "always")
+barplot(sort(tab, decreasing = T), col = "blue", las = 2)
+
+tab_SW <- table(dat$Q09_Stockwerk)
+bp <- barplot(sort(tab_SW, decreasing = T),
+        main = "Stockwerke der Schlafzimmer",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        yaxt = "n"
+          )
+axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
+
+tab_plz <- table(dat$Q08_Postleitzahl)
+bp_plz <- barplot(sort(tab_plz, decreasing = T),
+        main = "Postleitzahlen",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        cex.names = 0.5
+          )
+
+tab_time <- table(dat$Q14_Fahrzeit)
+bp_time <- barplot(sort(tab_time, decreasing = T),
+        main = "Fahrzeiten",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        cex.names = 1
+          )
+
+dat$Q10_beruf
+
+
+bodysize <- dat$Q04_Koerpergroesse
+handsize <- dat$Q06_Handspanne
+plot(bodysize, handsize, main = "Scatter Plot Körpergrösse vs. Handspanne",
+     xlab = "Körpergrösse [cm]", ylab = "Handspanne [cm]", pch = 19, col = "blue")
+
+# Fit a linear model to the data
+ #fit <- lm(handsize ~ bodysize)
+
+# Add a trend line to the scatter plot
+# abline(fit, col = "red")
+```
+
