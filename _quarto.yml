@@ -7,7 +7,7 @@ book:
   date: "06.9.2023"
   cover-image: zhaw.png
   repo-url: https://github.com/oliverspeer/CAS-datascience.git
-  repo-branch: branch
+  repo-branch: main
   repo-actions: [edit, issue]
   
   chapters:

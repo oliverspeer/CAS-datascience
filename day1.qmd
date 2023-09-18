@@ -117,6 +117,7 @@ nrow(dat)*ncol(dat)
 ```
 
 ### Aufgabe 4 = Aufgabe 2 Übungsblatt zur Vorlesung
+####Importieren von Erhebungsdaten
 
 ```{r}
 library(readxl)
@@ -149,15 +150,12 @@ rel.hairc <- table(dat$Q02_Haarfarbe)/length(dat$Q02_Haarfarbe)
 round(rel.hairc, 2)
 ```
 
-
 ## Kummulierte Summe
 
 ```{r}
 cumsum(table(dat$Q02_Haarfarbe))
 
 ```
-
-
 
 ## Arbeitsblatt 2
 
@@ -188,11 +186,37 @@ pie(table(leisure.time, useNA = "always"))
 ```
 
 ## Grafische Darstellungen
+#### Absolute und relative Häufigkeiten der Haarfarben
 
 ```{r}
-tab <- table(dat$Q02_Haarfarbe, useNA = "always")
-barplot(sort(tab, decreasing = T), col = "blue", las = 2)
+tab_haircolor <- table(dat$Q02_Haarfarbe, useNA = "always")
+tab_haircolor
+n = length(dat$Q02_Haarfarbe)
+round(x = tab_haircolor/n*100, digits = 2)
+barplot(sort(tab_haircolor, decreasing = T), col = "blue", las = 2)
+```
+Farbwahl für bestimmte Variablen, hier Haarfarbe, können in einem Vektor angegeben werden. 
+Die jeweigen Farben können als Hexadecimal-Code angegeben werden. Diese findet man hier:
+<https://r-charts.com/colors/>
+![r-charts](RHEX.png)
 
+<https://htmlcolorcodes.com/>
+![HTML colors](HTMLHEX.png)
+Mehre Grafiken nebeneinander darstellen mit: 
+"par(mfrow = c1,2)"
+```{r}
+# Definition der Farben im Säulen-Diagram 
+par(mfrow = c(1,2)) # Darstellung in 1 Zeile mit 2 Plots
+haircol <- c("#989897", "#f9f8aa", "#514002", "#fc5a03",  "#020100")
+barplot(height = tab_haircolor, cex.names = 0.8, col = haircol, las=2)
+pie(tab_haircolor, cex = 0.8, col = haircol)        
+```
+
+
+
+
+#### Stockwerke ohne & mit "factor" und zusätzlichen "levels"
+```{r}
 tab_SW <- table(dat$Q09_Stockwerk)
 bp <- barplot(sort(tab_SW, decreasing = T),
         main = "Stockwerke der Schlafzimmer",
@@ -203,7 +227,38 @@ bp <- barplot(sort(tab_SW, decreasing = T),
         yaxt = "n"
           )
 axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
+```
 
+4f) Stockwerke als "factor"
+```{r}
+# Stockwerke als Faktoren darstellen, dies erlaubt auch Stockwerke ohne Daten anzuzeigen
+dat$Q09_Stockwerk <- factor(dat$Q09_Stockwerk, levels = c("0 (Parterre", paste0(1:9, ". Stock"), "> 9. Stock"))
+
+# mit "sort" um Daten der Grösse nach anzuzeigen
+tab_SW_fac <- table(dat$Q09_Stockwerk)
+bp <- barplot(sort(tab_SW_fac, decreasing = T),
+        main = "Absolute Häufigkeit der Stockwerke der Schlafzimmer",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2,
+        horiz = F,
+        yaxt = "n"
+          )
+axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
+```
+
+```{r}
+bp <- barplot(tab_SW_fac,
+        main = "Absolute Häufigkeit der Stockwerke der Schlafzimmer",
+        ylab = "absolute Häufigkeiten",
+        col = "red",
+        las = 2
+          )
+axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
+```
+
+4g) PLZ
+```{r}
 tab_plz <- table(dat$Q08_Postleitzahl)
 bp_plz <- barplot(sort(tab_plz, decreasing = T),
         main = "Postleitzahlen",
@@ -238,4 +293,3 @@ plot(bodysize, handsize, main = "Scatter Plot Körpergrösse vs. Handspanne",
 # Add a trend line to the scatter plot
 # abline(fit, col = "red")
 ```
-

@@ -73,7 +73,7 @@ setwd() getwd()
 
 zum löschen rm()
 
-## R Übungsblatt 3
+### R Übungsblatt 3
 
 #### Aufgabe 1
 
@@ -121,24 +121,41 @@ table(kibitze.ru$Feld.Nr)
 
 ```
 
-###R-Übungsblatt 3 ####Aufgabe 3
+### R-Übungsblatt 3 
+#### Aufgabe 3
 
 ```{r}
-#a
+# a
 sleep.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\sleep.txt"
 sleep.zhaw <- read.table(sleep.path, header = T, sep = "\t")
 
-#b
+# b
 nrow(sleep.zhaw)
 
-#c
+# c
 sleep.zhaw$diff <- sleep.zhaw$Schlafmittel - sleep.zhaw$Placebo
+# d
+mean(sleep.zhaw$diff)
+median(sleep.zhaw$diff)
+
+# e
+par(mfcol = c(1,3))
 plot(ecdf(sleep.zhaw$diff))
+hist(sleep.zhaw$diff, 
+     xlab = "Stunden", 
+     main = "Zusätzlicher Schlaf", 
+     ylab = "Absolute Häufigkeiten"
+     )
+stripchart(sleep.zhaw$diff, method = "stack", xlab = "Stunden")
+
+
 ```
 
-##R-Übungsblatt 4 ###Aufgabe 1 ist Teil der Kibitz Aufgabe oben
+### R-Übungsblatt 4 
 
-###Aufgabe 2
+#### Aufgabe 1 ist Teil der Kibitz Aufgabe oben
+
+#### Aufgabe 2
 
 ```{r}
 #Einlesen der Daten
@@ -174,4 +191,3 @@ mad.KG <- round(mad(dat.CAS$Koerpergroesse), 3)
 sd.KG <- round(sd(dat.CAS$Koerpergroesse), 2)
 print(paste("Vergleich MAD:", mad.KG, "vs SD:", sd.KG))
 ```
-
