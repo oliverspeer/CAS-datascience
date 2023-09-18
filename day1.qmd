@@ -195,6 +195,7 @@ n = length(dat$Q02_Haarfarbe)
 round(x = tab_haircolor/n*100, digits = 2)
 barplot(sort(tab_haircolor, decreasing = T), col = "blue", las = 2)
 ```
+#### Farben
 Farbwahl für bestimmte Variablen, hier Haarfarbe, können in einem Vektor angegeben werden. 
 Die jeweigen Farben können als Hexadecimal-Code angegeben werden. Diese findet man hier:
 <https://r-charts.com/colors/>
@@ -202,7 +203,15 @@ Die jeweigen Farben können als Hexadecimal-Code angegeben werden. Diese findet 
 
 <https://htmlcolorcodes.com/>
 ![HTML colors](HTMLHEX.png)
-Mehre Grafiken nebeneinander darstellen mit: 
+Farben aus R
+```{r}
+colours()
+
+
+```
+![colours in R](RCOL.png)
+
+#### Mehre Grafiken nebeneinander darstellen mit: 
 "par(mfrow = c1,2)"
 ```{r}
 # Definition der Farben im Säulen-Diagram 
