@@ -24,4 +24,39 @@ KlassErheb$Q10_beruf[9]
 KlassErheb[17, c("Q09_Stockwerk", "Q08_Postleitzahl")]
 
 ```
+### 2e)
+```{r}
+KlassErheb[20, c("Q03_Augenfarbe", "Q10_beruf")]
+```
+### 2f)
+```{r}
+KlassErheb[c(25,29), c("Q05_Sport", "Q14_Fahrzeit")]
+KlassErheb[c(20:22), c("Q02_Haarfarbe", "Q03_Augenfarbe")]
+```
+### 2h,i)
+```{r}
+table(KlassErheb$Q01_Geschlecht[1:10])
+table(KlassErheb$Q09_Stockwerk[1:15])
+
+```
+
+### 2j, k)
+```{r}
+KlassErheb$Q06_Handspanne <- as.numeric(KlassErheb$Q06_Handspanne)
+round(mean(KlassErheb$Q06_Handspanne, na.rm = T), 1)
+KlassErheb$Q04_Koerpergroesse <- as.numeric(KlassErheb$Q04_Koerpergroesse)
+round(mean(KlassErheb$Q04_Koerpergroesse, na.rm = T), 1)
+```
+### 2l)
+```{r}
+median(KlassErheb$Q04_Koerpergroesse)
+median(KlassErheb$Q04_Koerpergroesse[-4])
+```
+### 2m)
+```{r}
+KlassErheb$Q14_Fahrzeit <- as.numeric(KlassErheb$Q14_Fahrzeit)
+mean(KlassErheb$Q14_Fahrzeit[c(8, 19, 20, 23)])
+round(mean(KlassErheb$Q14_Fahrzeit[-c(8, 19, 20, 23)]))
+```
+
 
