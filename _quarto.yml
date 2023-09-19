@@ -17,6 +17,7 @@ book:
       chapters: 
         - day1.qmd
         - day2.qmd
+        - LoesRUeb03.qmd
         - day3.qmd
     
     - part: ModulA2.qmd

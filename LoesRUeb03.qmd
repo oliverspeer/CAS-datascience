@@ -1,0 +1,27 @@
+# R Übungsblatt 03 {.unnumbered}
+
+## Aufgabe 2
+```{r}
+library(readxl)
+KlassErheb <- read_excel("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx")
+KlassErheb <- as.data.frame(KlassErheb)
+```
+
+### 2a)
+```{r}
+KlassErheb$Q04_Koerpergroesse[19]
+```
+### 2b)
+```{r}
+KlassErheb$`Q13_statistischen Vorkenntnisse`[12]
+```
+### 2c)
+```{r}
+KlassErheb$Q10_beruf[9]
+```
+### 2d)
+```{r}
+KlassErheb[17, c("Q09_Stockwerk", "Q08_Postleitzahl")]
+
+```
+
