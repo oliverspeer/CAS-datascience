@@ -1,0 +1,47 @@
+# Arbeitsblatt HT1
+
+```{r}
+path.alpha <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\alpha.dat"
+a.Zerf <- read.table(path.alpha, header = T)
+
+barplot(height = a.Zerf$freq, names.arg = a.Zerf$k, space = 0.5)
+
+mean(a.Zerf$freq)
+
+n <- sum(a.Zerf$freq)
+mu <- sum(a.Zerf$k * a.Zerf$freq)/n
+mu
+yModel <- dpois(a.Zerf$k, mu)*n
+plot(a.Zerf$k, a.Zerf$freq, type = "h", lwd = 20, col = "lightblue")
+lines(a.Zerf$k, yModel, type = "b", lwd = 2, col = "navy")
+
+```
+
+```{r}
+rpois(n=10, lambda = 55)
+```
+
+#### Aufgabe 3 Asbestfasern
+
+```{r}
+asbest1 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest1.dat", header = F)[,1]
+min(asbest1)
+max(asbest1)
+mean(asbest1)
+
+```
+
+#### Spannweite
+
+```{r}
+max(asbest1) - min(asbest1)
+
+```
+
+```{r}
+asbest2 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest2.dat", header = F)[,1]
+min(asbest2)
+max(asbest2)
+mean(asbest2)
+max(asbest2) - min(asbest2)
+```

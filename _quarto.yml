@@ -17,11 +17,20 @@ book:
       chapters: 
         - day1.qmd
         - day2.qmd
+        - LoesUeb03.qmd
         - LoesRUeb03.qmd
-        - day3.qmd
+        - day3_1.qmd
+        - LoesUeb05.qmd
+        - Rexday3_1.qmd
+        - Rexday3_2.qmd
+        - LoesRUeb04.qmd
+        - LoesRUeb05.qmd
+        - ProbePruefA1.qmd
     
     - part: ModulA2.qmd
       chapters: 
+        - day3_2.qmd
+        - LoesRHT1.qmd
         - day4.qmd
         - day5.qmd
         

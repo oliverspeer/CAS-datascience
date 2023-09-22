@@ -1,0 +1,90 @@
+<!-- # R-Demo 3.1 20.09.2023 {.unnumbered} -->
+
+<!-- ```{r} -->
+<!-- ## Woche 6 -->
+
+<!-- ## plot-Funktionen --------------------- -->
+<!-- ## High-level -->
+<!-- # dat$Sport[dat$Sport == "mehr als 15"] <- 16 -->
+<!-- # dat$Sport <- as.numeric(dat$Sport) -->
+<!-- # which(colnames(dat) == "Anreisezeit an die ZHAW") -->
+<!-- # colnames(dat)[15] <- "Anreisezeit" -->
+
+<!-- plot(x = dat$Anreisezeit, y = dat$Sport) -->
+<!-- plot(Sport ~  Anreisezeit, data = dat) -->
+<!-- plot(Sport ~  Anreisezeit, data = dat, main = "Klassenerhebung",  -->
+<!--      xlab = "Anreisezeit [min]") -->
+
+<!-- dat$Haarfarbe <- factor(dat$Haarfarbe) -->
+<!-- boxplot(Sport~Haarfarbe, data=dat) -->
+
+<!-- # plot generische Funktion -->
+<!-- methods(plot) -->
+<!-- ?plot.default -->
+<!-- dat$Alter[dat$Alter>1000]  -->
+<!-- dat$Alter[dat$Alter>1000 & !is.na(dat$Alter)] <- 2022 -dat$Alter[dat$Alter>1000 & !is.na(dat$Alter)]  -->
+<!-- hist(dat$Alter) -->
+<!-- boxplot(dat$Sport) -->
+<!-- dat$Programmierkenntnisse <- factor(dat$Programmierkenntnisse,  -->
+<!--                                     levels = c("nicht vorhanden", "gering", "mittel", -->
+<!--                                                "gross"), -->
+<!--                                     ordered= TRUE) -->
+<!-- which(colnames(dat) == "Statistische Vorkenntnisse") -->
+<!-- colnames(dat)[14] <- "Statistikkenntnisse" -->
+<!-- dat$Statistikkenntnisse <- factor(dat$Statistikkenntnisse,  -->
+<!--                                     levels = c("klein", "mittel"), -->
+<!--                                     ordered= TRUE) -->
+<!-- mosaicplot(Programmierkenntnisse ~ Statistikkenntnisse, data = dat) -->
+<!-- mosaicplot(table(dat$Programmierkenntnisse, dat$Statistikkenntnisse), xlab = "Programmierkenntnisse") -->
+
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = (as.numeric(dat$Programmierkenntnisse)+1), pch = 16) -->
+<!-- ?points -->
+<!-- palette() -->
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = palette()[dat$Programmierkenntnisse]) -->
+<!-- colors() -->
+<!-- plot(Handspanne ~  Anreisezeit, data=dat,  -->
+<!--      col = c("red", "green", "blue", "orange")[dat$Programmierkenntnisse]) -->
+<!-- farben <- c("tomato3", "wheat4", "plum2", "springgreen") -->
+<!-- plot(Handspanne ~  Anreisezeit, data = dat,  -->
+<!--      col = farben[dat$Programmierkenntnisse],  -->
+<!--      pch = 16) -->
+
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = dat$Programmierkenntnisse, pch = 16) -->
+
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = dat$Programmierkenntnisse,  -->
+<!--      pch = c(15, 17)[dat$Statistikkenntnisse]) -->
+
+<!-- dat$Geschwister[dat$Geschwister>10] <- 11 -->
+<!-- dat$Geschwister_cex <- as.numeric(dat$Geschwister)/3+0.5 -->
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = dat$Programmierkenntnisse,  -->
+<!--      pch = c(15, 17)[dat$Statistikkenntnisse], cex = dat$Geschwister_cex) -->
+
+
+<!-- ## Low-level (Ergänzungen zum Hauptplot) -->
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = dat$Programmierkenntnisse,  -->
+<!--      pch = c(15, 17)[dat$Statistikkenntnisse], cex = dat$Geschwister_cex) -->
+<!-- legend(x = 100, y = 26, legend = levels(dat$Programmierkenntnisse),  -->
+<!--        col = palette()[1:4], bty = "n", pch = 16,  -->
+<!--        y.intersp = 0.4, x.intersp = 0.6) -->
+<!-- text(x = 100, y = 25, labels="Programmierkenntnisse", pos = 4) -->
+<!-- legend(x = 100, y=20, legend = levels(dat$Statistikkenntnisse),  -->
+<!--        col = "black", bty = "n", pch = c(15, 17),  -->
+<!--        y.intersp = 0.4, x.intersp = 0.6) -->
+<!-- text(x = 100, y = 20, labels="Statistikkenntnisse", pos = 4) -->
+
+
+<!-- boxplot(dat$Sport) -->
+<!-- text(x = median(dat$Sport), labels ="Median", pos = 1) -->
+
+<!-- ## Legende ausserhalb des Plots (mehr dazu in der nächsten Woche) -->
+<!-- par(xpd = TRUE, mar=c(4,4,1, 8)) -->
+<!-- plot(Handspanne ~  Anreisezeit, data=dat, col = dat$Programmierkenntnisse,  -->
+<!--      pch = c(15, 17)[dat$Statistikkenntnisse], cex = dat$Geschwister_cex) -->
+<!-- # legend(x = 125, y = 25, legend = levels(dat$Programmierkenntnisse),  -->
+<!--        col = palette()[1:4], bty = "n", pch = 16,  -->
+<!--        y.intersp = 0.5, x.intersp = 0.6) -->
+<!-- text(x = 125, y = 25, labels="Programmierkenntnisse", pos = 4) -->
+
+<!-- ``` -->
+
+<!-- coming soon -->

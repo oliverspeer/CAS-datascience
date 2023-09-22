@@ -1,0 +1,139 @@
+# R Übungsblatt 04 {.unnumbered}
+
+#### 1a
+
+```{r}
+path.kib <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\kiebitz.txt"
+kibitze.ZRH <- read.table(path.kib, header = T, sep = ",")
+```
+
+#### 1b
+
+```{r}
+vSel <- kibitze.ZRH[,"Feld.Nr"] == 1411
+vSel
+kibitze.ZRH.1411 <- kibitze.ZRH[vSel,]
+kibitze.ZRH.1411
+
+vSel1 <- kibitze.ZRH[, "Anzahl"] >= 29
+kibitze.ZRH.numb <- kibitze.ZRH[vSel1,]
+kibitze.ZRH.numb
+
+vSel2 <- kibitze.ZRH[, "Taetigkeit"] == "fr"
+kibitze.ZRH.do <- kibitze.ZRH[vSel2,]
+kibitze.ZRH.do
+sort(unique(kibitze.ZRH.do$Feld.Nr))
+
+vSelr <- kibitze.ZRH$Anzahl == max(kibitze.ZRH$Anzahl, na.rm = T)
+kibitze.ZRH[vSelr,]
+```
+
+#### Aufgabe 2
+
+```{r}
+#Einlesen der Daten
+library(readxl)
+path.CAS <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx"
+dat.CAS <- read_excel(path.CAS) |> as.data.frame()
+
+# a
+# Entfernen der ersten 7 Spalten
+dat.CAS <- dat.CAS[, -c(1:7)]
+
+#b
+#Entfernen der ersten 4 Zeichen Q.._
+colnames(dat.CAS) <-  substring(colnames(dat.CAS), 5)
+
+#umwandeln der Körpergrössen in numerische Angaben
+dat.CAS$Koerpergroesse <- as.numeric(dat.CAS$Koerpergroesse)
+
+#boxplot der Körpergrössenverteilung zwischen W und M in Kombination mit der Haarfarbe
+par(mar =c(8, 5, 1, 2))
+boxplot(Koerpergroesse ~ Geschlecht + Haarfarbe, 
+        data = dat.CAS, 
+        las = 2, 
+        xlab = "")
+
+#Wie gross ist die relative Häufigkeit aller Studierenden 
+#mit einer Körpergrösse > 180cm?
+rel.hauf.ü180 <- round(nrow(subset(dat.CAS, Koerpergroesse > 180))/nrow(dat.CAS), 2)*100
+print(paste("Relative Häufigkeit von Studierenden mit einer 
+            Körpergröße über 180 cm:", rel.hauf.ü180,"%"))
+
+# d
+#Berchnung der absoluten Median Abweichung
+# Median absolute Deviation MAD
+mad.KG <- round(mad(dat.CAS$Koerpergroesse), 3)
+sd.KG <- round(sd(dat.CAS$Koerpergroesse), 2)
+print(paste("Vergleich MAD:", mad.KG, "vs SD:", sd.KG))
+
+#e
+# KursteilnehmerInnen mit blonden und schwarzen Haaren
+# KursteilnehmerInnen mit blonden und schwarzen Haaren
+unique(dat.CAS$Haarfarbe)
+unique(dat.CAS$Sport)
+vSel.bl.s <- dat.CAS$Haarfarbe == "blond" | dat.CAS$Haarfarbe =="schwarz"
+vSel.br <- dat.CAS$Haarfarbe == "braun"
+vSel.sp <- dat.CAS$Sport == "mehr als 15"
+dat.CAS$Sport[vSel.sp] <- "17"
+dat.CAS$Sport <- as.numeric(dat.CAS$Sport)
+median(dat.CAS$Sport[vSel.bl.s])>median(dat.CAS$Sport[vSel.br])
+
+```
+#### 2f)
+```{r}
+dat.CAS$Alter <- as.numeric(dat.CAS$Alter)
+dat.CAS$Handspanne <- as.numeric(dat.CAS$Handspanne)
+dat.CAS$Fahrzeit <- as.numeric(dat.CAS$Fahrzeit)
+vSel.f <- dat.CAS$Alter <= 35 & dat.CAS$Stockwerk == "1. Stock" &
+  c(dat.CAS$Haarfarbe == "braun" | dat.CAS$Fahrzeit >= 40 | dat.CAS$Handspanne > 17)
+any(vSel.f)
+sum(vSel.f)
+which(vSel.f)
+```
+#### 2g
+```{r}
+max(dat.CAS$Handspanne, na.rm = T) - min(dat.CAS$Handspanne, na.rm = T)
+IQR(dat.CAS$Handspanne, na.rm = T)
+mad(dat.CAS$Handspanne, na.rm = T)
+sd(dat.CAS$Handspanne, na.rm = T)
+median(dat.CAS$Handspanne, na.rm = T)
+mean(dat.CAS$Handspanne, na.rm = T)
+plot(dat.CAS$Handspanne)
+stripchart(dat.CAS$Handspanne, method = "jitter")
+
+
+```
+Verändern bestimmter Werte. Hier 46, ein Ausreisser?
+```{r}
+vSel.46 <- dat.CAS$Handspanne == 46
+dat.CAS$Handspanne[vSel.46] <- NA
+stripchart(dat.CAS$Handspanne)
+max(dat.CAS$Handspanne, na.rm = T) - min(dat.CAS$Handspanne, na.rm = T)
+IQR(dat.CAS$Handspanne, na.rm = T)
+mad(dat.CAS$Handspanne, na.rm = T)
+sd(dat.CAS$Handspanne, na.rm = T)
+median(dat.CAS$Handspanne, na.rm = T)
+mean(dat.CAS$Handspanne, na.rm = T)
+
+```
+#### h)
+```{r}
+dat.CAS$ratHKgr <- dat.CAS$Handspanne/dat.CAS$Koerpergroesse
+vsel.k <- dat.CAS$ratHKgr <= 0.12
+vsel.m <- dat.CAS$ratHKgr > 0.12 & dat.CAS$ratHKgr <= 0.13
+vsel.g <- dat.CAS$ratHKgr > 0.13
+dat.CAS$ratHKgr[vsel.k] <- "klein"
+dat.CAS$ratHKgr[vsel.m] <- "mittel"
+dat.CAS$ratHKgr[vsel.g] <- "gross"
+print(dat.CAS$ratHKgr)
+table(dat.CAS$ratHKgr)
+```
+#### fact
+```{r}
+dat.CAS$ratHKgr <-cut(dat.CAS$Handspanne/dat.CAS$Koerpergroesse, c(0, 0.12, 0.13, 0.2), labels = c("klein", "mittel", "gross"), ordered_result = T)
+is(dat.CAS$ratHKgr)
+dat.CAS$ratHKgr
+
+```
+

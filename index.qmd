@@ -1,31 +1,34 @@
 # ZHAW CAS Datenanalyse {.unnumbered}
-Der CAS Datenanalyse vermittelt einen Einstieg in das statistische  Denken sowie in klassische und neue Konzepte der Datenanalyse.
-Die KursteilnehmerInnen lernen in Abhängigkeit der fachlichen Fragestellung (business understanding) und der Art der Daten (Datentyp) 
-Vorgehensweisen und Methoden kennen, um nützliche Erkenntnisse aus den Daten zu extrahieren.
 
-## Kursbeginn: 
-               Mittwoch, 6. September 2023, 9:00 Uhr
+Der CAS Datenanalyse vermittelt einen Einstieg in das statistische Denken sowie in klassische und neue Konzepte der Datenanalyse. Die KursteilnehmerInnen lernen in Abhängigkeit der fachlichen Fragestellung (business understanding) und der Art der Daten (Datentyp) Vorgehensweisen und Methoden kennen, um nützliche Erkenntnisse aus den Daten zu extrahieren.
 
-## Kursort: 
-               ZHAW Campus Lagerplatz
-               Technopark Trakt A (Gebäudebezeichnung MT), Raum MT 1140
-               Technoparkstrasse 2
-               8406 Winterthur
+## Kursbeginn:
 
-## Teamskanal: 
-               CAS Datenanalyse HS 2023
+```         
+           Mittwoch, 6. September 2023, 9:00 Uhr
+```
 
+## Kursort:
 
+```         
+           ZHAW Campus Lagerplatz
+           Technopark Trakt A (Gebäudebezeichnung MT), Raum MT 1140
+           Technoparkstrasse 2
+           8406 Winterthur
+```
 
+## Teamskanal:
+
+```         
+           CAS Datenanalyse HS 2023
+```
 
 ## Kursdaten
+
 ![Programm](Programm.png)
 
 <https://moodle.zhaw.ch/pluginfile.php/1344144/mod_resource/content/3/CAS-DA2023-18_Kursdaten_HS.pdf>
 
-
-
 This is a Quarto book.
 
 To learn more about Quarto books visit <https://quarto.org/docs/books>.
-

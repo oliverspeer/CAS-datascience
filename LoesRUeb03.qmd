@@ -1,6 +1,53 @@
 # R Übungsblatt 03 {.unnumbered}
 
+## Aufgabe 1
+
+```{r}
+path.csv <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.csv"
+path.txt <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.txt"
+
+
+dat.csv <- read.table(path.csv, header = T, sep = ",")
+dat.txt <- read.table(path.txt, header = T, sep = "\t")
+all.equal.character(dat.csv, dat.txt)
+
+path.xls <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.xlsx"
+dat.x <- read.table(path.xls)
+
+
+
+```
+
+## Aufgabe 1 Kibitze \@ ZRH
+
+```{r}
+path.kib <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\kiebitz.txt"
+kibitze.zrh <- read.table(path.kib, header = T, sep = ",")
+str(kibitze.zrh)
+#selektion anhand der Zeilen Nr
+kibitze.zrh[c(1,3,7),]
+
+#Selektion über Booleschen Vektor
+vsel <- kibitze.zrh$Feld.Nr == 1411
+kibitze.1411 <- kibitze.zrh[vsel,]
+kibitze.1411
+#Anzahl Kibitze auf Feld 1411
+sum(kibitze.1411$Anzahl)
+
+#davon Anzahl fressender Vögel
+vsel.fr <- kibitze.1411$Taetigkeit == "fr"
+kibitze.1411.fr <- kibitze.1411[vsel.fr]
+sum(kibitze.1411.fr$Anzahl)
+
+#insgesamt ruhende Vögel
+vsel.ru <- kibitze.zrh$Taetigkeit == "ru"
+kibitze.ru <- kibitze.zrh[vsel.ru, ]
+table(kibitze.ru$Feld.Nr)
+
+```
+
 ## Aufgabe 2
+
 ```{r}
 library(readxl)
 KlassErheb <- read_excel("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx")
@@ -8,32 +55,45 @@ KlassErheb <- as.data.frame(KlassErheb)
 ```
 
 ### 2a)
+
 ```{r}
 KlassErheb$Q04_Koerpergroesse[19]
 ```
+
 ### 2b)
+
 ```{r}
 KlassErheb$`Q13_statistischen Vorkenntnisse`[12]
 ```
+
 ### 2c)
+
 ```{r}
 KlassErheb$Q10_beruf[9]
 ```
+
 ### 2d)
+
 ```{r}
 KlassErheb[17, c("Q09_Stockwerk", "Q08_Postleitzahl")]
 
 ```
+
 ### 2e)
+
 ```{r}
 KlassErheb[20, c("Q03_Augenfarbe", "Q10_beruf")]
 ```
+
 ### 2f)
+
 ```{r}
 KlassErheb[c(25,29), c("Q05_Sport", "Q14_Fahrzeit")]
 KlassErheb[c(20:22), c("Q02_Haarfarbe", "Q03_Augenfarbe")]
 ```
+
 ### 2h,i)
+
 ```{r}
 table(KlassErheb$Q01_Geschlecht[1:10])
 table(KlassErheb$Q09_Stockwerk[1:15])
@@ -41,22 +101,72 @@ table(KlassErheb$Q09_Stockwerk[1:15])
 ```
 
 ### 2j, k)
+
 ```{r}
 KlassErheb$Q06_Handspanne <- as.numeric(KlassErheb$Q06_Handspanne)
 round(mean(KlassErheb$Q06_Handspanne, na.rm = T), 1)
 KlassErheb$Q04_Koerpergroesse <- as.numeric(KlassErheb$Q04_Koerpergroesse)
 round(mean(KlassErheb$Q04_Koerpergroesse, na.rm = T), 1)
 ```
+
 ### 2l)
+
 ```{r}
 median(KlassErheb$Q04_Koerpergroesse)
 median(KlassErheb$Q04_Koerpergroesse[-4])
 ```
+
 ### 2m)
+
 ```{r}
 KlassErheb$Q14_Fahrzeit <- as.numeric(KlassErheb$Q14_Fahrzeit)
 mean(KlassErheb$Q14_Fahrzeit[c(8, 19, 20, 23)])
 round(mean(KlassErheb$Q14_Fahrzeit[-c(8, 19, 20, 23)]))
 ```
 
+## Aufgabe 3
 
+#### a
+
+```{r}
+
+sleep.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\sleep.txt"
+sleep.zhaw <- read.table(sleep.path, header = T, sep = "\t")
+```
+
+#### b
+
+```{r}
+nrow(sleep.zhaw)
+```
+
+#### c
+
+```{r}
+sleep.zhaw$diff <- sleep.zhaw$Schlafmittel - sleep.zhaw$Placebo
+print(sleep.zhaw)
+```
+
+#### d
+
+```{r}
+mean(sleep.zhaw$diff)
+median(sleep.zhaw$diff)
+```
+
+#### e & f
+
+```{r}
+par(mfcol = c(1,3))
+plot(ecdf(sleep.zhaw$diff), verticals = T)
+abline(v = 1, col = "red")
+abline(v = 3, col = "red")
+hist(sleep.zhaw$diff, 
+     xlab = "Stunden", 
+     main = "Zusätzlicher Schlaf", 
+     ylab = "Absolute Häufigkeiten"
+     )
+stripchart(sleep.zhaw$diff, method = "stack", xlab = "Stunden")
+ecdf(sleep.zhaw$diff)(1)
+ecdf(sleep.zhaw$diff)(3)
+```

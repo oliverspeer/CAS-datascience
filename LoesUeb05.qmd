@@ -1,0 +1,9 @@
+# Arbeitsblatt5 {.unnumbered}
+```{r}
+file.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\imports85.txt"
+imports85 <- read.table(file.path, header = T)
+plot(hwy.mpg ~ city.mpg, data = imports85, xlab = "miles per galon city", ylab = "miles per galon highway")
+scatter.smooth(imports85$city.mpg, imports85$hwy.mpg, lwd = 2, col = "red")
+pairs(imports85[,c(6:8)])
+```
+

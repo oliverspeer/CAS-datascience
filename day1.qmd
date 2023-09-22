@@ -1,5 +1,7 @@
 # Day 01 06.09.2023 {.unnumbered}
 
+![Daten Typen](daten_typen.png)
+
 ## Erste R-Übungen:
 
 ```{r}
@@ -117,6 +119,7 @@ nrow(dat)*ncol(dat)
 ```
 
 ### Aufgabe 4 = Aufgabe 2 Übungsblatt zur Vorlesung
+
 ####Importieren von Erhebungsdaten
 
 ```{r}
@@ -186,6 +189,7 @@ pie(table(leisure.time, useNA = "always"))
 ```
 
 ## Grafische Darstellungen
+
 #### Absolute und relative Häufigkeiten der Haarfarben
 
 ```{r}
@@ -195,24 +199,33 @@ n = length(dat$Q02_Haarfarbe)
 round(x = tab_haircolor/n*100, digits = 2)
 barplot(sort(tab_haircolor, decreasing = T), col = "blue", las = 2)
 ```
-#### Farben
-Farbwahl für bestimmte Variablen, hier Haarfarbe, können in einem Vektor angegeben werden. 
-Die jeweigen Farben können als Hexadecimal-Code angegeben werden. Diese findet man hier:
-<https://r-charts.com/colors/>
-![r-charts](RHEX.png)
 
-<https://htmlcolorcodes.com/>
-![HTML colors](HTMLHEX.png)
+#### Farben
+
+Farbwahl für bestimmte Variablen, hier Haarfarbe, können in einem Vektor angegeben werden. Die jeweigen Farben können als Hexadecimal-Code angegeben werden. Diese findet man hier: <https://r-charts.com/colors/> ![r-charts](RHEX.png)
+
+<https://htmlcolorcodes.com/> ![HTML colors](HTMLHEX.png) 
+
+
+
+In Vorlesung von Christoph verwendet:
+<https://html-color.codes/>
+
+
 Farben aus R
+
 ```{r}
 colours()
 
 
 ```
+
 ![colours in R](RCOL.png)
 
-#### Mehre Grafiken nebeneinander darstellen mit: 
+#### Mehre Grafiken nebeneinander darstellen mit:
+
 "par(mfrow = c1,2)"
+
 ```{r}
 # Definition der Farben im Säulen-Diagram 
 par(mfrow = c(1,2)) # Darstellung in 1 Zeile mit 2 Plots
@@ -221,10 +234,8 @@ barplot(height = tab_haircolor, cex.names = 0.8, col = haircol, las=2)
 pie(tab_haircolor, cex = 0.8, col = haircol)        
 ```
 
-
-
-
 #### Stockwerke ohne & mit "factor" und zusätzlichen "levels"
+
 ```{r}
 tab_SW <- table(dat$Q09_Stockwerk)
 bp <- barplot(sort(tab_SW, decreasing = T),
@@ -239,6 +250,7 @@ axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
 ```
 
 4f) Stockwerke als "factor"
+
 ```{r}
 # Stockwerke als Faktoren darstellen, dies erlaubt auch Stockwerke ohne Daten anzuzeigen
 dat$Q09_Stockwerk <- factor(dat$Q09_Stockwerk, levels = c("0 (Parterre", paste0(1:9, ". Stock"), "> 9. Stock"))
@@ -267,6 +279,7 @@ axis(2, at = axTicks(2), labels = axTicks(2), las = 1)
 ```
 
 4g) PLZ
+
 ```{r}
 tab_plz <- table(dat$Q08_Postleitzahl)
 bp_plz <- barplot(sort(tab_plz, decreasing = T),

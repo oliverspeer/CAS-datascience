@@ -1,0 +1,146 @@
+<!-- # R-Demo 3.2 20.09.2023 {.unnumbered} -->
+
+
+
+<!-- ```{r} -->
+<!-- ## Demo Praktikum Woche 07  -->
+<!-- ########################## -->
+
+<!-- ## Low-level ---- -->
+<!-- mpg <- readRDS('/Users/hofc/gitrepos/CAS/DA/CAS_DA_HS23/day03/data/mpg.rds') -->
+<!-- plot(cty ~ displ, data = mpg, pch= 16,  -->
+<!--      main= "Effizienz Automodelle", -->
+<!--      xlab = "Hubraum [l]", ylab = "Meilen pro Gallone", ylim=c(0, 45), las=1) -->
+<!-- points(x=mpg$displ, y= mpg$hwy, pch= 16, col= "red") -->
+<!-- mittelwert <- aggregate(cty ~ displ, data=mpg, FUN=mean) -->
+<!-- mittelwert -->
+<!-- lines(x=mittelwert$displ, y= mittelwert$cty, col= "blue") -->
+<!-- mittelwert2 <- aggregate(hwy ~ displ, data=mpg, FUN=mean) -->
+<!-- lines(x=mittelwert2$displ, y= mittelwert2$hwy, col= "orange") -->
+<!-- abline(h= 30, lty= 2) -->
+<!-- abline(v= 2, lwd= 4, col= "blue") -->
+<!-- abline(a= 40, b= -10, col= "red", lty= 3, lwd=2) -->
+<!-- segments(x0= 2, y0= 35, x1= 6, y1= 20, -->
+<!--          col= "blue", lty = 5, lwd = 2) -->
+<!-- t.index <- c(213, 32) -->
+<!-- mpg[t.index, ] -->
+<!-- arrows(x0= c(3, 6.5), y0= c(34,30), # Startpunkte der Pfeile -->
+<!--        x1= mpg$displ[t.index], # Endpunkte -->
+<!--        y1= mpg$cty[t.index], length = 0.1) # t.index = c(213, 32) -->
+<!-- text(x= c(3, 6.5), y= c(34,30), pos= c(4,3), -->
+<!--      labels = c(mpg$manufacturer[t.index]), col= c("red", "blue")) -->
+
+
+<!-- ## par ---- -->
+<!-- ?par -->
+<!-- par(mfcol = c(2,2), mar = c(0,0,0,0) ) -->
+<!-- plot(formula= cty ~ displ, -->
+<!--      data = mpg, pch = 16) -->
+<!-- text(6,30, labels = 1, cex = 2) -->
+<!-- plot(formula= hwy ~ displ, -->
+<!--      data = mpg, pch = 16) -->
+<!-- text(6,40, labels = 2, cex = 2) -->
+<!-- plot(formula= hwy ~ cyl, -->
+<!--      data = mpg, pch = 16) -->
+<!-- text(7.5,40, labels = 3, cex = 2) -->
+<!-- plot(formula= hwy ~ cty, -->
+<!--      data = mpg, pch = 16) -->
+<!-- text(30,15, labels = 4, cex = 2) -->
+
+<!-- par(mfrow=c(1,1), mar = c(4, 4, 1, 8), xpd = TRUE) -->
+<!-- plot(formula= cty ~ displ, data= mpg, pch= 16,  -->
+<!--      main= "Effizienz Automodelle", -->
+<!--      xlab= "Hubraum [l]", ylab= "Meilen pro Gallone",  -->
+<!--      ylim=c(0, 45), las=1) -->
+<!-- points(x=mpg$displ, y= mpg$hwy, pch= 16, col= "red") -->
+<!-- legend(x = 7.3, y =40, legend = c("city", "highway"),  -->
+<!--        col=c("black", "red"), -->
+<!--        pch=16) -->
+
+<!-- # Reset par -->
+<!-- dev.off() -->
+
+<!-- ## Farbcodierungen ---- -->
+
+<!-- ?colors()  -->
+<!-- colors() -->
+<!-- # Hexadezimal-Code: "#FF0000" (00 bis FF) ) weiss = "#FFFFFF", -->
+<!-- # schwarz = "#000000" -->
+<!-- ?rgb # RGB (Rot-Grün-Blau-Anteil, Transparenz)  -->
+<!-- # Werte mit maxColorValue =1 -> 0-1 transformiert zu 0 bis 255 -->
+<!-- ?hsv()  # HSV (Hue, Saturation, Value) + alpha Werte 0-1 -->
+
+<!-- cexText <- 1 -->
+<!-- cexPoint <- 1 -->
+<!-- par(mar=c(0,0,0,0)) -->
+<!-- plot(x = c(0, 1), y = c(-0.05, 1.05), type="n", axes = F,  -->
+<!--      xlab="", ylab="") -->
+<!-- points(x=0.1, y=1, pch=16, col = "darkgreen", cex = cexPoint) -->
+<!-- text(x=0.15, y=1, pos=4, col = "darkgreen", label="darkgreen",  -->
+<!--      cex = cexText ) -->
+<!-- points(x = 0.1, y = 0.8, pch=16, col = "skyblue4", cex =cexText ) -->
+<!-- text(x=0.15, y=0.8, pos=4, col = "skyblue4", label="skyblue4",  -->
+<!--      cex = cexText ) -->
+<!-- points(x = 0.1, y = 0.6, pch=16, col = "#FF0000", cex = cexPoint) -->
+<!-- text(x=0.15, y=0.6, pos=4, col = "#FF0000", label="#FF0000", cex = cexText ) -->
+<!-- points(x = 0.1, y=0.4, pch=16, col = "#808080", cex=cexPoint) -->
+<!-- text(x=0.15, y=0.4, pos=4, col = "#808080", label="#808080", cex = cexText ) -->
+<!-- points(x = 0.1, y=0.2, pch=16,  -->
+<!--        col = rgb(red = 0, green = 0, blue = 1, alpha =1),  -->
+<!--        cex = cexPoint) -->
+<!-- text(x=0.15, y=0.2, pos=4, col = rgb(0, 0, 1, alpha = 1),  -->
+<!--      label="rgb(0, 0, 1, alpha = 1)", cex = cexText ) -->
+<!-- points(x = 0.1, y=0, pch=16,  -->
+<!--        col = rgb(red = 0, green = 0, blue = 1, alpha=0.5),  -->
+<!--        cex=cexPoint) -->
+<!-- text(x=0.15, y=0, pos=4, col = rgb(0, 0, 1, alpha = 0.5),  -->
+<!--      label="rgb(0, 0, 1, alpha = 0.5)", cex = cexText ) -->
+<!-- points(x = 0.6, y=1, pch=16, col = rgb(red = 0, green = 0, blue = 0), cex=cexPoint) -->
+<!-- text(x=0.65, y=1, pos=4, col = rgb(0, 0, 0), label="rgb(0, 0, 0)",  -->
+<!--      cex = cexText ) -->
+<!-- points(x=0.6, y=0.8, pch=16,  -->
+<!--        col = rgb(red = 0, green = 0, blue = 255, max = 255),  -->
+<!--        cex=cexPoint) -->
+<!-- text(x=0.65, y=0.81, pos=4, col = rgb(0, 0, 255, max = 255),  -->
+<!--      label="rgb(0, 0, 255, max = 255)", cex = cexText ) -->
+<!-- points(x=0.6, y=0.6, pch=16,  -->
+<!--        col = rgb(red = 0, green = 50, blue = 150, max = 255),  -->
+<!--        cex=cexPoint) -->
+<!-- text(x=0.65, y=0.6, pos=4, col = rgb(0, 50, 150, max = 255),  -->
+<!--      label="rgb(0, 50, 150, max = 255)", cex = cexText ) -->
+<!-- points(x=0.6, y=0.4, pch=16, col = hsv(h =1, s= 1, v =1), cex=cexPoint) -->
+<!-- text(x=0.65, y=0.4, pos=4, col = hsv(1, 1, 1),  -->
+<!--      label="hsv(1, 1, 1)", cex = cexText ) -->
+<!-- points(x=0.6, y=0.2, pch=16, col = hsv(h =1, s= 1, v =0.25),  -->
+<!--        cex=cexPoint) -->
+<!-- text(x=0.65, y=0.2, pos=4, col = hsv(1, 1, 0.25),  -->
+<!--      label="hsv(1, 1, 0.25)", cex = cexText ) -->
+<!-- points(x=0.6, y=0, pch=16,  -->
+<!--        col = hsv(h =1, s= 1, v =0.25, alpha = 0.5),  -->
+<!--        cex=cexPoint) -->
+<!-- text(x=0.65, y=0, pos=4, col = hsv(1, 1, 0.25, alpha = 0.5),  -->
+<!--      label="hsv(1, 1, 0.25, alpha = 0.5)", cex = cexText ) -->
+
+<!-- ## identify(x= ..., y=...) ---- -->
+<!-- dev.off() -->
+<!-- plot(formula= cty ~ displ, data = mpg) -->
+<!-- identPoints <- identify(x = mpg$displ,y=mpg$cty) -->
+
+<!-- mpg[identPoints, ] -->
+
+<!-- ## Grafiken speichern ---- -->
+
+<!-- ?pdf -->
+<!-- ?png -->
+<!-- ?jpeg -->
+
+<!-- pdf(file= "scatterplot.pdf") -->
+<!-- plot(formula= cty ~ displ, data= mpg) -->
+<!-- abline(h=10) -->
+<!-- dev.off() -->
+
+
+
+<!-- ``` -->
+
+
