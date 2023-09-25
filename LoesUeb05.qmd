@@ -1,4 +1,6 @@
 # Arbeitsblatt5 {.unnumbered}
+## Aufgabe 1
+
 ```{r}
 file.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\imports85.txt"
 imports85 <- read.table(file.path, header = T)
@@ -6,4 +8,46 @@ plot(hwy.mpg ~ city.mpg, data = imports85, xlab = "miles per galon city", ylab =
 scatter.smooth(imports85$city.mpg, imports85$hwy.mpg, lwd = 2, col = "red")
 pairs(imports85[,c(6:8)])
 ```
+## Aufgabe 2
+### 2a
+```{r}
+file.path.whng <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\wohnungen.rda"
+load(file.path.whng)
+head(wg)
+str(wg)
+plot(x = wg$Ort, y = wg$Miete, xlab = "Ort", ylab = "Miete", type = "p", col = "lightblue", lwd = 2)
+pairs(wg)
+```
+
+### 2b
+```{r}
+vsel <- wg$m2 > 125
+wg.g <- wg[vsel,]
+wg.g
+wg[wg$m2>125,]
+subset(wg, m2 > 125)
+```
+### 2c
+```{r}
+table(wg$Ort)
+barplot(table(wg$Zimmer))
+par(mfrow =c(1,2), mar = c(4,2,1,1))
+barplot(table(wg$Ort), main ="Anzahl Wohnungen pro Stadt")
+pie(table(wg$Ort), main ="Anzahl Wohnungen pro Stadt")
+```
+### 2d 
+siehe Boxplot oben
+
+### 2e
+```{r}
+par(mfrow = c(1,2), mar = c(4,2,1,1))
+plot(wg$Miete ~ wg$m2, main = "Zusammenhang Wohnfläche und Miethöhe", xlab = "Fläche (m2)", ylab = "Miete (CHF)")
+abline(lm(wg$Miete ~ wg$m2))
+#legend("topright", print(paste("Pearson:", cor.pear, "Spearman:", cor.spear)))
+scatter.smooth(wg$Miete ~ wg$m2, main = "Zusammenhang Wohnfläche und Miethöhe", xlab = "Fläche (m2)", ylab = "Miete (CHF)", col = "lightblue", lwd = 2,pch = c(1:25), lpars = list(col = "red", lwd = 2))
+cor.pear <- round(cor(wg$m2, wg$Miete,method = "pearson"), 2)
+cor.spear <- round(cor(wg$m2, wg$Miete,method = "spearman"), 2)
+legend("topright", print(paste("Pearson:", round(cor(wg$m2, wg$Miete,method = "pearson"), 2), "Spearman:", round(cor(wg$m2, wg$Miete,method = "spearman"), 2))))
+```
+
 
