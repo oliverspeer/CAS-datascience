@@ -26,11 +26,14 @@ book:
         - LoesRUeb04.qmd
         - LoesRUeb05.qmd
         - ProbePruefA1.qmd
+        - Prüfung230927.qmd
+        - day4_1.qmd
     
     - part: ModulA2.qmd
       chapters: 
         - day3_2.qmd
         - LoesRHT1.qmd
+        
         - day4.qmd
         - day5.qmd
         

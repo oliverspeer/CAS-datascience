@@ -1,8 +1,10 @@
-# Arbeitsblatt HT1
+# Arbeitsblatt HT1 {.unnumbered}
 
 ```{r}
 path.alpha <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\alpha.dat"
 a.Zerf <- read.table(path.alpha, header = T)
+
+print(a.Zerf)
 
 barplot(height = a.Zerf$freq, names.arg = a.Zerf$k, space = 0.5)
 
@@ -10,21 +12,33 @@ mean(a.Zerf$freq)
 
 n <- sum(a.Zerf$freq)
 mu <- sum(a.Zerf$k * a.Zerf$freq)/n
+## Alternative Berechnung:
+rep(alpha$k, alpha$freq)
+mu.a <- mean(rep(alpha$k, alpha$freq))
+n
 mu
+mu.a
 yModel <- dpois(a.Zerf$k, mu)*n
-plot(a.Zerf$k, a.Zerf$freq, type = "h", lwd = 20, col = "lightblue")
+yModel
+yModel_wthoutn <- dpois(a.Zerf$k, mu)
+yModel_wthoutn
+plot(a.Zerf$k, a.Zerf$freq, type = "h", lwd = 10, col = "lightblue")
 lines(a.Zerf$k, yModel, type = "b", lwd = 2, col = "navy")
 
 ```
 
 ```{r}
-rpois(n=10, lambda = 55)
+rpois(n=10, lambda = mu)
 ```
 
 #### Aufgabe 3 Asbestfasern
-
+#### 3a
 ```{r}
 asbest1 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest1.dat", header = F)[,1]
+asbest1.ges <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest1.dat", header = F)
+asbest1
+asbest1.ges
+
 min(asbest1)
 max(asbest1)
 mean(asbest1)
@@ -37,9 +51,10 @@ mean(asbest1)
 max(asbest1) - min(asbest1)
 
 ```
-
+#### 3b
 ```{r}
 asbest2 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest2.dat", header = F)[,1]
+asbest2
 min(asbest2)
 max(asbest2)
 mean(asbest2)

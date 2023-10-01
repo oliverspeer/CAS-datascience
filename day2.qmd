@@ -1,6 +1,7 @@
 # Day 02 13.09.2023 {.unnumbered}
 
-### logische Operationen
+### logische Operationen mit boolschen Operatoren ! < = > & |
+
 
 ```{r}
 a <- c(T, T, F, F)
@@ -23,6 +24,15 @@ min(v - 150)
 max(log(v - 150)) < 1
 min(v - 150) > 0 && max(log(v - 150)) < 1
 ```
+#### *logische Operation vom Feinsten*
+```{r}
+v <- c(3, NA, 5, NA, 6)
+2*(!is.na(v))+is.na(v)
+```
+
+
+## Verschiedene graphische Darstellung absoluter und relativer Häufigkeiten
+
 
 ### Arbeitsblatt 3
 
@@ -35,23 +45,58 @@ table(imports85$cyl, imports85$wheels)
 imports85$cyl <- factor(imports85$cyl, levels = c("two", "three", "four", "five", "six", "eight", "twelve"))
 prop.cyl.wheel <- round(prop.table(table(imports85$cyl, imports85$wheels)), 2)
 print(prop.cyl.wheel*100)
+```
+### Mosaicplot
+```{r}
 mosaicplot(prop.cyl.wheel, color = 2:9)
+```
+### Barplot
+
+```{r}
 barplot(prop.cyl.wheel)
 barplot(prop.cyl.wheel, beside = T)
+```
 
-# Aufgabe 1c
-# DDarstellung der Beziehung zwischen Preis und Zylinderzahl
+
+
+#### Aufgabe 1c
+#### DDarstellung der Beziehung zwischen Preis und Zylinderzahl
+
+
+
+```{r}
 table(imports85$price, imports85$cyl)
 barplot(table(imports85$price, imports85$cyl))
 plot(imports85$cyl, imports85$price)
 plot(imports85$price, imports85$cyl)
-plot(ecdf(imports85$price))
-plot(ecdf(imports85$cyl))
-plot(ecdf(imports85$city.mpg))
-hist(imports85$city.mpg)
 ```
 
-befehle um Tabell/Daten anzuscheun
+### ECDF Plot   
+** *E* mpirical *C* umulative *D* istribution *F* untion **
+```{r}
+plot(ecdf(imports85$price))
+plot(ecdf(imports85$cyl), 
+     verticals = T, 
+     col.points = "navy", 
+     lwd = 2, 
+     col.hor = "red", 
+     col.vert = "bisque")
+plot(ecdf(imports85$city.mpg))
+```
+
+### Histogramm
+```{r}
+hist(imports85$city.mpg)
+```
+### Strip Plot
+```{r}
+stripchart(imports85$city.mpg, method = "jitter")
+stripchart(imports85$city.mpg, method = "stack")
+```
+
+
+
+## Befehle um Tabellen / Daten anzuschauen
 
 ```{r}
 head(imports85)
@@ -63,15 +108,27 @@ str(imports85)
 
 ```
 
-Farben einstellen über hex code: html-color.codes oder "colors" oder im www R colors
 
+
+## Farben
+
+Farben einstellen über hex code: 
+<https://www.html-color.codes> 
+
+oder R 
+"colors" 
+```{r}
+colors()
+```
+
+oder im www R colors
+
+## read.table
 read.table liest generisch ein, read.csv etc sind wrapper, die dann read.table aufrufen.
 
+## working directory
 Working direktory
 
 setwd() getwd()
 
 zum löschen rm()
-
-
-

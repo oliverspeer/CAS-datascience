@@ -52,6 +52,45 @@ mosaicplot(education ~ occupation, data = censUS, las =2)
 ```{r}
 levels(censUS$education)
 ```
+```{r}
+# censUS$edu <- factor(censUS$education)
+# edu.lev <- c(rep("basic", 7), "Assoc&college", "Assoc&college", rep("Accad", 4), "basic", "Accad", "Assoc&college")
+# censUS$edu.red <- factor(censUS$education, levels = censUS$education, labels = edu.lev)
 
+eduLev <- c("Preschool", "1st-4th", "5th-6th", "7th-8th", "9th",
+"10th", "11th", " 12th", "HS-grad", "Prof-school",
+"Assoc-acdm", "Assoc-voc", "Some-college", "Bachelors",
+"Masters", "Doctorate")
+eduRedLev <- c(rep("basicEdu", 8), "HS-grad",
+"Prof-school-Doctorate", rep("Assoc-acdm-voc",2),
+"Some-college","Bachelors", "Masters", "Prof-school-Doctorate")
+censUS$eduRed <- factor(censUS$education, levels = eduLev, labels =eduRedLev )
+censUS$eduRed <- factor(censUS$eduRed,
+levels = levels(censUS$eduRed)[c(1:2, 4:7,3)])
+occLevSort <- names(sort(table(censUS$occupation)))
+censUS$occupation <-factor(censUS$occupation, levels = occLevSort)
+mosaicplot(censUS$eduRed ~ censUS$occupation, las= 2,
+xlab = "education", ylab = "occupation",
+main = "education vs. occupation")
+
+```
+#### 3a
+```{r}
+nzz <- readRDS("C:\\Users\\oliver.speer\\Documents\\ZHAW\\nzz.rds")
+```
+
+#### 4a
+```{r}
+# install.packages("ggmap")
+# install.packages("tmaptools")
+library(ggmap)
+library(tmaptools)
+bbox_winti <- rbind(as.numeric(paste(geocode_OSM("Winterthur")$bbox) ))
+map_winti <- get_stamenmap(bbox_winti, zoom = 13)
+Koord <- data.frame(lon = c(8.7293), lat = c(47.4974))
+ggmap(map_winti, extent = 'device')+
+geom_point(data=Koord, aes(x=lon, y=lat), colour="red")
+3
+```
 
 
