@@ -3,15 +3,15 @@
 ## Aufgabe 1
 
 ```{r}
-path.csv <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.csv"
-path.txt <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.txt"
+path.csv <- "Erhebung_CAS_DA_HS23.csv"
+path.txt <- "Erhebung_CAS_DA_HS23.txt"
 
 
 dat.csv <- read.table(path.csv, header = T, sep = ",")
 dat.txt <- read.table(path.txt, header = T, sep = "\t")
 all.equal.character(dat.csv, dat.txt)
 
-path.xls <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.xlsx"
+path.xls <- "Erhebung_CAS_DA_HS23.xlsx"
 dat.x <- read.table(path.xls)
 
 
@@ -21,7 +21,7 @@ dat.x <- read.table(path.xls)
 ## Aufgabe 1 Kibitze \@ ZRH
 
 ```{r}
-path.kib <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\kiebitz.txt"
+path.kib <- "kiebitz.txt"
 kibitze.zrh <- read.table(path.kib, header = T, sep = ",")
 str(kibitze.zrh)
 #selektion anhand der Zeilen Nr
@@ -50,7 +50,7 @@ table(kibitze.ru$Feld.Nr)
 
 ```{r}
 library(readxl)
-KlassErheb <- read_excel("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx")
+KlassErheb <- read_excel("Erhebung_CASDA_HS23.xlsx")
 KlassErheb <- as.data.frame(KlassErheb)
 ```
 
@@ -130,7 +130,7 @@ round(mean(KlassErheb$Q14_Fahrzeit[-c(8, 19, 20, 23)]))
 
 ```{r}
 
-sleep.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\sleep.txt"
+sleep.path <- "sleep.txt"
 sleep.zhaw <- read.table(sleep.path, header = T, sep = "\t")
 ```
 

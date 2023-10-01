@@ -23,7 +23,7 @@ Streudiagramm MAtrix pairs(mtcars\[,c(1,3,6)\]) für bis zu 8 einigermassen noch
 # Unterricht Andreas Ruckstuhl
 
 ```{r}
-path.yeast <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Hefezellen.dat"
+path.yeast <- "Hefezellen.dat"
 dat.yeast <- read.table(path.yeast, header = F)
 yeast.v <- dat.yeast$V1
 yeast.v

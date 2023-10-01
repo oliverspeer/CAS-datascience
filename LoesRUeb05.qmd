@@ -1,57 +1,77 @@
 # R Übungsblatt 05 {.unnumbered}
 
 #### 1a
+
 ```{r}
 library(readxl)
-dat <- read_excel("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.xlsx")
+dat <- read_excel("Erhebung_CAS_DA_HS23.xlsx")
 dat <- as.data.frame(dat)
 dat$AugFaFact <- factor(dat$augenfarbe)
 ```
+
 #### 1b
+
 ```{r}
 nlevels(dat$AugFaFact)
 ```
+
 #### 1c
+
 ```{r}
 levels(dat$AugFaFact)
 ```
+
 #### 1d
+
 ```{r}
 dat$AugFaFactSimple <- factor(
   x = dat$AugFaFact, levels = levels(dat$AugFaFact), labels = c("blau", "blau", "blau", "braun", "braun", "gruen", "gruen", "braun", "schwarz")
 )
 dat$AugFaFactSimple <- factor(dat$AugFaFactSimple, levels = c("schwarz", "braun", "blau", "gruen"))
 ```
+
 #### 1e
+
 ```{r}
 barplot(table(dat$AugFaFactSimple)/length(dat$AugFaFactSimple))
 
 ```
+
 #### 1f
+
 ```{r}
 coleyes <- c("black", "#593b1d", "blue", "green")
 mosaicplot(haarfarbe ~ AugFaFactSimple, data = dat, las = 1, col = coleyes, xlab = "Haarfarbe", ylab = "Augenfarbe", main = "Verteilung der Augenfarben innerhalb der Haarfarben")
 ```
+
 #### 1g
+
 ```{r}
 levels(factor(dat$stockwerk))
 round(sum(dat$stockwerk %in% c(levels(factor(dat$stockwerk))[4:7]))/ nrow(dat[dat$stockwerk,]), 2)
 ```
+
 #### 2a
+
 ```{r}
-censUS <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\censUSA.txt", header = T)
+censUS <- read.table("censUSA.txt", header = T)
 censUS$occupation <- gsub(" ", "", censUS$occupation) |> as.factor()
 censUS$education <- gsub(" ", "", censUS$education) |> as.factor()
 
 ```
+
 #### 2b
+
 ```{r}
 mosaicplot(education ~ occupation, data = censUS, las =2)
 ```
+
 ####2c
+
 ```{r}
 levels(censUS$education)
 ```
+
 ```{r}
 # censUS$edu <- factor(censUS$education)
 # edu.lev <- c(rep("basic", 7), "Assoc&college", "Assoc&college", rep("Accad", 4), "basic", "Accad", "Assoc&college")
@@ -74,12 +94,15 @@ xlab = "education", ylab = "occupation",
 main = "education vs. occupation")
 
 ```
+
 #### 3a
+
 ```{r}
-nzz <- readRDS("C:\\Users\\oliver.speer\\Documents\\ZHAW\\nzz.rds")
+nzz <- readRDS("nzz.rds")
 ```
 
 #### 4a
+
 ```{r}
 # install.packages("ggmap")
 # install.packages("tmaptools")
@@ -92,5 +115,3 @@ ggmap(map_winti, extent = 'device')+
 geom_point(data=Koord, aes(x=lon, y=lat), colour="red")
 3
 ```
-
-

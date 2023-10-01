@@ -3,7 +3,7 @@
 #### 1a
 
 ```{r}
-path.kib <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\kiebitz.txt"
+path.kib <- "kiebitz.txt"
 kibitze.ZRH <- read.table(path.kib, header = T, sep = ",")
 ```
 
@@ -33,7 +33,7 @@ kibitze.ZRH[vSelr,]
 ```{r}
 #Einlesen der Daten
 library(readxl)
-path.CAS <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx"
+path.CAS <- "Erhebung_CASDA_HS23.xlsx"
 dat.CAS <- read_excel(path.CAS) |> as.data.frame()
 
 # a

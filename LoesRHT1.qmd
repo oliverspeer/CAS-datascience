@@ -1,7 +1,7 @@
 # Arbeitsblatt HT1 {.unnumbered}
 
 ```{r}
-path.alpha <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\alpha.dat"
+path.alpha <- "alpha.dat"
 a.Zerf <- read.table(path.alpha, header = T)
 
 print(a.Zerf)
@@ -32,10 +32,12 @@ rpois(n=10, lambda = mu)
 ```
 
 #### Aufgabe 3 Asbestfasern
+
 #### 3a
+
 ```{r}
-asbest1 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest1.dat", header = F)[,1]
-asbest1.ges <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest1.dat", header = F)
+asbest1 <- read.table("asbest1.dat", header = F)[,1]
+asbest1.ges <- read.table("asbest1.dat", header = F)
 asbest1
 asbest1.ges
 
@@ -51,9 +53,11 @@ mean(asbest1)
 max(asbest1) - min(asbest1)
 
 ```
+
 #### 3b
+
 ```{r}
-asbest2 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest2.dat", header = F)[,1]
+asbest2 <- read.table("asbest2.dat", header = F)[,1]
 asbest2
 min(asbest2)
 max(asbest2)

@@ -1,10 +1,9 @@
 # Arbeitsblatt3 {.unnumbered}
 
-
 #### Aufgabe 1
 
 ```{r}
-file.path <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\imports85.txt"
+file.path <- "imports85.txt"
 imports85 <- read.table(file.path, header = T)
 table(imports85$cyl, imports85$wheels)
 imports85$cyl <- factor(imports85$cyl, levels = c("two", "three", "four", "five", "six", "eight", "twelve"))
@@ -28,9 +27,11 @@ plot(ecdf(imports85$cyl))
 plot(ecdf(imports85$city.mpg))
 hist(imports85$city.mpg)
 ```
+
 #### Aufgabe 5
+
 ```{r}
-datfile <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CAS_DA_HS23.rds"
+datfile <- "Erhebung_CAS_DA_HS23.rds"
 dat <- readRDS(datfile)
 mean(dat$fahrzeit)
 median(dat$fahrzeit)
@@ -39,7 +40,9 @@ abline(v = median(dat$fahrzeit), col = "red", lwd = 2)
 abline(v = mean(dat$fahrzeit), col = "blue", lwd = 2)
 legend("topright", col = c("red", "blue"), lwd = 2, legend = c("Median", "Mittelwert"))
 ```
+
 #### Varianz, Standartabweichung, IQR, MAD
+
 ```{r}
 var(dat$fahrzeit, na.rm = T)
 sd(dat$fahrzeit, na.rm = T)
@@ -47,4 +50,3 @@ IQR(dat$fahrzeit, na.rm = T)
 mad(dat$fahrzeit, na.rm = T)
 
 ```
-

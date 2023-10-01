@@ -1,11 +1,11 @@
 # Day 03 20.09.2023 {.unnumbered}
 
-
 # Unterricht Andreas Ruckstuhl
+
 ## Poisson Verteilung, Wahrscheinlichkeits-Rechnung
 
 ```{r}
-path.yeast <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\Hefezellen.dat"
+path.yeast <- "Hefezellen.dat"
 dat.yeast <- read.table(path.yeast, header = F)
 yeast.v <- dat.yeast$V1
 yeast.v

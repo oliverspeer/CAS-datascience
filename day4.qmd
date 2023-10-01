@@ -65,7 +65,7 @@ poisson.test(x = 1872, T = 400, conf.level = 0.95)
 #### Aufgabe 3
 
 ```{r}
-path.alpha <- "C:\\Users\\oliver.speer\\Documents\\ZHAW\\alpha.dat"
+path.alpha <- "alpha.dat"
 a.Zerf <- read.table(path.alpha, header = T)
 m <- sum(a.Zerf$k * a.Zerf$freq)
 poisson.test(x = 2612, T = m, conf.level = 0.95)
@@ -79,6 +79,6 @@ poisson.test(x = length(h.alpha), T = sum(h.alpha), conf.level = 0.95)
 ####Aufgabe 4 HT1
 
 ```{r}
-asbest23 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest1.dat")
-asbest52 <- read.table("C:\\Users\\oliver.speer\\Documents\\ZHAW\\asbest2.dat")
+asbest23 <- read.table("asbest1.dat")
+asbest52 <- read.table("asbest2.dat")
 ```
