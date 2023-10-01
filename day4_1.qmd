@@ -1,0 +1,35 @@
+# Day 04 27.09.2023 {.unnumbered}
+
+## Ausblick mit Christoph Hofer
+
+```{r}
+load("C:\\Users\\oliver.speer\\Documents\\ZHAW\\wohnungen.rda")
+
+plot(Miete ~ m2, data = wg, col = c("red", "yellow", "blue", "green")[wg$Ort])
+```
+
+#### 3D Darstellungen
+
+```{r}
+#install.packages("rgl")
+#library(rgl)
+```
+
+#### Standardisierung
+
+```{r}
+
+# (mpg$hwy-mean(mpg$hwy))/sd(mpg$hwy)
+```
+
+### apply & lapply
+
+siehe R demo day 4
+
+### long & wide
+
+### merge
+
+### grosse daten mit package data.table
+
+andere Struktur mit referenzen mit anderer syntax

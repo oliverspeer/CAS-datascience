@@ -18,6 +18,10 @@ mu.a <- mean(rep(alpha$k, alpha$freq))
 n
 mu
 mu.a
+```
+
+## Wahrscheinlichkeiten mit geschätztem lambda berechnen
+```{r}
 yModel <- dpois(a.Zerf$k, mu)*n
 yModel
 yModel_wthoutn <- dpois(a.Zerf$k, mu)

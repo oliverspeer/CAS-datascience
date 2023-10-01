@@ -1,0 +1,28 @@
+# Prüfung 27.09.2023 {.unnumbered}
+```{r}
+load("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Arrivals.rda")
+str(Arrivals)
+hist(Arrivals$Passagiere)
+pie(table(Arrivals$Landebahn))
+barplot(table(Arrivals$Landebahn))
+boxplot(Verspaetung ~ Landebahn, Arrivals)
+summary(Arrivals$Verspaetung)
+Arrivals$freiePl <- Arrivals$Sitzplaetze - Arrivals$Passagiere
+Arrivals$freiePl
+hist(Arrivals$freiePl)
+prop.table(Arrivals$freiePl)
+(Arrivals$freiePl)
+vSel <- Arrivals$freiePl<=2
+round(sum(vSel)*100/sum(Arrivals$freiePl),2)
+sum(Arrivals$freiePl)
+table(Arrivals$Herkunft)
+A <- table(Arrivals$Herkunft)<10
+B <- Arrivals[A,]
+table(B$Herkunft)
+which.max(table(Arrivals$Herkunft)<10)
+#vSel2 <- Arrivals$Herkunft < 10
+plot(freiePl ~ Sitzplaetze, Arrivals)
+# scatter.smooth(freiePl ~ Sitzplaetze, Arrivals, na.rm = T)
+cor(Arrivals$Sitzplaetze, Arrivals$freiePl, method = "spearman")
+```
+
