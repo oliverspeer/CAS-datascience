@@ -13,8 +13,8 @@ mean(a.Zerf$freq)
 n <- sum(a.Zerf$freq)
 mu <- sum(a.Zerf$k * a.Zerf$freq)/n
 ## Alternative Berechnung:
-rep(alpha$k, alpha$freq)
-mu.a <- mean(rep(alpha$k, alpha$freq))
+rep(a.Zerf$k, a.Zerf$freq)
+mu.a <- mean(rep(a.Zerf$k, a.Zerf$freq))
 n
 mu
 mu.a

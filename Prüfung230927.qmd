@@ -1,6 +1,7 @@
 # Prüfung 27.09.2023 {.unnumbered}
+
 ```{r}
-load("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Arrivals.rda")
+load("Arrivals.rda")
 str(Arrivals)
 hist(Arrivals$Passagiere)
 pie(table(Arrivals$Landebahn))
@@ -25,4 +26,3 @@ plot(freiePl ~ Sitzplaetze, Arrivals)
 # scatter.smooth(freiePl ~ Sitzplaetze, Arrivals, na.rm = T)
 cor(Arrivals$Sitzplaetze, Arrivals$freiePl, method = "spearman")
 ```
-
