@@ -106,12 +106,12 @@ nzz <- readRDS("nzz.rds")
 ```{r}
 # install.packages("ggmap")
 # install.packages("tmaptools")
-library(ggmap)
-library(tmaptools)
-bbox_winti <- rbind(as.numeric(paste(geocode_OSM("Winterthur")$bbox) ))
-map_winti <- get_stamenmap(bbox_winti, zoom = 13)
-Koord <- data.frame(lon = c(8.7293), lat = c(47.4974))
-ggmap(map_winti, extent = 'device')+
-geom_point(data=Koord, aes(x=lon, y=lat), colour="red")
-3
+# library(ggmap)
+# library(tmaptools)
+# bbox_winti <- rbind(as.numeric(paste(geocode_OSM("Winterthur")$bbox) ))
+# map_winti <- get_stamenmap(bbox_winti, zoom = 13)
+# Koord <- data.frame(lon = c(8.7293), lat = c(47.4974))
+# ggmap(map_winti, extent = 'device')+
+# geom_point(data=Koord, aes(x=lon, y=lat), colour="red")
+# 3
 ```
