@@ -204,13 +204,9 @@ barplot(sort(tab_haircolor, decreasing = T), col = "blue", las = 2)
 
 Farbwahl für bestimmte Variablen, hier Haarfarbe, können in einem Vektor angegeben werden. Die jeweigen Farben können als Hexadecimal-Code angegeben werden. Diese findet man hier: <https://r-charts.com/colors/> ![r-charts](RHEX.png)
 
-<https://htmlcolorcodes.com/> ![HTML colors](HTMLHEX.png) 
+<https://htmlcolorcodes.com/> ![HTML colors](HTMLHEX.png)
 
-
-
-In Vorlesung von Christoph verwendet:
-<https://html-color.codes/>
-
+In Vorlesung von Christoph verwendet: <https://html-color.codes/>
 
 Farben aus R
 
@@ -315,3 +311,5 @@ plot(bodysize, handsize, main = "Scatter Plot Körpergrösse vs. Handspanne",
 # Add a trend line to the scatter plot
 # abline(fit, col = "red")
 ```
+
+created happyly by os 3.10.
