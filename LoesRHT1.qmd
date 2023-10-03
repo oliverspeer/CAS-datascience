@@ -44,6 +44,7 @@ asbest1 <- read.table("asbest1.dat", header = F)[,1]
 asbest1.ges <- read.table("asbest1.dat", header = F)
 asbest1
 asbest1.ges
+asbest2 <- read.table("asbest2.dat", header = F)[,1]
 
 min(asbest1)
 max(asbest1)
@@ -55,9 +56,7 @@ mean(asbest1)
 
 ```{r}
 max(asbest1) - min(asbest1)
-
 ```
-
 #### 3b
 
 ```{r}
@@ -67,4 +66,70 @@ min(asbest2)
 max(asbest2)
 mean(asbest2)
 max(asbest2) - min(asbest2)
+
 ```
+#### elegantere Spannweite 3b
+```{r}
+range(asbest1)
+diff(range(asbest1))
+mean(asbest1)
+diff(range(asbest2))
+mean(asbest2)
+```
+#### 3c Asbest n=23
+```{r}
+asb1.lambda <- mean(asbest1)
+asb1.k <- min(asbest1):max(asbest1)
+asb1.k
+asb1.tab <- table(asbest1)
+asb1.tab
+n.asb1 <- sum(asb1.tab)
+n.asb1
+yModel.asb1 <- dpois(asb1.k, asb1.lambda)*sum(asb1.tab)
+yModel.asb1
+plot(asb1.tab, type = "h", lwd = 10, col = "lightblue", xlab = "k", ylab = "Häufigkeiten")
+lines(asb1.k, yModel.asb1, type = "b", lwd = 2, col = "navy")
+
+```
+
+#### 3c Asbest n=75
+```{r}
+asb2.lambda <- mean(asbest2)
+asb2.k <- min(asbest2):max(asbest2)
+asb2.k
+asb2.tab <- table(asbest2)
+asb2.tab
+n.asb2 <- sum(asb2.tab)
+n.asb2
+yModel.asb2 <- dpois(asb2.k, asb2.lambda)*sum(asb2.tab)
+yModel.asb2
+plot(asb2.tab, type = "h", lwd = 10, col = "lightblue", xlab = "k", ylab = "Häufigkeiten")
+lines(asb2.k, yModel.asb2, type = "b", lwd = 2, col = "navy")
+
+```
+
+
+
+In der ersten Grafik zeigt sich, dass die einzelnen Balken nur die Werte
+0, 1, 2 und 3 annehmen. Gemäss dem angepassten Poisson-Modell erwarten
+wir in den einzelnen Balken auch nicht höhere Werte. Wir haben also viel
+zu wenig Beobachtungen, um zu beurteilen, ob das Poisson-Modell die Daten
+gut beschreibt.
+Bei der zweiten Grafik ist die Übereinstimmung schon besser beurteilbar.
+Aber eigentlich hat es da immer noch zu wenig Beobachtungen (= absolute Häufigkeiten = hellblaue Balken). Die
+erwarteten Häufigkeiten (unser y-Model) in den Balken (=die dunkelblauen Modellpunkte) sind
+immer noch tief.
+
+#### Aufgabe 1 ii Verkehr
+```{r}
+V <- read.table("verkehr.dat", header = T)
+v_lambda <- mean(rep(V$k, V$freq))
+v_lambda
+v.n <- sum(V$freq)
+v.n
+yModel.v <- dpois(V$k, v_lambda)*v.n
+par(mar=c(4,4,1,4), las=1, mgp=c(2.5,0.8,0))
+plot(x=V$k, y = V$freq, type = "h", lwd = 10, col = "lightblue", xlab = "k", ylab = "Häufigkeiten", main = "Häufigkeit der Rechtsabbieger", lend = 8)
+lines(x = V$k, y = yModel.v, lwd = 2, col = "navy", type = "b")
+```
+
