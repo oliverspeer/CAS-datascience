@@ -3,7 +3,7 @@
 ## Ausblick mit Christoph Hofer
 
 ```{r}
-load("C:\\Users\\oliver.speer\\Documents\\ZHAW\\wohnungen.rda")
+load("wohnungen.rda")
 
 plot(Miete ~ m2, data = wg, col = c("red", "yellow", "blue", "green")[wg$Ort])
 ```

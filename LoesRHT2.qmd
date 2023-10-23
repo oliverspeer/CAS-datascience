@@ -1,0 +1,55 @@
+# Arbeitsblatt HT2 {.unnumbered}
+
+## Aufgabe 1 Segelflugunfälle
+
+```{r}
+# im Durchschnitt 4.21 Unfälle pro Jahr. poisson-Verteilung mit lambda = 4.21
+# 1. Wahrscheinlichkeit für 7 Unfälle beim Niveau 0.05
+# Faustregel P1 lambda +- 2*sqrt(lambda)
+lambda <- 4.21
+round(lambda + c(-1, 1)*2*sqrt(lambda), 2)
+round(lambda + c(-2, 2)*sqrt(lambda), 2)
+
+```
+
+Interpretation: nach der Faustregel P1 liegt der Annahmebereich der jährlichen Segelflugunfälle zwischen 1 und 8. Nach der Faustregel P1 sind 7 Unfälle also plausibel.
+
+## Aufgabe 2 Erdbeben
+### a) 95% Zufalls-Streubereich mit Fausregel P1 = lambda +- 2 x Wurzel(lambda)
+
+Nullhypothese: In einem bestimmten Zeitraum werden im Mittel 64 Erdbeben beobachtet. Eine Beobachtung von 80 Erdbeben in diesem Zeitraum sind damit vereinbar.
+```{r}
+eq <- 64 + c(-2, 2) * sqrt(64)
+eq
+```
+Damit gibt es keine Evidenz gegen die Nullhypothese.
+
+Und mit dem P-Test:
+
+```{r}
+poisson.test(x = 80, r = 64)
+```
+
+### b) 
+```{r}
+poisson.test(x = 8)
+```
+### c)
+### Faustregel P2 = x +- 2 x Wurzel(x) für den Vertrauensintervall
+### Faustregel P2` = x + 2 +- 2 x Wurzel(x+1)
+```{r}
+p2 <- 8 + c(-2,2)*sqrt(8)
+p2s <- 8 + 2 + c(-2,2)*sqrt(8+1)
+p2
+p2s
+
+```
+### d)
+```{r}
+p2 <- 50 + c(-2,2)*sqrt(50)
+p2
+p2s <- 50 + 2 + c(-2,2)*sqrt(50+1)
+p2s
+poisson.test(50)
+```
+

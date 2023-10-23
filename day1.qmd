@@ -124,7 +124,7 @@ nrow(dat)*ncol(dat)
 
 ```{r}
 library(readxl)
-dat <- read_xlsx("C:\\Users\\oliver.speer\\Documents\\ZHAW\\Erhebung_CASDA_HS23.xlsx")
+dat <- read_xlsx("Erhebung_CASDA_HS23.xlsx")
 
 mode(dat$Gruppe)
 typeof(dat$Gruppe)

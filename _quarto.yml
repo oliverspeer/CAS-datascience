@@ -36,10 +36,15 @@ book:
         
         - day4.qmd
         - day5.qmd
-        
-    - part: ModulB.qmd
-      chapters: 
+        - LoesRHT2.qmd
         - day6.qmd
+        - day7_1.qmd
+        - LoesRHT3_4.qmd
+        
+    - part: ModulB1.qmd
+      chapters: 
+        - day7_2.qmd
+        - day8.qmd
         
     - part: ModulB2.qmd
     
