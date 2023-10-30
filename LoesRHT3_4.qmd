@@ -1,6 +1,7 @@
 # Arbeitsblatt HT3_4 {.unnumbered}
 
 ## Aufgabe 1 faire Münze
+
 ### a
 
 ```{r}
@@ -9,31 +10,57 @@ plot(0:5, dbinom(0:5, size = 5, prob = 0.5), type = "h", lwd = 6, col = "lightbl
 plot(0:15, dbinom(0:15, size = 15, prob = 0.5), type = "h", lwd = 6, col = "lightblue", lend = 2, las = 1, xlab = "k", ylab = "probability", ylim = c(0, 0.4)) 
 
 ```
+
 Die linke Grafik zeigt die Verteilung der Anzahl an Kopf bei 5 Würfen mit einer fairen Münze. Die rechte Grafik zeigt die Verteilung der Anzahl an Kopf bei 15 Würfen mit einer fairen Münze.
 
-## Aufgabe 1 
+## Aufgabe 1
+
 ### b&c&d
 
 ```{r}
 round(dbinom(3, size = 15, prob = 0.5), 2)
 round(dbinom(1, size = 5, prob = 0.5), 2)
-``` 
+```
 
-Die Wahrscheinlichkeit, dass bei 15 Würfen mit einer fairen Münze genau 3 mal Kopf geworfen wird, beträgt 0.01. Die Wahrscheinlichkeit, dass bei 5 Würfen mit einer fairen Münze höchstens 1 mal Kopf geworfen wird, beträgt 0.16.
-Die Chance bei 15 Würfen mit einer fairen Münze mindestens 3 mal Kopf zu werfen, ist also 16 mal kleiner, als bei 5 Würfen mit einer fairen Münze höchstens 1 mal Kopf zu werfen.
+Die Wahrscheinlichkeit, dass bei 15 Würfen mit einer fairen Münze genau 3 mal Kopf geworfen wird, beträgt 0.01. Die Wahrscheinlichkeit, dass bei 5 Würfen mit einer fairen Münze höchstens 1 mal Kopf geworfen wird, beträgt 0.16. Die Chance bei 15 Würfen mit einer fairen Münze mindestens 3 mal Kopf zu werfen, ist also 16 mal kleiner, als bei 5 Würfen mit einer fairen Münze höchstens 1 mal Kopf zu werfen.
 
 ## Aufgabe 2
+
 ### Wahrscheinlichkeitsverteilung der Buchungen im Flugzeug
+
 ```{r}
 plot(0:85, dbinom(0:85, size = 85, prob = 0.86), type = "h", lwd = 2, col = "lightblue", lend = 2, las = 1, xlab = "k", ylab = "probability")
 ```
+
 Wahrscheinlichkeit, dass ein Flieger mit 82 Plätzen bei 85 gebuchten Tickets alle Passagiere mitgenommen werden können?
+
 ```{r}
 round(1 - sum(dbinom(83:85, size = 85, prob = 0.86)), 10)
 ```
+
 oder so?
+
 ```{r}
 round(pbinom(82, size = 85, prob = 0.86), 10)
 ```
 
+## Aufgabe 3
+### a
+X ist die Anzahl abgeschlossener Verträge,
+m ist die Anzahl verkaufter Wärmepumpe.
+Jeder Abschluss einer Service-Vertrags ist unabhängig. Daher kann formuliert werden:
+x ~ B(m, pi = 0.5)
+
+### b
+Erfolgswahrscheinlichkeit der Filiale:
+pi = X/m = 16/50 = 0.32
+
+### c
+H0-Hypothese: Die Verkaufswahrscheinlichkeit ist in der Filiale gelich gross wie
+im Gesamtunternehmen.
+```{r}
+binom.test(15, 50, p = 0.5)
+```
+Der berechnete p-Wert ist kleiner als 0.05, H0 muss verworfen werden. 
+Die Verkaufwahrscheinlichkeit in der Filiale ist also kleiner.
 
