@@ -1,0 +1,158 @@
+# Arbeitsblatt HT5_6 {.unnumbered}
+
+## Aufgabe 1
+
+### Daten vom CAS Datenanalyse 14.3
+
+```{r}
+
+EM <- c(6.4,  6.3, 6.2, 6.4, 6.4,  6.3, 6.5, 6.4, 6.2, 6.25,
+        6.35, 6.3, 6.2, 7.1, 6.15, 6.2, 6.3, 6.0, 6.0, 7.0)
+
+stripchart(EM, method="stack", offset=1, pch=4, 
+           main="EM", xlab="Knoten", ylab="")
+
+boxplot(EM, horizontal=TRUE, main="EM", xlab="Knoten", ylab="")
+
+hist(EM, main="EM", xlab="Knoten", ylab="")
+
+scatter.smooth(EM, main="EM", ylab="Knoten", xlab="", type="b", col="navyblue")
+
+mean(EM)
+
+median(EM)
+
+mad(EM)
+sd(EM)
+
+
+```
+
+## Aufgabe 1c
+
+```{r}
+
+EM23 <- c(8.0, 8.2, 8.0, 8.0, 8.0, 8.18, 8.20, 8.0, 8.6, 8.0, 9.0, 8.1, 8.1,
+        8.2, 7.9, 8.0, 8.1, 8.1, 8.2, 9.0, 9.0, 8.7, 8.1, 8.0, 8.2, 8.1, 8.0)
+
+stripchart(EM23, method="stack", offset=1, pch=4, 
+           main="EM", xlab="Knoten", ylab="")
+
+boxplot(EM23, horizontal=TRUE, main="EM", xlab="Knoten", ylab="")
+
+hist(EM23, main="EM", xlab="Knoten", ylab="")
+
+scatter.smooth(EM23, main="EM", xlab=" ", ylab="Knoten", type="b", col="navyblue")
+
+mean(EM23)
+
+median(EM23)
+
+mad(EM23)
+sd(EM23)
+```
+
+## Aufgabe 2a
+
+```{r}
+pnorm(-1.2)
+pnorm(2.2)
+pnorm(2)-pnorm(0)
+1-pnorm(0.47) # oder auch mir lower.tail=FALSE
+pnorm(0.47, lower.tail=FALSE)
+```
+
+## Aufgabe 2b
+
+```{r}
+qnorm(0.7, mean = 1, sd = sqrt(9))
+# P(X>k) = 0.2 <=> P(X<=k) = 0.8
+qnorm(0.8, mean = 1, sd = sqrt(9))
+
+# P(-k<x<2)=0.4 <=> P(x<=2)-P(x<=-k)=0.4
+# <=> P(x>=k)=P(x<=2)-0.4
+
+
+```
+
+#QQ-Plot \## Aufgabe 5
+
+```{r}
+source("RFn-qqnormSim.R")
+load("qqplot.RData")
+par(mfcol=c(1,3))
+qqnormSim(brust, rob=TRUE); mtext(text="brust",side=3, line=0.5)
+qqnormSim(lohn, rob=TRUE); mtext(text="lohn",side=3, line=0.5)
+qqnormSim(waerme, rob=TRUE); mtext(text="waerme",side=3, line=0.5)
+```
+
+## Aufgabe 5b
+
+```{r}
+par(mfcol=c(2,3))
+qqnormSim(brust, rob=TRUE); mtext(text="brust",side=3, line=0.5)
+qqnormSim(log(brust), rob=TRUE); mtext(text="log(brust)",side=3, line=0.5)
+qqnormSim(lohn,rob=TRUE); mtext(text="lohn",side=3, line=0.5)
+qqnormSim(log(lohn), rob=TRUE); mtext(text="log(lohn)",side=3, line=0.5)
+qqnormSim(waerme, rob=TRUE); mtext(text="waerme",side=3, line=0.5)
+qqnormSim(log(waerme), rob=TRUE); mtext(text="log(waerme)",side=3, line=0.5)
+```
+
+# Aufgabe 6
+```{r}
+
+OE <- c(-16, -404, -397, 113, -791, -165, -118, 9, -651, 383, -480, -77, 221,
+        93, 107, -272, 133, 276, 36, -298, -222, -76, -427, -268, -230, 287,
+        -285, -344, -394, 161)
+#show 3 plots in a column
+
+stripchart(OE, method="jitter", offset=1, pch=4, 
+           main="OE", xlab="Kostenüberschreitung", ylab="")
+hist(OE, main="OE", xlab="Kostenüberschreitung", ylab="")
+boxplot(OE, horizontal=TRUE, main="OE", xlab="Kostenüberschreitung", ylab="")
+source("RFn-qqnormSim.R")
+qqnormSim(OE, rob=TRUE, SEED = 4711); mtext(text="OE",side=3, line=0.5); qqline(OE, col="red", lty=3)
+```
+# Aufgabe 6b
+```{r}
+(xq <- mean(OE))  ## -136.5333
+(s <- sd(OE) )    #   287.7036
+
+par(mfrow=c(1,1))
+hist(OE, probability=TRUE, col="lightblue")
+curve(dnorm(x, xq, sd=s), col="magenta", lwd=2, add=TRUE)
+```
+# t-test für 0-Hypothese Kostenüberschreitungen sind insgesamt 0
+```{r}
+t.test(OE, mu=0, alternative="two.sided", conf.level=0.95)
+t.test(OE, mu=0, alternative="less", conf.level=0.95)
+t.test(OE, mu=0, alternative="greater", conf.level=0.95)
+
+
+
+```
+Wichtig ist, wie die 0-Hypothese formuliert wird. 
+Sie muss zu den Daten passen.
+
+# Aufgabe 7
+```{r}
+
+Kad <- c(0.95, 0.85, 0.92, 0.95, 0.93, 0.86, 1.00, 0.92, 0.85, 0.81,
+         0.78, 0.93, 0.93, 1.05, 0.93, 1.06, 1.06, 0.96, 0.81, 0.96)
+
+qqnormSim(Kad, rob=TRUE, SEED = 4711); mtext(text="Kad",side=3, line=0.5); qqline(Kad, col="red", lty=3)
+
+xq <- mean(Kad)
+s <- sd(Kad)
+hist(x = Kad, xlab = "Schritte /Sekunde", col = "lightblue")
+curve(dnorm(x, xq, s), col = "navy", lwd = 2, add = T)
+
+
+```
+# Aufgabe 7b
+```{r}
+
+t.test(Kad, level=0.95)
+t.test(Kad, mu=1, alternative="two.sided", conf.level=0.95)
+
+```
