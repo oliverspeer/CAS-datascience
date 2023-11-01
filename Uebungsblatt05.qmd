@@ -1,0 +1,88 @@
+#  Übungsblatt 05 {.unnumbered}
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
+editor: visual
+lang: de
+language: 
+  title-block-author-single: "Autor:"
+  title-block-published: "Version vom:"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    theme: sandstone
+    fig-width: 8
+    fig-height: 6
+    fig-align: "center"
+    fig-caption: true
+    df-print: kable
+    highlight: "monochrome"
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Im Artikel "Characterization of Highway Runoff in Austin, Texas, Area" wird untersucht, wie der Zusammenhang zwischen der Zielgrösse Runoff (Abflussmenge in der Kanalisation) und dem Prädiktor Rainfall (Regenmenge) auf den Highways in Texas ist. Die Daten sind in der Tabelle unten dargestellt und im File `hwy.runoff.rda` verfügbar. Sie können mit dem folgenden Befehl eingelesen werden:
+
+```{r}
+## Daten einlesen
+load("hwy.runoff.rda")
+```
+
+| Rainfall | 5   | 12  | 14  | 17  | 23  | 30  | 40  | 47  | 55  | 67  | 72  | 81  | 96  | 112 | 127 |
+|----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| Runoff   | 4   | 10  | 13  | 15  | 15  | 25  | 27  | 46  | 38  | 46  | 53  | 70  | 82  | 99  | 100 |
+
+### Teilaufgabe a)
+
+Erzeugen sie einen Scatterplot, passen sie die KQ-Gerade an, zeichnen sie diese im Scatterplot ein und generieren sie den Summary-Output.
+
+### Teilaufgabe b)
+
+Welcher Anteil der beobachteten Variation im Runoff Volume kann dem einfachen linearen Zusammenhang zwischen Runoff und Rainfall zugeordnet werden?
+
+### Teilaufgabe c)
+
+Besteht ein signifikanter linearer Zusammenhang zwischen Runoff und Rainfall? Geben sie auch die anschauliche Interpretation des Regressionskoeffizienten an.
+
+### Teilaufgabe d)
+
+Machen sie eine Vorhersage, wie gross das erwartete Runoff Volume bei einem Rainfall von 50 ist. Geben sie an dieser Stelle auch ein 95%-Prognoseintervall an.
+
+### Teilaufgabe e)
+
+Überprüfen sie die für die KQ-Schätzung getroffenen Annahmen mit den Modelldiagnose-Tools, die wir bereits kennen gelernt haben. Verwenden sie nun die neuen Erkenntnisse bzgl. der Logarithmustransformation und passen sie ein anderes (bzw. besseres) Modell als bisher an.
+
+### Teilaufgabe f)
+
+Zeichnen sie die neue Regressionsbeziehung in den Scatterplot auf der Originalskala ein und vergleichen sie gegenüber der ursprünglichen Gerade.
+
+### Teilaufgabe g)
+
+Prüfen sie wiederum die Stärke des linearen Zusammenhangs, die Signifikanz zwischen Runoff und Rainfall und geben sie eine Interpretation für den Regressionskoeffizienten an.
+
+### Teilaufgabe h)
+
+Machen sie eine Vorhersage, wie gross der erwartete Runoff bei einem Rainfall von 50 ist. Erzeugen sie ebenso ein 95%-PI und vergleichen sie gegenüber der ursprünglichen Lösung. Plotten sie dann das PI für beliebige $x$ in den Scatterplot.
+
+### Teilaufgabe i)
+
+Führen sie eine Residuenanalyse durch. Beantworten sie anschliessend, welches der beiden Modelle ihnen besser geeignet scheint, und begründen sie die Antwort.
+
+## Aufgabe 2 {.justify}
+
+Auf dem Übungsblatt 02 wurde der Zusammenhang zwischen dem Verbrauch verschiedener Fahrzeugmodelle und deren Motorleistung untersucht. In der Residuenanalyse ergaben sich diverse Vorbehalte gegenüber der angepassten KQ-Regressionsgerade.
+
+### Teilaufgabe a)
+
+Führen sie geeignete Variablentransformationen durch, so dass der Zusammenhang zwischen den beiden Grössen korrekt mit einem einfachen linearen Regressionsmodell beschrieben werden kann.
+
+### Teilaufgabe b)
+
+Formulieren sie das nach Variablentransformation angepasste Modell als Beziehung zwischen den originalen, untransformierten Grössen. Tragen sie den Fit im Scatterplot auf der Originalskala ein.

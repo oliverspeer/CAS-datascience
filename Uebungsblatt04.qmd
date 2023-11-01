@@ -1,0 +1,118 @@
+#  Übungsblatt 04 {.unnumbered}
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
+editor: visual
+lang: de
+language: 
+  title-block-author-single: "Autor:"
+  title-block-published: "Version vom:"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    theme: sandstone
+    fig-width: 8
+    fig-height: 6
+    fig-align: "center"
+    fig-caption: true
+    df-print: kable
+    highlight: "monochrome"
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Der Conconi-Test dient zur Messung der Ausdauer-Leistungsfähigkeit. Er findet auf der 400m-Bahn statt, wo man gemütlich (mit 9km/h) zu laufen beginnt. Alle 200m wird das Tempo um 0.5km/h erhöht. Am Ende jedes 200m-Abschnitts wird die Herzfrequenz gemessen. Der Test geht so lange weiter, bis das Tempo nicht mehr erhöht werden kann. Im Übungsblatt 03 haben sie die Daten bereits eingelesen, in einem Scatterplot zusammen mit der Regressionsgerade eingezeichnet und eine Residuenanalyse durchgeführt. Nun soll Inferenz betrieben werden.
+
+```{r, echo=T, eval=T}
+## Daten laden
+load("conconi.rda")
+
+## Scatterplot erzeugen
+plot(puls ~ speed, data=conconi, pch=20, xlim=c(8.5,18.5), ylim=c(140,205))
+title("Conconi-Test: Puls vs. Speed")
+
+## Regressionsgerade fitten und einzeichnen
+fit <- lm(puls ~ speed, data=conconi)
+abline(fit, col="red")
+```
+
+### Teilaufgabe a)
+
+Zu welchem Prozentanteil lassen sich die Schwankungen in meinem Pulswerten durch die Zunahme der Geschwindigkeit erklären?
+
+### Teilaufgabe b)
+
+Um wie viel nimmt mein Puls im Schnitt zu, wenn die Geschwindigkeit um 1km/h erhöht wird? Welche anderen Werte für die Pulszunahme sind ebenfalls plausibel?
+
+### Teilaufgabe c)
+
+Geben sie an, wie hoch mein Ruhepuls (d.h. ohne Vorwärtsbewegung) geschätzt wird. In welchem 95%-Intervall würden sie den entsprechenden Messpunkt erwarten? Kommentieren sie, ob der Wert und das Intervall vertrauenswürdig sind.
+
+### Teilaufgabe d)
+
+Bei meinem Kollegen Dani wurde auch ein Conconi-Test durchgeführt. Wessen Puls steigt bei Geschwindigkeitserhöhung langsamer an? Können sie eine Aussage treffen, ob zwischen seinem und meinem Anstieg ein signifikanter Unterschied besteht? Lässt sich ableiten, wer der besser trainierte Läufer ist?
+
+## Aufgabe 2 {.justify}
+
+Im Datensatz `hpfuel.rda` finden sie Angaben zur Leistung (in PS, engl. *horse power*, Variable `hp`) und zum Verbrauch (Variable `l.100km`) von verschiedenen Automobiltypen. Ziel ist es, die Zielgrösse `l.100km` mit dem Leistung `hp` zu erklären.
+
+### Teilaufgabe a)
+
+Erzeugen sie einen Scatterplot, schätzen sie die Regressionsgerade mit dem KQ-Algorithmus, zeichnen sie die Gerade im Scatterplot ein und generieren sie den Summary-Output.
+
+### Teilaufgabe b)
+
+Um wie viel nimmt der Verbrauch im Schnitt zu, wenn die Leistung eines Motors um 10 PS grösser ist? Erzeugen sie ebenfalls eine Verbrauchs-Vorhersage für eine Leistung von 100 PS und bestimmen sie die Leistung eines Motors mit einem Verbrauch von 15l/100km.
+
+### Teilaufgabe c)
+
+In der Szene gilt die Regel, der Verbrauch nehme pro 10 zusätzliche PS um einen halben Liter auf 100km zu. Unterstützen die vorliegenden Daten diese Aussage?
+
+### Teilaufgabe d)
+
+Erzeugen sie die Diagnoseplots Residuen vs. Prädiktor (inklusive einem Glätter zur Visualisierung) sowie einen Normal Plot und halten sie ihre Gedanken fest.
+
+## Aufgabe 3 {.justify}
+
+Während das Anpassen und Darstellen von einfachen linearen Regressionen sowie die zugehörigen Tests mit der Zeit zur Routine werden, bleibt die Beurteilung ob ein Modell passt oder nicht eine spannende Aufgabe. Wir wollen dies an zwei weiteren Datensätzen üben und erläutern. Deren Beschreibung ist wie folgt:
+
+### Teilaufgabe a)
+
+Im Datensatz `gas.rda` finden sie ein Data Frame mit dem Verbrauch (in kWh) sowie der Differenz zwischen Innen- und Aussentemperatur (in Grad Celsius). Zur Verfügung stehen Daten von 15 verschiedenen Häusern, welche jeweils über lange Zeit gemittelte Messwerte enthalten. Ziel ist es, den Verbrauch mit der Temperaturdifferenz zu erklären.
+
+### Teilaufgabe b)
+
+Das File `antikeUhren.rda` enthält Angaben zum Alter und Preis von antiken Uhren, die bei Auktionen gehandelt wurden. Es soll der Preis mit dem Alter erklärt werden.
+
+Schätzen sie in beiden Fällen mit dem KQ-Algorithmus die Regressionskoeffizienten und tragen sie die Lösung im Scatterplot ein. Generieren sie auch das Summary und die beiden Residuenplots. Kommentieren sie danach, welche Annahmen der vier Annahmen für KQ-Regression erfüllt sind, und ob das angepasste Modell passt oder nicht.
+
+## Aufgabe 4 {.justify}
+
+An dieser Stelle befinden sich einige Fragen, welche das Verständnis der Theorie prüfen. Finden sie heraus, ob die folgenden Aussagen richtig oder falsch sind, und warum dies der Fall ist.
+
+### Teilaufgabe a)
+
+Wenn das Bestimmtheitsmass $R^2>0.8$ ist, so ist eine Residuenanalyse weniger wichtig, weil das Modell in diesem Fall sowieso gut zu den Daten passt.
+
+### Teilaufgabe b)
+
+Wenn der p-Wert für die Nullhypothese $H_0: \beta_1=0$ kleiner als 0.001 ist, dann kann man davon ausgehen, dass zwischen Zielgrösse und Prädiktor eine ursächliche Relation besteht.
+
+### Teilaufgabe c)
+
+Wenn die Residuen nicht exakt einer Normalverteilung folgen sondern etwas langschwänzig aber symmetrisch sind, so erzeugt das Modell immer noch brauchbare Vorhersagen.
+
+### Teilaufgabe d)
+
+Wenn nur im Plot von Residuen vs. Prädiktor eine Abweichung des Glätters von der $x$ -Achse sichtbar ist, die Varianz aber konstant scheint und im Normal Plot keine Abweichung vorhanden ist, so kann man das Modell und seine Resultate mit entsprechender Vorsicht trotzdem nutzen.
+
+### Teilaufgabe e)
+
+Der Residual Standard Error gibt an, wie stark die Beobachtungen um die Regressionsgerade streuen. Falls die Modellannahmen erfüllt sind, so können wir davon ausgehen, dass sich rund 95% der Punkte in einem Intervall von $\pm 2 \cdot \sigma$ um die Regressionsgerade befinden.

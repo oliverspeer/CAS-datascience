@@ -1,0 +1,41 @@
+# Lösungen B1 01 {.unnumbered}
+
+## Aufgabe 1 Stau am Gotthard
+
+```{r}
+load("gotthard.rda")
+scatter.smooth(gotthard, main="Gotthard", xlab="Jahr", ylab="Stautage", type="p", col="navyblue")
+
+plot(gotthard$stautage ~ gotthard$jahr, main="Gotthard", ylab="Stautage", xlab="Jahr", type="p", col="navyblue", pch = 20)
+loess.gotthard <- loess.smooth(gotthard$jahr, gotthard$stautage)
+points(loess.gotthard, col="red", pch="+")
+lines(loess.gotthard, col="red", lwd=1)
+
+gsn <- ksmooth(gotthard$jahr, gotthard$stautage, kernel="normal", bandwidth=2)
+points(gsn, col="green", pch="+")
+lines(gsn, col="green", lwd=1)
+
+gsb <- ksmooth(gotthard$jahr, gotthard$stautage, kernel="box", bandwidth=2)
+points(gsb, col="blue", pch="+")
+lines(gsb, col="blue", lwd=1)
+
+
+
+
+
+
+
+```
+
+## Standardabweichung des Gauss Glätters = 2Jahre
+
+```{r}
+
+# 25%-quantile of Gauss smoothing: -0.25*bandwith 
+# 75%-quantile of Gauss smoothing: 0.25*bandwith
+# SD of Gauss smoothing: 0.25*bandwith/qnorm(0.75) = 2
+# bandwith = 2/0.25*qnorm(0.75)= 4*qnorm(0.75, 0.2)
+2/0.25*qnorm(0.75)
+qnorm(0.75, 2)
+
+```

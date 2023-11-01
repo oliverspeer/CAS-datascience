@@ -1,4 +1,4 @@
-# ZHAW CAS Datenanalyse {.unnumbered}
+  # ZHAW CAS Datenanalyse {.unnumbered}
 
 Der CAS Datenanalyse vermittelt einen Einstieg in das statistische Denken sowie in klassische und neue Konzepte der Datenanalyse. Die KursteilnehmerInnen lernen in Abhängigkeit der fachlichen Fragestellung (business understanding) und der Art der Daten (Datentyp) Vorgehensweisen und Methoden kennen, um nützliche Erkenntnisse aus den Daten zu extrahieren.
 

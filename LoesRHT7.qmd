@@ -1,0 +1,91 @@
+# Arbeitsblatt HT7 {.unnumbered}
+
+## Aufgabe 1
+
+```{r}
+P <- data.frame(Proband=1:14,
+                Auto1=c(37.0, 25.8, 16.2, 24.2, 22.0, 33.4, 23.8, 58.2,
+                         33.6, 24.4, 23.4, 21.2, 36.2, 29.8),
+                Auto2=c(17.8, 20.2, 16.8, 41.4, 21.4, 38.4, 16.8, 32.2,
+                         27.8, 23.2, 29.6, 20.6, 32.2, 53.8))
+P.diff <- P$Auto1 - P$Auto2
+
+# histogram from P$Auto1 and P$Auto2 with base R
+par(mar=c(1,1,1,1))
+par(mfrow=c(5,1))
+hist(P$Auto1)
+hist(P$Auto2)
+hist(P.diff)
+boxplot(P$Auto1, P$Auto2, names=c("Auto1", "Auto2"))
+boxplot(P.diff, names="Differenz", horizontal=TRUE)
+
+qqnorm(P.diff)
+qqline(P.diff, lty=2)
+
+# add the function qqnormSim to your R environment
+source("RFn-qqnormSim.R")
+qqnormSim(P$Auto1, SEED=888)
+t.test(P$Auto1, P$Auto2, mu=0, paired=TRUE, conf.level = 0.95)
+
+```
+
+# Aufgabe 3 A/B Test mit ungepaartem t-Test
+
+## 
+
+```{r}
+load("grene.rda")
+qqnormSim(grene$A, rob = TRUE, SEED=888)
+qqnormSim(grene$B, rob = TRUE, SEED=888)
+
+qqnormSim(log(grene$A), rob = TRUE, SEED=888)
+qqnormSim(log(grene$B), rob = TRUE, SEED=888)
+
+grene.diff <- grene$A - grene$B
+boxplot(grene.diff, names="Differenz", horizontal=TRUE)
+t.test(grene$A, grene$B, mu=0, paired=FALSE, conf.level = 0.95, var.equal=TRUE, alternative = "less")
+t.test(log(grene$A), log(grene$B), mu=0, paired=FALSE, conf.level = 0.95, var.equal=TRUE, alternative = "less")
+
+
+
+```
+
+Die H0 Hypothese, dass der Unterschied zwischen A und B null sei, kann mit einem p-Wert von 0.001615 abgelehnt werden. Die H1 Hypothese, dass der Unterschied zwischen A und B nicht null sei, kann angenommen werden. Das 95% Konfidenzintervall liegt zwischen -818 und -195. Auf page A werden also weniger Einkäufe getätigt als auf page B. Die Neuerungen auf page B scheinen also zu funktionieren.
+
+wie gross ist der Unterschied zwischen A und B? 95% Konfidenzintervall für den Unterschied zwischen A und B:
+
+```{r}
+exp(6.883183 - 7.233905) # = 0.7
+
+```
+
+Also werden mit B 70% mehr Einkäufe getätigt als mit A.
+
+# Aufgabe 4 Messung der Lichtgeschwindigkeit
+
+```{r}
+load("SpeedOfLight.RData")
+SoL <- SpeedOfLight
+# SoL without -44 and without -2
+SoL1 <- SoL[SoL>0]
+
+hist(SoL)
+boxplot(SoL, horizontal=TRUE)
+qqnormSim(SoL, rob = TRUE, SEED=888)
+t.test(SoL, conf.level = 0.95, alternative = "two.sided")
+t.test(SoL1, conf.level = 0.95, alternative = "two.sided")
+
+```
+
+## 4c) Vertrauensintervall der Lichtgeschwindigkeit
+
+```{r}
+SoL.a <- 7400/(SoL + 24800)*10^9
+SoL.a1 <- 7400/(SoL1 + 24800)*10^9
+qqnormSim(SoL.a, rob = TRUE, SEED=888)
+qqnormSim(SoL.a1, rob = TRUE, SEED=888)
+t.test(SoL.a, conf.level = 0.95, alternative = "two.sided")
+t.test(SoL.a1, conf.level = 0.95, alternative = "two.sided")
+
+
+```

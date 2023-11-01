@@ -1,5 +1,52 @@
-# Day 07.2 01.12.2023 {.unnumbered}
+# Day 07_2   01.12.2023 {.unnumbered}
 
-## to be filled
+## Siehe Folien
+## Passagierzahlen
+```{r}
+load("unique2010.rda")
+unique2010$ATM <- as.numeric(unique2010$ATM)
+plot(x=unique2010$ATM, y=unique2010$Pax, xlab="ATM", ylab="PAX", col="navyblue", type = "p")
+plot(x=unique2010$Cargo, y=unique2010$Pax, xlab="Cargo", ylab="PAX", col="navyblue")
+plot(unique2010)
+pax <- unique2010$PAX
+Flüge <- unique2010$ATM
+plot(Flüge, pax)
+scatter.smooth(Flüge, pax)
+```
 
-coming soon
+# Running Mean Glättung
+```{r}
+plot(Pax ~ ATM, data=unique2010, pch=20)
+rmglaetter <- ksmooth(unique2010$ATM, unique2010$Pax, kernel="box", bandwidth=1000, n.points=1000)
+# points(rmglaetter, col="red", pch=20)
+lines(rmglaetter, col="red", lwd=2)
+
+
+plot(Pax ~ ATM, data=unique2010, pch=20)
+rmglaetter.x <- ksmooth(unique2010$ATM, unique2010$Pax, kernel="box", bandwidth=2000, x.points = unique2010$ATM)
+points(rmglaetter, col="red", pch=20)
+lines(rmglaetter.x, col="red")
+
+
+```
+
+# Gauss Glättung
+```{r}
+plot(Pax ~ ATM, data=unique2010, pch=20)
+gaussglaetter <- ksmooth(unique2010$ATM, unique2010$Pax, kernel="normal", bandwidth=2000)
+points(gaussglaetter, col="red", pch="+")
+lines(gaussglaetter, col="red", lwd=1)
+
+```
+
+# Loess Glättung
+```{r}
+plot(Pax ~ ATM, data=unique2010, pch=20)
+loessglaetter <- loess.smooth(unique2010$ATM, unique2010$Pax)
+points(loessglaetter, col="red", pch="+")
+lines(loessglaetter, col="red", lwd=1)
+
+
+```
+
+

@@ -33,7 +33,6 @@ book:
       chapters: 
         - day3_2.qmd
         - LoesRHT1.qmd
-        
         - day4.qmd
         - day5.qmd
         - LoesRHT2.qmd
@@ -41,11 +40,25 @@ book:
         - day7_1.qmd
         - LoesRHT3_4.qmd
         - LoesRHT5_6.qmd
+        - LoesRHT7.qmd
         
     - part: ModulB1.qmd
       chapters: 
         - day7_2.qmd
+        - Uebungsblatt01.qmd
+        - LoesB1_01.qmd
         - day8.qmd
+        - Uebungsblatt02.qmd
+        - LoesB1_02.qmd
+        - day9.qmd
+        - Uebungsblatt03.qmd
+        - LoesB1_03.qmd
+        - day10.qmd
+        - Uebungsblatt04.qmd
+        - LoesB1_04.qmd
+        - day11.qmd
+        - Uebungsblatt05.qmd
+        - LoesB1_05.qmd
         
     - part: ModulB2.qmd
     

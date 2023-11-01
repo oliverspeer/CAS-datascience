@@ -1,0 +1,59 @@
+#  Übungsblatt 03 {.unnumbered}
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
+---
+editor: visual
+lang: de
+language: 
+  title-block-author-single: "Autor:"
+  title-block-published: "Version vom:"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    theme: sandstone
+    fig-width: 8
+    fig-height: 6
+    fig-align: "center"
+    fig-caption: true
+    df-print: kable
+    highlight: "monochrome"
+---
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Der Conconi-Test dient zur Messung der Ausdauer-Leistungsfähigkeit. Er findet auf der 400m-Bahn statt, wo man gemütlich (mit 9km/h) zu laufen beginnt. Alle 200m wird das Tempo um 0.5km/h erhöht. Am Ende jedes 200m-Abschnitts wird die Herzfrequenz gemessen. Der Test geht so lange weiter, bis das Tempo nicht mehr erhöht werden kann. Beim Dozenten wurde im Sommer 2012 ein solcher Test durchgeführt. Die Daten stehen im File `conconi.rda` zu Verfügung. Ein Scatterplot mit KQ-Gerade sieht dabei wie folgt aus:
+
+```{r, echo=T, eval=T}
+load("conconi.rda")
+plot(puls ~ speed, data=conconi, pch=20, xlim=c(8.5,18.5), ylim=c(140,205), main="Conconi-Test: Puls vs. Speed")
+```
+
+### Teilaufgabe a)
+
+Stellen sie die Daten wie oben gezeigt in einem Scatterplot dar, passen sie mit dem Befehl `lm()` die Regressionsgerade an und zeichnen sie diese ein.
+
+### Teilaufgabe b)
+
+Erzeugen sie die beiden Plots zur Residuenanalyse, d.h. Residuen vs. Prädiktor sowie den Normal Plot der Residuen.
+
+### Teilaufgabe c)
+
+Entscheiden sie sich dann, welche der 4 Annahmen für die KQ-Regression, d.h.:
+
+-   Die Gerade erfasst den Zusammenhang korrekt, d.h. $E[E_i]=0$
+
+-   Die Streuung der Fehler ist konstant, d.h. $Var(E_i) = \sigma^2_E$
+
+-   Die Fehler folgen einer Normalverteilung, d.h. $\mathcal{N}(0,\sigma^2_E)$
+
+-   Die Fehler sind unkorreliert, d.h. $Cor(E_i, E_j)=0 \ \ für \ \ i \neq j$
+
+in diesem Problem erfüllt sind, und welche nicht. Wo und wie erkennen sie allfällige Verletzungen der Annahmen, und worin könnten diese begründet sein?

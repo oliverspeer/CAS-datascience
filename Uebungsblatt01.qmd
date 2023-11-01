@@ -1,0 +1,88 @@
+# Übungsblatt 01 - Smoothing {.unnumbered}
+author: "Marcel Dettling" 
+date: "`r Sys.Date()`" 
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Wir betrachten in dieser Aufgabe einen Datensatz, welcher über die Jahre 2004-2016 die Anzahl Tage mit Stau vor dem Gotthard Strassentunnel Nordportal beschreibt. Er ist auf der Webseite des ASTRA erhältlich.
+
+```{r, echo=F, eval=T}
+load("gotthard.rda")
+```
+
+| Jahr | 2004 | 2005 | 2006 | 2007 | 2008 | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 |
+|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+| Wert | 88   | 76   | 112  | 109  | 91   | 98   | 139  | 150  | 168  | 149  | 149  | 135  | 140  |
+
+Lesen sie diese Daten in R ein oder laden sie das File `gotthard.rda`. Erzeugen sie selber einen Scatterplot der Daten. Weil die folgende Aufgabe mit einem auf Papier ausgedruckten Scatterplot einfacher zu lösen ist, wird er hier wiedergegeben:
+
+```{r, echo=F, eval=T}
+plot(stautage ~ jahr, data =gotthard, pch = 16, ylab = "Tage", main = "Stautage vor dem Gotthard-Nordportal")
+```
+
+### Teilaufgabe a)
+
+Bestimmen Sie von Hand einen Running Mean Glätter. Die Fensterbreite soll 3 Jahre betragen, die Schrittweite 1 Jahr. Beginnen Sie mit dem Jahr 2004 als erstem Fensterzentrum, und hören Sie mit dem Jahr 2016 als letztem Fensterzentrum auf. Tragen sie die Lösung im obigen Scatterplot ein.
+
+### Teilaufgabe b)
+
+Erzeugen Sie den von Hand bestimmten Glätter nun auch mit R. Verwenden Sie dazu die Funktion `ksmooth()`. Stellen Sie die Parameter so ein, dass die von Hand erzeugte Lösung reproduziert wird. Erzeugen Sie in R einen Scatterplot und tragen Sie darin die gefundene Lösung ein.
+
+### Teilaufgabe c)
+
+(*fakultativ, für schnelle Teilnehmer*) Bestimmen Sie „von Hand" einen Gauss'schen Kernel Smoother. Wählen Sie die Gauss-Verteilung so, dass die Standardabweichung 2 Jahre beträgt. Beginnen Sie wiederum mit dem Jahr 2004 als Fensterzentrum, und hören Sie mit dem Jahr 2016 als letztem Fensterzentrum auf. Tragen Sie die Lösung ebenfalls im obigen Scatterplot auf. **Hinweis:** *Sie können sich die Rechen- bzw. Taschenrechner-Tipparbeit ersparen, wenn Sie R geschickt für die Bestimmung der Fitted Values einsetzen*.
+
+### Teilaufgabe d)
+
+Erzeugen Sie nun den von Hand bestimmten Gauss'schen Kernel Smoother mit der R-Funktion `ksmooth()` und zeichnen Sie ihn im Scatterplot ein. Variieren Sie auch die Wahl des Glättungsparameters und entscheiden Sie sich für einen Wert. Erzeugen Sie jeweils einen Scatterplot und tragen Sie dort den Kernel Smoother ein.
+
+### Teilaufgabe e)
+
+Passen Sie nun einen LOESS-Glätter an diesen Datensatz an. Erzeugen Sie erneut einen Scatterplot und tragen Sie die Lösung ein. Variieren Sie mit den Argumenten `degree=...` und `span=...` und studieren Sie das Verhalten des Fits.
+
+## Aufgabe 2 {.justify}
+
+Im File `solar.radiation.rda` finden Sie Daten zur Sonneneinstrahlung auf der Erde. Die Station befindet sich in Zentraleuropa und es handelt sich um 30 Jahreswerte in einem Zeitraum von 1963-2003. Achtung, es ist nicht in jedem Jahr ein Wert vorhanden!
+
+```{r, echo=F, eval=T}
+load("solar.radiation.rda")
+```
+
+### Teilaufgabe a)
+
+Stellen sie diese Daten geeignet mit einem Scatterplot dar und legen Sie danach einen Glätter durch. Experimentieren Sie auch hier mit dem Running Mean, dem Gauss'schen Kernel Smoother und mit LOESS.
+
+### Teilaufgabe b)
+
+Nehmen Sie Stellung zur Frage, ob sich die Strahlung im Laufe der Zeit verringert hat.
+
+## Aufgabe 3 {.justify}
+
+An dieser Stelle befinden sich einige Fragen, welche das Verständnis der Theorie prüfen. Finden sie heraus, ob die folgenden Aussagen richtig oder falsch sind, und warum dies der Fall ist. Sie können diese Aufgabe auch [online](https://forms.office.com/Pages/ResponsePage.aspx?id=nZ8aXR8gEEq5g0Uc9ly8Hr0tg6Asy39BpZuXvQghN2tUNVFVOFA3TjZNQlFaS0QxWkUxTE82TlhBUS4u) lösen -- so kriegen sie gleich ein Feedback auf ihre Antworten und der Dozent erhält eine Übersicht, wie gut die Inhalte verstanden wurden.
+
+### Teilaufgabe a)
+
+Falls es Ausreisser gibt, so ist es besser die Beziehung zwischen einer Zielgrösse und einem Prädiktor mit einem Gauss'schen Kernschätzer darzustellen, als mit einem LOESS-Glätter.
+
+### Teilaufgabe b)
+
+Wenn man einen Glätter verwendet, so lassen sich damit einfacher Vorhersagen ausserhalb vom Bereich der beobachteten Daten erzeugen als wenn man ein lineares Modell anpasst.
+
+### Teilaufgabe c)
+
+Ein gut gewählter Glätter liegt so, dass er die Residuenquadratsumme minimiert, d.h. den kleinstmöglichen Abstand zwischen Datenpunkten und Glätter aufweist.
+
+### Teilaufgabe d)
+
+$y = \beta_0 + \beta_1 \cdot \sin(x_1)+\beta_2 \cdot \cos(x_1)+\beta_3 \cdot \log(x_2)+\beta_3 \cdot \sqrt(x_3)+E$ ist ein lineares Modell.
+
+### Teilaufgabe e)
+
+$y=\beta_1 \cdot x_1+e^{\beta_2 \cdot x_2}+E$ ist ein lineares Modell.
