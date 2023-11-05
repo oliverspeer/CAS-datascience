@@ -1,2 +1,1 @@
 # Modul B2 - Multiple Regression, die Basis der Datenanalyse und Prognose {.unnumbered}
-

@@ -64,17 +64,156 @@ poisson.test(50)
 ```
 
 # Aufgabe 3 Konfidenzintervalle
-## 3a)
- Faustregel P2 = x +- 2 x Wurzel(x) für den Vertrauensintervall
 
- Faustregel P2' = x + 2 +- 2 x Wurzel(x+1)
+## 3a)
+
+### Faustregel P2 für den Vertrauensintervall
+$$
+P2 = x \pm 2 \times \sqrt{x} 
+$$
+
+
+
+für Poisson sei 
+
+z Summe aller Ereignisse,
+
+n Summe der Beobachtungen/Intervalle
+
+$$
+P2 = \frac{z \pm 2 \times \sqrt{z}}{n}
+$$
+
+=
+
+$$
+P2 = \frac{z}{n} \pm 2 \times \sqrt{\frac{z}{n^2}}
+$$   
+$$
+\begin{aligned}
+P2 &= \frac{z \pm 2 \times \sqrt{z}}{n} \\
+   &= \frac{z}{n} \pm 2 \times \sqrt{\frac{z}{n^2}}
+\end{aligned}
+$$
+
+### Faustregel P2'
+$$
+P2 = x +2 \pm 2 \times \sqrt{x+1} 
+$$
+für Poisson:
+$$
+\begin{aligned}
+P2' &= \frac{z + 2 \pm 2 \times \sqrt{z + 1}}{n} \\
+    &= \frac{z +2}{n} \pm \frac{2}{n} \times \sqrt{ \frac{z+1}{n^2}}
+\end{aligned}    
+$$
+
+
+
+### alpha Zerfälle
 ```{r}
 alpha <- read.table("alpha.dat", header = TRUE)
-verkehr <- read.table("verkehr.dat", header = TRUE)
-asbest1 <- read.table("asbest1.dat", header = TRUE)
-asbest2 <- read.table("asbest2.dat", header = TRUE)
+alpha
+```
 
-poisson.test(length(alpha$freq), conf.level = 0.95)
+
+
+Anzahl aller beobachteten Ereignisse
+```{r}
+z <- sum(alpha$k*alpha$freq)
+z
+```
+
+
+Summe aller Beobachtungen
+```{r}
+n <- sum(alpha$freq)
+n
+```
+
+
+
+Poisson Test zum Berechnen des Konfidenz Intervalls
+```{r}
+pt <- poisson.test(z,n)
+pt
+# Poisson Test lässt sich auch nachträglich weiter berechnen
+pt.gpt <- poisson.test(z,1)
+pt.gpt.ci <- pt.gpt$conf.int/n
 
 ```
- 
+
+
+
+### Faustregel P2 im Vergleich zum exakteren Poisson Test
+```{r}
+P2 <- z/n +c(-2,2)*sqrt(z/n^2)
+P2s <- (z + 2 + c(-2,2)*sqrt(z+1))/n
+pt$conf.int
+pt.gpt.ci
+P2
+P2s
+```
+
+### Verkehr
+```{r}
+verkehr <- read.table("verkehr.dat", header = TRUE)
+P2.vk <- (sum(verkehr$k * verkehr$freq) + c(-2,2) * sqrt(sum(verkehr$k * verkehr$freq)))/sum(verkehr$freq)
+P2s.vk <- (sum(verkehr$k*verkehr$freq)+2+c(-2,2)*sqrt(sum(verkehr$k*verkehr$freq)+1))/sum(verkehr$freq)
+pt.vk <- poisson.test(sum(verkehr$k*verkehr$freq), sum(verkehr$freq))
+P2.vk
+P2s.vk
+pt.vk$conf.int
+
+```
+
+### Asbest Fasern
+```{r}
+asbest1 <- read.table("asbest1.dat", header = F)
+asbest2 <- read.table("asbest2.dat", header = F)
+freq.asb1 <- table(asbest1$V1)
+# list and order unique values of asbest1 
+k.asb1 <- sort(unique(asbest1$V1))
+asb1.df <- as.data.frame(cbind(k.asb1, freq.asb1))
+asb1.df
+f1 <- sum(asb1.df$k.asb1*asb1.df$freq.asb1)
+b1 <- sum(asb1.df$freq.asb1)
+pt.asb1 <- poisson.test(f1, b1)
+P2.asb1 <- (f1 + c(-2,2)*sqrt(f1))/b1
+P2s.asb1 <- (f1 + 2 + c(-2,2)*sqrt(f1+1))/b1
+pt.asb1
+P2.asb1
+P2s.asb1
+```
+### eleganterer Weg
+```{r}
+a1 <- asbest1[,1]
+pt.a1 <- poisson.test(sum(a1), length(a1))
+pt.a1$conf.int
+
+a2 <- asbest2[,1]
+pt.a2 <- poisson.test(sum(a2), length(a2))
+P2.a2 <- sum(a2)/length(a2) + c(-2,2)*sqrt(sum(a2)/length(a2)^2)
+P2s.a2 <- ((sum(a2)+2) + c(-2, 2)*(sqrt(sum(a2)+1)))/length(a2)
+pt.a2$conf.int
+P2.a2
+P2s.a2
+
+```
+
+# Aufgabe 4 Dispersionstest
+## alpha Zerfälle
+### Bootstrap
+```{r}
+alpha.z <- rep(alpha$k, alpha$freq)
+f.disp <- function(x, ind){
+  xx <- x[ind]
+  var(xx)/mean(xx)
+}
+library(boot)
+set.seed(seed=117)  ## "Startwert" für den Pseudo-Zufallszahlengenerator
+alpha.boot2 <- boot(alpha.z, f.disp, R=4999, stype="i")
+alpha.boot.ci <- boot.ci(alpha.boot2, conf=0.95, type="perc")
+alpha.boot.ci
+```
+
