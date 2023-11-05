@@ -216,4 +216,38 @@ alpha.boot2 <- boot(alpha.z, f.disp, R=4999, stype="i")
 alpha.boot.ci <- boot.ci(alpha.boot2, conf=0.95, type="perc")
 alpha.boot.ci
 ```
+### chi-square
+```{r}
+chisq.test(alpha.z)
+
+```
+### weitere Möglichkeiten
+```{r}
+# observed counts are alpha.z
+# calculate lambda hat, which serves as lambda for the Poisson distribution
+lambda.dach <- z/n # z=sum(alpha.z), n=length(alpha.z)=sum(alpha$freq)
+
+# calculate the expected frequencies for each count/observation
+assumed.freq <- dpois(alpha$k, lambda = lambda.dach)*length(alpha.z) 
+# assumed.freq analog yModel
+
+# control that all expected frequencies are at least 5 
+# for the chi-squared test to be valid
+# eventually need to group smaller frequencies together
+if(any(assumed.freq < 5)) {
+  cat("Some expected frequencies are less than 5, 
+      you may need to group counts together.\n")
+}
+
+# chi-square to test whether the poisson distribution 
+# fits to the observed counts (=H0)
+chsq.t <- chisq.test(alpha$freq, p = assumed.freq, rescale.p = T)
+chsq.t
+
+```
+### zum Gruppieren gibt es die Funktion chisq.bin
+```{r}
+source("RFn-chisq-bin.R")
+chisq.bin(alpha$k, alpha$freq, m=n)
+```
 
