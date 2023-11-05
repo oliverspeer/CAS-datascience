@@ -74,8 +74,26 @@ qnorm(0.8, mean = 1, sd = sqrt(9))
 
 
 ```
+# Aufgabe 3 Montagezeit für eine Maschine
+```{r}
 
-#QQ-Plot \## Aufgabe 5
+pnorm(q = 11.5, mean = 12.9, sd = sqrt(4), lower.tail = F)
+
+```
+Mit einer Wahrscheinlichkeit von 75.8 % dauert die Montage mindestens 11.5 min.
+```{r}
+pnorm(q = 14.8, mean = 12.9, sd = 2) - pnorm(q=11, mean = 12.9, sd = 2)
+```
+
+```{r}
+pnorm(0.305, mean = 0.302, sd = 0.003) - pnorm(0.295, mean = 0.302, sd = 0.003)
+```
+
+
+
+#QQ-Plot
+# Aufgabe 5
+## Aufgabe 5a
 
 ```{r}
 source("RFn-qqnormSim.R")
@@ -99,6 +117,7 @@ qqnormSim(log(waerme), rob=TRUE); mtext(text="log(waerme)",side=3, line=0.5)
 ```
 
 # Aufgabe 6
+
 ```{r}
 
 OE <- c(-16, -404, -397, 113, -791, -165, -118, 9, -651, 383, -480, -77, 221,
@@ -113,7 +132,9 @@ boxplot(OE, horizontal=TRUE, main="OE", xlab="Kostenüberschreitung", ylab="")
 source("RFn-qqnormSim.R")
 qqnormSim(OE, rob=TRUE, SEED = 4711); mtext(text="OE",side=3, line=0.5); qqline(OE, col="red", lty=3)
 ```
+
 # Aufgabe 6b
+
 ```{r}
 (xq <- mean(OE))  ## -136.5333
 (s <- sd(OE) )    #   287.7036
@@ -122,7 +143,9 @@ par(mfrow=c(1,1))
 hist(OE, probability=TRUE, col="lightblue")
 curve(dnorm(x, xq, sd=s), col="magenta", lwd=2, add=TRUE)
 ```
+
 # t-test für 0-Hypothese Kostenüberschreitungen sind insgesamt 0
+
 ```{r}
 t.test(OE, mu=0, alternative="two.sided", conf.level=0.95)
 t.test(OE, mu=0, alternative="less", conf.level=0.95)
@@ -131,10 +154,11 @@ t.test(OE, mu=0, alternative="greater", conf.level=0.95)
 
 
 ```
-Wichtig ist, wie die 0-Hypothese formuliert wird. 
-Sie muss zu den Daten passen.
+
+Wichtig ist, wie die 0-Hypothese formuliert wird. Sie muss zu den Daten passen.
 
 # Aufgabe 7
+
 ```{r}
 
 Kad <- c(0.95, 0.85, 0.92, 0.95, 0.93, 0.86, 1.00, 0.92, 0.85, 0.81,
@@ -149,7 +173,9 @@ curve(dnorm(x, xq, s), col = "navy", lwd = 2, add = T)
 
 
 ```
+
 # Aufgabe 7b
+
 ```{r}
 
 t.test(Kad, level=0.95)

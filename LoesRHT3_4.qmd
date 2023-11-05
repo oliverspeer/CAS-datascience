@@ -45,22 +45,113 @@ round(pbinom(82, size = 85, prob = 0.86), 10)
 ```
 
 ## Aufgabe 3
+
 ### a
-X ist die Anzahl abgeschlossener Verträge,
-m ist die Anzahl verkaufter Wärmepumpe.
-Jeder Abschluss einer Service-Vertrags ist unabhängig. Daher kann formuliert werden:
-x ~ B(m, pi = 0.5)
+
+X ist die Anzahl abgeschlossener Verträge, m ist die Anzahl verkaufter Wärmepumpe. Jeder Abschluss einer Service-Vertrags ist unabhängig. Daher kann formuliert werden: x \~ B(m, pi = 0.5)
 
 ### b
-Erfolgswahrscheinlichkeit der Filiale:
-pi = X/m = 16/50 = 0.32
+
+Erfolgswahrscheinlichkeit der Filiale: pi = X/m = 16/50 = 0.32
 
 ### c
-H0-Hypothese: Die Verkaufswahrscheinlichkeit ist in der Filiale gelich gross wie
-im Gesamtunternehmen.
+
+H0-Hypothese: Die Verkaufswahrscheinlichkeit ist in der Filiale gleich gross wie im Gesamtunternehmen.
+
 ```{r}
 binom.test(15, 50, p = 0.5)
 ```
-Der berechnete p-Wert ist kleiner als 0.05, H0 muss verworfen werden. 
-Die Verkaufwahrscheinlichkeit in der Filiale ist also kleiner.
 
+Der berechnete p-Wert ist kleiner als 0.05, H0 muss verworfen werden. Die Verkaufwahrscheinlichkeit in der Filiale ist also kleiner.
+
+## Aufgabe 4 Unfälle in ZH
+
+### H0: Die Anzahl Unfälle im 2010 (35) ist nicht signifikant verschieden von den Anzahl Unfällen im 2011 (37).
+
+```{r}
+Unf.ZH <- c(35, 37)
+binom.test(x = Unf.ZH, conf.level = 0.05)
+```
+
+Da p nicht kleiner als 0.05 gibt es keine Evidenz H0 zu verwerfen. Es gilt die Annahme, dass die Anzahl Unfälle im 2010 und 2011 sich nicht statistisch unterscheiden.
+
+## Aufgabe 7 Bayes Theorem
+
+Bayes' Theorem lautet:
+
+$$
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+$$
+
+mit:
+
+-   $P(A|B)$ is the probability of event $A$ occurring given that $B$ is true.
+-   $P(B|A)$ is the probability of event $B$ occurring given that $A$ is true.
+-   $P(A)$ is the probability of event $A$.
+-   $P(B)$ is the probability of event $B$.
+
+### 7a&b)
+
+$$
+\begin{aligned}
+P(S|K) = 0.99 \\
+und \\
+P(\overline S|\overline K) = 0.95 \\
+und \\
+P(S|\overline K) = 1-0.95=0.05 \\
+und \\
+P(K) = 0.0001 \\
+und \\
+P(\overline K)=0.9999
+\end{aligned}
+$$ Wahrscheinlichkeit von P(K\|S) $$
+P(K|S)=\frac{P(S|K) \cdot P(K)}{P(S)}
+$$ da gilt: $$
+P(S)=P(S|K) \cdot P(K) + P(S|\overline K) \cdot P(\overline K)
+$$
+
+kann umgeformt werden in $$
+P(K|S)=\frac{P(S|K) \cdot P(K)}{P(S|K) \cdot P(K) + P(S|\overline K) \cdot P(\overline K)}
+$$ und die bekannten Werte eingesetzt werden: $$
+\begin{aligned}
+P(K|S)  &= \frac{0.99 \cdot 0.0001}{0.99 \cdot 0.0001 + 0.05 \cdot0.9999} \\
+        &= 0.000099 / (0.000099+0.049995) \\
+        &=0.001976
+\end{aligned}
+$$
+
+Wenn der Test positiv ist, dann beträgt die Wahrscheinlichkeit, dass die Person tatsächlich krank ist 0.2%. Überraschend wenig!
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## [Aufgabe 8]{.underline}
+
+### `rbind` & `dimnames <-`
+
+Erzeugen eines **data.frame** aus Vektoren mit ***`rbind`***
+
+Benennung der Zeilen und Spalten mit ***`dimnames<-`***
+
+```{r}
+kt <- rbind(c(20,28,23,14,12), c(14,34,21,14,12), c( 4,12,10,20,53))
+dimnames(kt) <- list(paste("Region", 1:3, sep = " "), paste("Geruch", 1:5, sep = " "))
+kt <- as.data.frame(kt)
+kt
+```
+
+### chi-square
+
+H0: Die Geruchswahrnehmungen zwischen den Regionen unterscheiden sich nicht
+
+```{r}
+chisq.test(kt)
+```
+
+Da p\<0.05 ist, muss die H0-Hypothese verworfen werden. Die Geruchswahrnehmungen unterscheiden sich zwischen den Regionen.
+
+Visualisierung der Unterschiede mit einem Mosaik-Plot:
+
+```{r}
+farben <- c("blue", "white", "green", "red", "purple")
+mosaicplot(kt, las = 1, color = farben, main = "Geruchswahrnehmungen zw Regionen")
+```

@@ -89,3 +89,75 @@ t.test(SoL.a1, conf.level = 0.95, alternative = "two.sided")
 
 
 ```
+
+# Aufgabe 6 Exponentialverteilung
+
+```{r}
+AF <- c(4.5, 11.5, 16, 20.7, 20.8, 31, 34.5, 46, 61)
+
+summary(AF)
+lambda <- mean(AF)
+# Schätzung der Rate
+lambda.kw <- 1/lambda
+par(mfrow = c(1,1))
+hist(AF, nclass = 4, freq = F, ylim = c(0, 0.05))
+curve(dexp(x, rate = 1/mean(AF)), col = "navy", add = T)
+# add a normal distribution curve
+curve(dnorm(x, mean = mean(AF), sd = sd(AF)), col = "red", add = T)
+# add a lognormal distribution curve
+curve(dlnorm(x, meanlog = mean(log(AF)), sdlog = sd(log(AF))), col = "green", add = T)
+```
+
+## 95% CI mit bootstrap
+
+```{r}
+library(boot)
+f.rate <- function(x, ind){
+  1/mean(x[ind])
+}
+set.seed(seed = 4711)
+AF.boot <- boot(AF, f.rate, R = 5999)
+boot.ci(AF.boot, conf = 0.95, type = "perc")
+boot.ci(AF.boot, conf = 0.95, type = "bca")
+```
+
+Interpretation:
+
+$$
+\text{Rate}(1000^{-1}) = \frac {1}{\lambda} = \frac {1}{mean(AF)} = 0.037
+$$ 
+
+D.h. es gibt 0.000037 Ausfälle pro Betriebsstunde, bzw 1 Ausfall alle
+```{r, echo=FALSE}
+cat(round(100000/3.7, 2))
+```
+
+Stunden.
+
+Das 95% CI: pro Stunde gibt es zwischen 0.0000258 und 0.0000572 Ausfälle (mit der percentile Variante)
+
+```{r}
+par(mfrow=c(1,1))
+hist(AF.boot$t, col="gray", xlab=expression(lambda~'*'),
+     main="Bootstrap-Verteilung", freq=FALSE)
+abline(v=c(1/mean(AF), mean(AF.boot$t)), col=c("red", "blue"),
+       lty=c(1,2), lwd=c(3,3))
+
+# add a log-normal distribution curve
+curve(dlnorm(x, meanlog=log(1/mean(AF)), sdlog=sd(log(1/AF))),
+      col="navy", add=TRUE)
+
+# add a log-normal distribution curve of the bootstrap distribution
+curve(dlnorm(x, meanlog=log(mean(AF.boot$t)), sdlog=sd(log(AF.boot$t))),
+      col="green", add=TRUE)
+
+# add a normal distribution curve of the bootstrap distribution
+curve(dnorm(x, mean=mean(AF.boot$t), sd=sd(AF.boot$t)),
+      col="orange", add=TRUE)
+
+# add a normal distribution curve of AF
+curve(dnorm(x, mean=mean(AF), sd=sd(AF)),
+      col="black", add=TRUE)
+
+
+```
