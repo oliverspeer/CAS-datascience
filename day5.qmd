@@ -4,7 +4,7 @@
 
 P1 Fausregel -\> Zufallsstrubereich \<- Idealisierung = Annahmebereich beim Testen
 
-P2, P2\`-\> Vertrauensintervall für lambda, baut auf dne DAten auf, heisst auch Intervallschätzung -\> Konfidenzintervall für lambda, baut auf der Verteilung auf, heisst auch Intervallschätzung
+P2, P2\`-\> Vertrauensintervall für lambda, baut auf den Daten auf, heisst auch Intervallschätzung -\> Konfidenzintervall für lambda, baut auf der Verteilung auf, heisst auch Intervallschätzung
 
 ```         
      P-Wert: transformierte Teststatistik mit normiertem Verwerfungsbereich
@@ -100,6 +100,23 @@ binom.test(15, 50, 0.5)
 50*0.5 + c(-1, 1)*1.96*sqrt(50*0.5*0.5)
 
 ```
+
+## Faustregel B1
+Den Zufallsstreubereich kann man wieder approximativ mit der
+2σ-Approximation (vgl. 2.4.g) bestimmen.
+Zur Erinnerung: 95% Zufallsstreubereich ist approximativ
+Erwartungswert ± 2xStandardabweichung
+– Sei also pi 0 die Eintrittswahrscheinlichkeit aus der Null-Hypothese,
+dann ist der 95%-Zufallsstreubereich (≡ Annahmebereich zum
+Signifikanzniveau 5%) genähert
+
+$$
+m \cdot \pi_{0} \pm 2 \cdot \sqrt{m \cdot \pi_{0}(1- \pi_{0})}
+$$
+für 
+$$
+m \cdot \pi_{0}(1- \pi_{0}) > 5
+$$
 
 ## Vertrauensintervall
 

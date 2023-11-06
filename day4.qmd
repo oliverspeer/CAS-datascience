@@ -34,6 +34,14 @@ x+2+c(-1,1)*2*sqrt(x+1)
 x + c(-1,1)*2*sqrt(x)
 ```
 
+# Faustregeln
+## Faustregel P1 Zufallsstreubereich für Poisson Zufallsvariable
+$$
+P1 = \lambda \pm 2 \cdot \sqrt{\lambda}
+$$
+## Faustregel P2 Confidenzintervall von Ereignissen
+
+
 #### alpha Zerfälle
 
 ```{r}
