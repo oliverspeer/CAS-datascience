@@ -41,6 +41,8 @@ book:
         - LoesRHT3_4.qmd
         - LoesRHT5_6.qmd
         - LoesRHT7.qmd
+        - ProbePruefA2.qmd
+        - Prüfung231108.qmd
         
     - part: ModulB1.qmd
       chapters: 
