@@ -35,12 +35,28 @@ x + c(-1,1)*2*sqrt(x)
 ```
 
 # Faustregeln
-## Faustregel P1 Zufallsstreubereich für Poisson Zufallsvariable
+
+## Faustregel P1
+
+für Zufallsstreubereich der Poisson Zufallsvariable
+
 $$
 P1 = \lambda \pm 2 \cdot \sqrt{\lambda}
 $$
-## Faustregel P2 Confidenzintervall von Ereignissen
 
+## Faustregel P2
+
+für 95% Konfidenzintervall von Ereignissen
+
+$$
+P2 = x \pm 2 \cdot \sqrt{x}
+$$
+
+## Faustregel P2'
+
+für 95% Konfidenzintervall von Ereignissen $$
+P2' = x+2 \pm 2 \cdot \sqrt{x+1}
+$$
 
 #### alpha Zerfälle
 

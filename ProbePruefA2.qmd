@@ -1,10 +1,10 @@
 # Probe Prüfung Modul A2 {.unnumbered}
-
+#Aufgabe 1
 ## Aufgabe 1a)
-
 
 ```{r}
 B1 <- data.frame(k=0:5, freq=c(4, 17, 18, 6, 5, 2))
+
 t <- sum(B1$k*B1$freq)
 n <- sum(B1$freq)
 mu <- sum(B1$k*B1$freq)/n
@@ -12,6 +12,7 @@ mu
 ```
 
 ## 1b)
+
 ```{r}
 y.model <- dpois(B1$k, lambda = mu)*n
 plot(B1$k, B1$freq, type = "h", lend = 2, las = 1, col = "lightblue", lwd = 6)
@@ -19,12 +20,14 @@ lines(B1$k, y.model, type = "b", col = "navy", lwd =2)
 ```
 
 ## 1c) mit chi-square
+
 ```{r}
 B1.tel <- rep(B1$k, B1$freq)
 chisq.test(B1.tel)
 ```
 
 ## 1c) mit boot-strapping
+
 ```{r}
 F.B1 <- function(x, ind){
   xx <- x[ind]
@@ -37,14 +40,34 @@ B1.boot.ci <- boot.ci(B1.boot, conf = 0.95, type = "perc")
 B1.boot.ci
 ```
 
+mit Faustregel Chi2
+
+```{r}
+#Dispersion D
+D <- (length(B1.tel)-1)*var(B1.tel)/mean(B1.tel)
+Ds <- (length(B1.tel)-1)+2*sqrt(2*(length(B1.tel)-1))
+D
+Ds
+```
+
+39.6 \< 71.2 daher passt das Poissonmodel für diese Daten
+
 ## 1d) 95% CI
+
 ```{r}
 poisson.test(t,n)
 ```
 
-Das CI ist [1.58, 2.36].
+Das CI ist \[1.58, 2.36\].
 
-## Aufgabe 2
+mit Faustregel P2'
+
+```{r}
+(t+2+c(-2,2)*sqrt(t+1))/n
+```
+
+# Aufgabe 2
+
 ```{r}
 SP <- rbind(c(454, 208, 491, 160, 1599), c(5806, 2112, 3989, 3790, 10754))
 dimnames(SP) <- list(c("absent", "present"), c("A.M.", "Noon", "P.M.", "Swing", "Split"))
@@ -53,28 +76,61 @@ SP
 ```
 
 ## 2a)
-H0: Die Abwesenheitsquoten sind zwischen den Schichttypen nicht unterschiedlich. 
-D.h. der Schichttyp ist unabhängig von den Abwesenheiten der Chauffeure. 
+
+H0: Die Abwesenheitsquoten sind zwischen den Schichttypen nicht unterschiedlich. D.h. der Schichttyp ist unabhängig von den Abwesenheiten der Chauffeure.
+
 ```{r}
 chisq.test(SP)
 ```
-Der p-Wert ist < 0.05, H0 wird verworfen.
-Es gilt die Alternative: Die Abwesenheiten der Chauffeure ist abhängig vom Schichtyp. 
+
+Der p-Wert ist \< 0.05, H0 wird verworfen. Es gilt die Alternative: Die Abwesenheiten der Chauffeure ist abhängig vom Schichtyp.
 
 ## 2b)
-Das Risiko liegt bei 5%, dass H0 fälschlicher weise abgelehnt wurde, also ein Fehler 1. Art begangen wurde. 
+
+Das Risiko liegt bei 5%, dass H0 fälschlicher weise abgelehnt wurde, also ein Fehler 1. Art begangen wurde.
 
 ## 2c)
+
 ```{r}
-Q.SP5 <- SP[1,5]/(SP[2,5]+SP[1,5])
-Q.SP5
+SP[1,]/(SP[2,]+SP[1,])
+pi.SP5 <- SP[1,5]/(SP[2,5]+SP[1,5])
+pi.SP5
 binom.test(x=1599, n=1599+10754, conf.level = 0.95)
 
 ```
-Das exakte Vertrauensintervall ist [0.124, 0.135]
 
-mit Faustregel P2=x+-2*sqrt(x)
+Das exakte Vertrauensintervall ist \[0.124, 0.135\]
+
+Mit der Fausregel B2:
 ```{r}
+pi.SP5+c(-2,2)*sqrt(pi.SP5*(1-pi.SP5)*1/(SP[2,5]+SP[1,5]))
+```
 
+# Aufgabe 3
+```{r}
+KP <- rbind(c(23, 35, 30, 33, 43, 32, 41, 38, 40, 24), c(28, 38, 29, 37, 42, 30, 43, 41, 41, 30))
+dimnames(KP) <- list(c("noBreak", "Break"), paste("dude", 1:10, sep = " "))
+KP <- data.frame(t(KP))
+KP
+
+
+```
+
+## 3a)
+```{r}
+KP$Diff <- KP$Break-KP$noBreak
+source("RFn-qqnormSim.R")
+qqnormSim(KP$Diff, rob=T, SEED=8173)
+qqline(KP$Diff)
+
+```
+Die Differenzen sind normal verteilt. Dies jedoch am ehesten mit dem qq-Plot, mit Histogram schwierig.
+
+Da die Differenzen normal verteilt sind, spricht nichts dagegen einen t.test anzuwenden.
+
+```{r}
+t.test(KP$Diff)
+
+wilcox.test(KP$Diff)
 ```
 

@@ -68,13 +68,12 @@ poisson.test(50)
 ## 3a)
 
 ### Faustregel P2 für den Vertrauensintervall
+
 $$
 P2 = x \pm 2 \times \sqrt{x} 
 $$
 
-
-
-für Poisson sei 
+für Poisson sei
 
 z Summe aller Ereignisse,
 
@@ -88,7 +87,7 @@ $$
 
 $$
 P2 = \frac{z}{n} \pm 2 \times \sqrt{\frac{z}{n^2}}
-$$   
+$$\
 $$
 \begin{aligned}
 P2 &= \frac{z \pm 2 \times \sqrt{z}}{n} \\
@@ -97,43 +96,39 @@ P2 &= \frac{z \pm 2 \times \sqrt{z}}{n} \\
 $$
 
 ### Faustregel P2'
+
 $$
 P2 = x +2 \pm 2 \times \sqrt{x+1} 
-$$
-für Poisson:
-$$
+$$ für Poisson: $$
 \begin{aligned}
 P2' &= \frac{z + 2 \pm 2 \times \sqrt{z + 1}}{n} \\
     &= \frac{z +2}{n} \pm \frac{2}{n} \times \sqrt{ \frac{z+1}{n^2}}
 \end{aligned}    
 $$
 
-
-
 ### alpha Zerfälle
+
 ```{r}
 alpha <- read.table("alpha.dat", header = TRUE)
 alpha
 ```
 
-
-
 Anzahl aller beobachteten Ereignisse
+
 ```{r}
 z <- sum(alpha$k*alpha$freq)
 z
 ```
 
-
 Summe aller Beobachtungen
+
 ```{r}
 n <- sum(alpha$freq)
 n
 ```
 
-
-
 Poisson Test zum Berechnen des Konfidenz Intervalls
+
 ```{r}
 pt <- poisson.test(z,n)
 pt
@@ -143,9 +138,8 @@ pt.gpt.ci <- pt.gpt$conf.int/n
 
 ```
 
-
-
 ### Faustregel P2 im Vergleich zum exakteren Poisson Test
+
 ```{r}
 P2 <- z/n +c(-2,2)*sqrt(z/n^2)
 P2s <- (z + 2 + c(-2,2)*sqrt(z+1))/n
@@ -156,6 +150,7 @@ P2s
 ```
 
 ### Verkehr
+
 ```{r}
 verkehr <- read.table("verkehr.dat", header = TRUE)
 P2.vk <- (sum(verkehr$k * verkehr$freq) + c(-2,2) * sqrt(sum(verkehr$k * verkehr$freq)))/sum(verkehr$freq)
@@ -168,6 +163,7 @@ pt.vk$conf.int
 ```
 
 ### Asbest Fasern
+
 ```{r}
 asbest1 <- read.table("asbest1.dat", header = F)
 asbest2 <- read.table("asbest2.dat", header = F)
@@ -185,7 +181,9 @@ pt.asb1
 P2.asb1
 P2s.asb1
 ```
+
 ### eleganterer Weg
+
 ```{r}
 a1 <- asbest1[,1]
 pt.a1 <- poisson.test(sum(a1), length(a1))
@@ -202,8 +200,11 @@ P2s.a2
 ```
 
 # Aufgabe 4 Dispersionstest
+
 ## alpha Zerfälle
+
 ### Bootstrap
+
 ```{r}
 alpha.z <- rep(alpha$k, alpha$freq)
 f.disp <- function(x, ind){
@@ -216,12 +217,16 @@ alpha.boot2 <- boot(alpha.z, f.disp, R=4999, stype="i")
 alpha.boot.ci <- boot.ci(alpha.boot2, conf=0.95, type="perc")
 alpha.boot.ci
 ```
+
 ### chi-square
+
 ```{r}
 chisq.test(alpha.z)
 
 ```
+
 ### weitere Möglichkeiten
+
 ```{r}
 # observed counts are alpha.z
 # calculate lambda hat, which serves as lambda for the Poisson distribution
@@ -245,9 +250,28 @@ chsq.t <- chisq.test(alpha$freq, p = assumed.freq, rescale.p = T)
 chsq.t
 
 ```
+
 ### zum Gruppieren gibt es die Funktion chisq.bin
+
 ```{r}
 source("RFn-chisq-bin.R")
 chisq.bin(alpha$k, alpha$freq, m=n)
 ```
 
+# Faustregel Chi2 (auf dem 2.5% Niveau)
+für den Dispersionstest:
+Dispersion D mit n = Grösse der Stichprobe
+$$
+D = (n-1) \frac{s^2}{\overline x}
+$$
+
+Die Abweichungen sind tollerierbar, wenn gilt:
+$$
+D \leq (n-1)+2\cdot\sqrt{2\cdot(n-1)}
+$$
+
+bei
+$$
+D > (n-1)+2\cdot\sqrt{2\cdot(n-1)}
+$$
+passt das Modell insgesamt nicht.

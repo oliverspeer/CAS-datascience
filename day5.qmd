@@ -102,21 +102,27 @@ binom.test(15, 50, 0.5)
 ```
 
 ## Faustregel B1
-Den Zufallsstreubereich kann man wieder approximativ mit der
-2σ-Approximation (vgl. 2.4.g) bestimmen.
-Zur Erinnerung: 95% Zufallsstreubereich ist approximativ
-Erwartungswert ± 2xStandardabweichung
-– Sei also pi 0 die Eintrittswahrscheinlichkeit aus der Null-Hypothese,
-dann ist der 95%-Zufallsstreubereich (≡ Annahmebereich zum
-Signifikanzniveau 5%) genähert
+
+Den Zufallsstreubereich kann man wieder approximativ mit der 2σ-Approximation (vgl. 2.4.g) bestimmen. Zur Erinnerung: 95% Zufallsstreubereich ist approximativ Erwartungswert ± 2xStandardabweichung -- Sei also pi 0 die Eintrittswahrscheinlichkeit aus der Null-Hypothese, dann ist der 95%-Zufallsstreubereich (≡ Annahmebereich zum Signifikanzniveau 5%) genähert
 
 $$
 m \cdot \pi_{0} \pm 2 \cdot \sqrt{m \cdot \pi_{0}(1- \pi_{0})}
-$$
-für 
-$$
+$$ für $$
 m \cdot \pi_{0}(1- \pi_{0}) > 5
 $$
+
+Falls $\pi_{0}=\frac{1}{2}$ reduziert sich B1 zu
+B1'
+$$
+\frac{m}{2}\pm\sqrt{m}
+$$
+mit m = Grösse der Zufallsvariable (zBsp. X=Würfel mit m=6)
+
+## Faustregel B2
+$$
+\pi\pm2\cdot\sqrt{\pi\cdot(1-\pi)\cdot\frac{1}{m}}
+$$
+Weil $\pi$ unbekannt ist, wird es ersetzt durch $\frac{x}{m}$.
 
 ## Vertrauensintervall
 
