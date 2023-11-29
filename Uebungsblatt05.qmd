@@ -1,24 +1,6 @@
-#  Übungsblatt 05 {.unnumbered}
-author: "Marcel Dettling"
-date:   "`r Sys.Date()`"
-editor: visual
-lang: de
-language: 
-  title-block-author-single: "Autor:"
-  title-block-published: "Version vom:"
-format:
-  html:
-    embed-resources: true
-    toc: true
-    toc-depth: 3
-    theme: sandstone
-    fig-width: 8
-    fig-height: 6
-    fig-align: "center"
-    fig-caption: true
-    df-print: kable
-    highlight: "monochrome"
+# Übungsblatt 05 Aufgabe 2 {.unnumbered}
 
+author: "Marcel Dettling" date: "`r Sys.Date()`" editor: visual lang: de language: title-block-author-single: "Autor:" title-block-published: "Version vom:" format: html: embed-resources: true toc: true toc-depth: 3 theme: sandstone fig-width: 8 fig-height: 6 fig-align: "center" fig-caption: true df-print: kable highlight: "monochrome"
 
 ```{css, echo = FALSE}
 .justify {
@@ -35,45 +17,167 @@ Im Artikel "Characterization of Highway Runoff in Austin, Texas, Area" wird unte
 load("hwy.runoff.rda")
 ```
 
-| Rainfall | 5   | 12  | 14  | 17  | 23  | 30  | 40  | 47  | 55  | 67  | 72  | 81  | 96  | 112 | 127 |
+| rainfall | 5   | 12  | 14  | 17  | 23  | 30  | 40  | 47  | 55  | 67  | 72  | 81  | 96  | 112 | 127 |
 |----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-| Runoff   | 4   | 10  | 13  | 15  | 15  | 25  | 27  | 46  | 38  | 46  | 53  | 70  | 82  | 99  | 100 |
+| runoff   | 4   | 10  | 13  | 15  | 15  | 25  | 27  | 46  | 38  | 46  | 53  | 70  | 82  | 99  | 100 |
 
 ### Teilaufgabe a)
 
 Erzeugen sie einen Scatterplot, passen sie die KQ-Gerade an, zeichnen sie diese im Scatterplot ein und generieren sie den Summary-Output.
 
+```{r}
+## Daten einlesen
+load("hwy.runoff.rda")
+## Scatterplot
+plot(runoff ~ rainfall, data = hwy.runoff, pch = 20, col = "blue")
+## KQ-Gerade
+fit <- lm(runoff ~ rainfall, data = hwy.runoff)
+abline(fit, col = "red", lwd = 2)
+## Summary-Output
+summary(fit)
+confint(fit)
+
+```
+
 ### Teilaufgabe b)
 
 Welcher Anteil der beobachteten Variation im Runoff Volume kann dem einfachen linearen Zusammenhang zwischen Runoff und Rainfall zugeordnet werden?
+
+[97.5 % der beobachteten Variation im Runoff Volume kann dem einfachen linearen Zusammenhang zwischen Runoff und Rainfall zugeordnet werden.]{style="color:#3C5AB4"}
 
 ### Teilaufgabe c)
 
 Besteht ein signifikanter linearer Zusammenhang zwischen Runoff und Rainfall? Geben sie auch die anschauliche Interpretation des Regressionskoeffizienten an.
 
+[Ja, es gibt einen linearen Zusammenhang.Die Nullhypothese $\beta_1$ kann verworfen mit einem p-Wert von $7.9\cdot 10^{-12}$ Der lineare Zusammenhang zwischen Ablauf und Regenmenge ist statitisch gesichert.Die Steigung ist mit 0.8 unter 1, d.h nicht das ganze Regenwasser fliesst ab, was durch Verdunstung, Versickerung, Rückhaltung erklärt werden kann.]{style="color:#3C5AB4"}
+
 ### Teilaufgabe d)
 
 Machen sie eine Vorhersage, wie gross das erwartete Runoff Volume bei einem Rainfall von 50 ist. Geben sie an dieser Stelle auch ein 95%-Prognoseintervall an.
+
+```{r}
+
+xx <- data.frame(rainfall = 50)
+runoff.pred <- predict(fit, newdata = xx, interval = "prediction", level = 0.95)
+runoff.pred
+
+
+
+
+```
 
 ### Teilaufgabe e)
 
 Überprüfen sie die für die KQ-Schätzung getroffenen Annahmen mit den Modelldiagnose-Tools, die wir bereits kennen gelernt haben. Verwenden sie nun die neuen Erkenntnisse bzgl. der Logarithmustransformation und passen sie ein anderes (bzw. besseres) Modell als bisher an.
 
+```{r}
+## Daten einlesen
+load("hwy.runoff.rda")
+## Scatterplot
+plot(runoff ~ rainfall, data = hwy.runoff, pch = 20, col = "blue")
+## KQ-Gerade
+fit <- lm(runoff ~ rainfall, data = hwy.runoff)
+abline(fit, col = "red", lwd = 2)
+
+
+## Logarithmustransformation
+fit.log <- lm(log(runoff) ~ log(rainfall), data = hwy.runoff)
+xx <- data.frame(rainfall = 1:150)
+yy <- predict(fit.log, newdata = xx)
+lines(xx$rainfall, exp(yy), col = "navy")
+legend("topleft", legend = c("linear", "logarithmisch"), col = c("red", "navy"), lwd = 2, bty = "n")
+
+## Summary-Output as plot(fit)
+# plot 2 x 2
+par(mfrow = c(2, 2))
+plot(fit)
+par(mfrow = c(2, 2))
+plot(fit.log)
+
+
+
+```
+
 ### Teilaufgabe f)
 
-Zeichnen sie die neue Regressionsbeziehung in den Scatterplot auf der Originalskala ein und vergleichen sie gegenüber der ursprünglichen Gerade.
+Zeichnen sie die neue Regressionsbeziehung in den Scatterplot auf der Originalskala ein und vergleichen sie gegenüber der ursprünglichen Gerade. [siehe unter Teilaufgabe e)]{style="color:#3C5AB4"}
+
+```{r}
+## Logarithmustransformation
+fit.log <- lm(log(runoff) ~ log(rainfall), data = hwy.runoff)
+xx <- data.frame(rainfall = 1:150)
+yy <- predict(fit.log, newdata = xx)
+ci <- predict(fit.log, newdata = xx, interval = "confidence")
+pi <- predict(fit.log, newdata = xx, interval = "prediction")
+plot(runoff ~ rainfall, data = hwy.runoff, pch = 20, col = "red")
+lines(xx$rainfall, exp(ci[,2]), col = "darkgreen", lty = 2)
+lines(xx$rainfall, exp(ci[,3]), col = "darkgreen", lty = 2)
+lines(xx$rainfall, exp(pi[,2]), col = "blue", lty = 2)
+lines(xx$rainfall, exp(pi[,3]), col = "blue", lty = 2)
+lines(xx$rainfall, exp(yy), col = "navy")
+
+```
 
 ### Teilaufgabe g)
 
 Prüfen sie wiederum die Stärke des linearen Zusammenhangs, die Signifikanz zwischen Runoff und Rainfall und geben sie eine Interpretation für den Regressionskoeffizienten an.
 
+```{r}
+summary(fit.log)
+confint(fit.log)
+```
+
 ### Teilaufgabe h)
 
 Machen sie eine Vorhersage, wie gross der erwartete Runoff bei einem Rainfall von 50 ist. Erzeugen sie ebenso ein 95%-PI und vergleichen sie gegenüber der ursprünglichen Lösung. Plotten sie dann das PI für beliebige $x$ in den Scatterplot.
 
+```{r}
+## Vorhersage für eine Regenmenge von 50 mit der linearen Regression
+xx <- data.frame(rainfall = 50)
+runoff.pred <- predict(fit, newdata = xx, interval = "prediction", level = 0.95)
+runoff.pred
+
+## Vorhersage für eine Regenmenge von 50 mit der logarithmischen Regression
+xx <- data.frame(rainfall = 50)
+runoff.log.pred <- predict(fit.log, newdata = xx, interval = "prediction", level =0.95)
+exp(runoff.log.pred)
+
+```
+
+Dieser Wert - 39.88 - ist der Median, also nicht der Erwartungswert. Für den Erwartungswert muss korrigert werden, da für diesen gilt: $E = e^{\mu_0 + \frac{\sigma}{2}}$
+
+```{r}
+exp(runoff.log.pred[1] + (summary(fit.log)$sigma)^2/2)
+
+```
+
+Plot mit CI und PI siehe oben
+
 ### Teilaufgabe i)
 
 Führen sie eine Residuenanalyse durch. Beantworten sie anschliessend, welches der beiden Modelle ihnen besser geeignet scheint, und begründen sie die Antwort.
+
+## Residuenanalyse
+
+```{r}
+## Residuenanalyse
+par(mfrow = c(1,2))
+xx <- hwy.runoff$rainfall
+yy <- resid(fit)
+smoo <- loess.smooth(xx, yy, family = "gaussian")
+plot(xx, yy)
+lines(smoo, col = "red")
+abline(h=0, col = "grey")
+
+xx <- log(hwy.runoff$rainfall)
+yy <- resid(fit.log)
+smoo <- loess.smooth(xx, yy, family = "gaussian")
+plot(xx, yy)
+lines(smoo, col = "red")
+abline(h=0, col = "grey")
+
+
+```
 
 ## Aufgabe 2 {.justify}
 

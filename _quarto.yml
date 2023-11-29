@@ -55,23 +55,52 @@ book:
         - day9.qmd
         - Uebungsblatt03.qmd
         - LoesB1_03.qmd
-        - day10.qmd
         - Uebungsblatt04.qmd
         - LoesB1_04.qmd
-        - day11.qmd
         - Uebungsblatt05.qmd
         - LoesB1_05.qmd
+        - Uebungsblatt06.qmd
+        - LoesB1_06.qmd
+        - day10.qmd
+        - Uebungsblatt07.qmd
+        - LoesB1_07.qmd
+        - Uebungsblatt08.qmd
+        - LoesB1_08.qmd
+        - ProbePruefB1.qmd
+        - day11.qmd
+        - Uebungsblatt09.qmd
+        - LoesB1_09.qmd
+        
+        
+        
+        
         
     - part: ModulB2.qmd
+      chapters:
+        - day11_2.qmd
+        - UebungB2_01.qmd
     
+    - part: TidyModelling.qmd
+      chapters:
+        - TidyversePrincipals.qmd   
+        - AmesHousing.qmd
+        - parsnip.qmd
+        - workflow.qmd
+        
     - summary.qmd
     - references.qmd
+    
+
+        
 
 bibliography: references.bib
 
 format:
   html:
     theme: cosmo
+    css: cas.css
+    
+
     
     code-link: true
   pdf:

@@ -122,9 +122,9 @@ $$
 
 Wenn der Test positiv ist, dann beträgt die Wahrscheinlichkeit, dass die Person tatsächlich krank ist 0.2%. Überraschend wenig!
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
 
-## [Aufgabe 8]{.underline}
+
+## Aufgabe 8
 
 ### `rbind` & `dimnames <-`
 

@@ -1,0 +1,323 @@
+# Übungsblatt 07 {.unnumbered}
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Der Datensatz `no2basel.rda` enthält meteorologische Daten und Messungen der Konzentration von Stickstoffdioxid $[\mu g / m^3]$ in Basel im Februar 1991. Enthalten sind die Variablen `NO2`, `Wind`, `Temp` und `Tag`. Der Tagesgrenzwert für Stickstoffdioxid liegt bei $80 \ [\mu g / m^3]$ . Wir laden zuerst die Daten:
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("no2basel.rda")
+```
+
+### Teilaufgabe a)
+
+Passen sie die beiden einfachen linearen Regressionsmodelle an:
+
+1)  $NO2 = \beta_0+\beta_1 \cdot Wind+E$
+
+2)  $NO2 = \beta_0 + \beta_2 \cdot Temp + E$
+
+Halten sie die geschätzten Koeffizienten und deren Standard Errors fest.
+```{r}
+par(mfrow = c(1,3))
+hist(no2basel$Wind)
+hist(no2basel$Temp)
+hist(no2basel$NO2)
+
+```
+und mit pairs:
+```{r}
+pairs(no2basel)
+```
+Wind kann nicht negativ sein, ist theoretisch nach oben offen und erscheint rechtsschief verteilt. 
+Dehr log- transformieren: wir so in Lösung aber nicht propagiert. Daher hier ohne Log-Transformation:
+```{r}
+
+fit.w = lm(NO2 ~ Wind, data = no2basel)
+plot(NO2 ~ Wind, data = no2basel, pch = 20)
+abline(fit.w, col = "red")
+
+
+par(mfrow = c(1,2), mar = c(3, 2, 3, 2))
+plot(fit.w, which = 1:2)
+
+
+
+```
+Temperatur scheint eher normal verteilt, kann negativ und positiv werden. Daher erst mal nicht transforieren:
+```{r}
+fit.t <- lm(NO2 ~ Temp, data = no2basel)
+plot(NO2 ~ Temp, data = no2basel, pch = 20)
+abline(fit.t, col = "red")
+```
+```{r}
+summary(fit.w)
+summary(fit.t)
+```
+
+
+### Teilaufgabe b)
+
+Passen sie nun das multiple lineare Regressionsmodell mit beiden Prädiktoren an:
+
+$NO2 = \beta_0 +\beta_1 \cdot Wind + \beta_2 \cdot Temp+E$
+
+Vergleichen sie die geschätzten Koeffizienten und deren Standard Errors mit den entsprechenden Schätzungen aus Teilaufgabe a). Vergleichen sie auch die jeweiligen Werte der geschätzten Standardabweichungen der Residuen über die verschiedenen Modelle hinweg.
+
+```{r}
+fit = lm(NO2 ~ log(Wind) + Temp, data = no2basel)
+fit.e <- lm(NO2 ~ Wind + Temp, data = no2basel)
+par(mfrow = c(1,2))
+plot(fit, which = 1:2)
+plot(fit.e, which = 1:2)
+summary(fit)
+summary(fit.e)
+summary(fit.t)
+summary(fit.w)
+
+```
+
+
+### Teilaufgabe c)
+
+Zeigen die beiden Prädiktoren `Wind` und `Temp` in den einfachen linearen Regressionen einen signifikanten Zusammenhang mit der Zielgrösse? Lässt sich daraus ableiten, ob beide Variablen für die Beschreibung der StickstoffdioxidKonzentration nötig sind?
+
+[die p-Werte sind in beiden Fällen kleiner als 0.05, also sind beide Variablen signifikant. Die multiple R-squared sind in den multiplen Regressionen deutlich grösser wie in den einzelnen linearen Regresseionen. Also sind beide Variablen für die Beschreibung der StickstoffdioxidKonzentration hilfreich.]{style="color:#3C5AB4"}
+
+Sind `Temp`und Ẁind`linear unabhängig voneinander?
+```{r}
+cor.t.w. <- cor(no2basel$Temp, no2basel$Wind)
+cor.t.w.
+
+```
+Der Pearson-Korrelationskoeffizient ist 0.1, also sind die beiden Variablen linear unabhängig voneinander.
+Auch das spricht dafür, dass diese beiden Variablen für die Beschreibung der StickstoffdioxidKonzentration hilfreich sind.
+
+## Aufgabe 2 {.justify}
+
+Laden sie das Data Frame `pima`, das sie im File `pima.rda` finden. Mit diesem Datensatz soll vorhergesagt werden, ob eine Person dem Risiko ausgesetzt ist, an Diabetes zu erkranken. Die folgende Information steht zur Verfügung: *The National Institute of Diabetes and Digestive and Kidney Diseases conducted a study on 768 adult female Pima Indians living near Phoenix (Arizona, USA). The following variables were recorded:*
+
+| Variable    | Description                                                               |
+|------------------|------------------------------------------------------|
+| `pregnant`  | Number of times pregnant                                                  |
+| `glucose`   | Plasma glucose concentration (mg/dl) at 2 hours in an oral glucose tolerance test |
+| `diastolic` | Diastolic blood pressure (mm Hg)                                          |
+| `triceps`   | Triceps skin fold thickness (inches)                                      |
+| `insulin`   | 2-Hour serum insulin (mu U/ml)                                            |
+| `bmi`       | Body mass index (weight in kg/(height in meters squared))                 |
+| `diabetes`  | Diabetes pedigree function                                                |
+| `age`       | Age (years)                                                               |
+
+In diesem Datensatz ist `glucose` die Zielgrösse. Alle anderen Variablen kommen als Prädiktoren in Frage. Nicht alle sind in der richtigen Form, nicht alle werden gebraucht.
+
+```{r, echo=F, eval=T}
+
+## Daten laden
+load("pima.rda")
+
+```
+
+### Teilaufgabe a)
+
+Wie viele Beobachtungen und Variablen sind in diesem Datensatz enthalten?
+[n = 768, p=8]{style="color:#3C5AB4"}
+
+### Teilaufgabe b)
+
+Stellen sie sicher, dass alle Variablen in R vom korrekten Datentyp sind. Setzen sie die R-Befehle wie `summary()`, `hist()`, `plot()` und allenfalls auch `pairs()` ein, um die Daten kennen zu lernen. Beurteilen sie sie im Hinblick auf systematisch und nicht-systematisch fehlende sowie zweifelhafte Werte, Fehlcodierungen, unübliche Verteilungen und andere Probleme.
+```{r}
+summary(pima)
+```
+
+
+```{r}
+par(mfrow = c(3,3))
+hist(pima$pregnant)
+hist(pima$glucose)
+hist(pima$diastolic)
+hist(pima$triceps)
+hist(pima$insulin)
+hist(pima$bmi)
+hist(pima$diabetes)
+hist(pima$age)
+```
+
+
+
+
+
+```{r}
+pairs(pima)
+
+```
+fehlen Daten?
+```{r}
+sum(is.na(pima))
+any(is.na(pima))
+
+```
+nein, es fehlen keine Daten.
+
+in welchen Spalten gibt es wieviele Werte = 0?
+```{r}
+sum(pima$pregnant == 0)
+sum(pima$glucose == 0)
+sum(pima$diastolic == 0)
+sum(pima$triceps == 0)
+sum(pima$insulin == 0)
+sum(pima$bmi == 0)
+sum(pima$diabetes == 0)
+sum(pima$age == 0)
+
+
+```
+[In den Spalten `pregnant`, `glucose`, `diastolic`, `triceps`, `insulin`, `bmi` gibt es Werte = 0.]{style="color:#3C5AB4"}
+[Bis auf `pregnant` ist 0 als Wert bei den anderen Prädiktoren nicht plausibel.]{style="color:#3C5AB4"}
+[Damit auch alle 0-Werte dargestellt werden, is es sinnvoll die Daten in Stabdiagrammen darzustellen.]{style="color:#00008B"}
+
+
+
+```{r}
+par(mfrow=c(4,2))
+par(mar=c(2,2,2,2))
+for (i in 1:8) {
+  plot(table(pima[[i]]), main = names(pima)[i], col = "#00008B", lwd = 4)
+}
+```
+
+
+
+
+### Teilaufgabe c)
+
+Reparieren sie den Datensatz, d.h. bereinigen sie oben erkannte Probleme so, dass sie den Datensatz mit gutem Gewissen als Input für statistische Methoden verwenden können. Sie müssen unter Umständen Werte ersetzen, oder Beobachtungen von der Analyse ausschliessen, et cetera. Wie viele Variablen erachten sie als wirklich brauchbar für die Analyse?
+
+[Ausser bei `pregnant` sind alle Werte = 0 nicht plausibel. Daher werden diese 0 auf NA gesetzt]{style="color:#00008B"}
+```{r}
+pima.r <- pima
+for (i in 2:8) {
+  pima.r[[i]][pima.r[[i]] == 0] <- NA
+}
+```
+
+
+### Vergleich zu den bisherigen Stabdiagrammen
+
+```{r}
+par(mfrow=c(4,2))
+par(mar=c(2,2,2,2))
+for (i in 1:8) {
+  plot(table(pima.r[[i]]), main = names(pima.r)[i], col = "#00008B", lwd = 4)
+}
+```
+[Nach dem Ersatz der Werte = 0 durch `NA` sind die Stabdiagramme plausibler. Allerdings enthält `ìnsulin` jetzt 374 NAs und bizeps 220 NAs. Für eine Regression müssten diese ganzen Datensätze entfernt werden. Daher werde ich zwei Trainings-Sets erstellen: einen ohne `insulin` und `triceps`]{style="color:#00008B"}
+
+
+### Teilaufgabe d)
+
+Führen sie nun wo nötig lineare Transformationen durch, so dass alle Variablen in uns vertrauten und gut interpretierbaren Einheiten vorhanden sind. Mit linearen Transformationen ist aber längst nicht alles erledigt. Es gibt diverse Variablen, welche Kandidaten für eine Log-Transformation sind. Identifizieren sie diese und führen sie die Transformationen aus
+
+[`glucose` wird umgerechnet von mg/dl in mmol/l]{style="color:#00008B"}
+```{r}
+pima.r$glucose <- pima.r$glucose / 18.02
+```
+
+[`diastolic` wird umgerechnet von mmHg in kPa]{style="color:#00008B"}
+```{r}
+pima.r$diastolic <- pima.r$diastolic * 0.133322
+```
+[`triceps` wird umgerechnet von inch in cm]{style="color:#00008B"}
+```{r}
+pima.r$triceps <- pima.r$triceps * 2.54
+```
+
+[Entfernen der Spalten `insulin` und `triceps`]{style="color:#00008B"}
+```{r}
+pima.rep.red <- pima.r[, -c(4, 5)]
+```
+
+[Entfernen aller NAs]{style="color:#00008B"}
+```{r}
+pima.rep.red <- na.omit(pima.rep.red)
+pima.r <- na.omit(pima.r)
+```
+
+
+
+### Teilaufgabe e)
+
+Führen sie nun eine Regressionsanalyse durch, wo sie die Zielgrösse `glucose` mit den Prädiktoren `pregnant`, `diastolic`, `triceps`, `bmi`, `diabetes` und `age` (aber ohne `insulin`) erklären. Verwenden sie dazu die geeignet aufbereiteten Daten inklusive Reparaturen und Transformationen. Schätzen und interpretieren sie die geschätzten Koeffizienten, d.h. geben sie an, welches die Risikofaktoren für Diabetes sind, und wie diese wirken.
+
+```{r}
+fit.r <- lm(glucose ~ pregnant + diastolic + log(triceps) + log(insulin) + log(bmi) + log(diabetes) + log(age), data = pima.r)
+fit.r.mi <- lm(glucose ~ pregnant + diastolic + log(triceps) + log(bmi) + log(diabetes) + log(age), data = pima.r)
+fit.r.small <- lm(glucose ~ pregnant + diastolic + log(bmi) + log(diabetes) + log(age), data = pima.r)
+fit.rep.red <- lm(glucose ~ pregnant + diastolic + log(bmi) + log(diabetes) + log(age), data = pima.rep.red)
+```
+Auswertungen
+```{r}
+summary(fit.r)
+summary(fit.r.mi)
+summary(fit.r.small)
+summary(fit.rep.red)
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+# combine summaries into a table
+library(stargazer)
+stargazer(fit.r, fit.r.mi, fit.r.small, fit.rep.red, type = "text", omit.stat = "f", omit.table.layout = "n", report = "vc*p")
+
+```
+
+Anova
+```{r}
+anova(fit.r.small, fit.r)
+anova(fit.r.mi, fit.r)
+```
+
+[`insulin` ist der stärkste Prädiktor dessen Koeffizient deutlich <0.05 ist. Zusammen mit `insulin` wird R² am grössten. Der schwächste Koeffizint ist für `triceps`. Daher wir dieser im folgenden weggelassen. Da die diabetes pedigree function, die hinter `diabetes` steckt eher qualitativer Natur ist, und auf Patientenbefragungen beruht, wird auch diese im nächste Schritt weggelassen.]{style="color:#00008B"}
+
+```{r}
+fit.r.mt <- lm(glucose ~ pregnant + diastolic + 
+                 log(insulin) + log(bmi) + log(diabetes) + 
+                 log(age), data = pima.r)
+fit.r.mt.md <- lm(glucose ~ pregnant + diastolic + 
+                    log(insulin) + log(bmi) + 
+                    log(age), data = pima.r)
+```
+
+```{r, warning=FALSE, message=FALSE}
+# combine summaries into a table
+library(stargazer)
+stargazer(fit.r, fit.r.mt, fit.r.mt.md, 
+          type = "text", 
+          omit.stat = "f", 
+          omit.table.layout = "n", 
+          report = "vc*p")
+
+```
+
+[Interpretation der Koeffizienten]{style="color:#00008B"}
+[Plasma-Insulin, Alter und diastolischer Blutdruck sind die stärksten Prädiktoren. Je höher der diastolische Blutdruck, je höher das Alter, je höher der Insulinspiegel, desto höher der Blutzucker beim 2h OGTT. Und damit nimmt das Risiko zu an einem D. melitus zu erkranken, bzw schon erkrankt zu sein. Einzig die Anzahl Schwangerschaften schein diesem Trend etwas entgegen zu wirken, wenn auch nicht signifikant.]{style="color:#00008B"}
+
+
+### Teilaufgabe f)
+
+Erklären sie in kurzen Worten, ob eine Regression mit den jeweiligen Variablen singulär ist oder nicht, bzw. warum dies der Fall ist und warum nicht.
+
+i)  Wenn die Prädiktoren Körpergrösse in Meter und in Zentimeter dabei sind.
+
+ii) Wenn das Alter in Monaten und das Alter in Jahren dabei sind.
+
+iii) Wenn die Prädiktoren `triceps` und `log(triceps)` dabei sind.
+
+iv) Wenn die Prädiktoren Grösse, Gewicht und BMI dabei sind.

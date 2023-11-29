@@ -1,5 +1,76 @@
-# Day 08 08.11.2023 {.unnumbered}
+# Day 08 08.11.2023 Einfache Regression {.unnumbered}
 
-## to be filled
+## Einfache Regressions
 
-coming soon
+Literatur Vorschlag:
+
+PDF practical regression and anova with R <https://cran.r-project.org/doc/contrib/Faraway-PRA.pdf> [@farawayPracticalRegressionAnova]
+
+## Ordinary Least Squares (OLS)
+
+```{r}
+load("unique2010.rda")
+## fitting ATM vs Pax
+fit <- lm(Pax ~ ATM, data = unique2010)
+fitted.p <- fitted(fit)
+
+plot(Pax ~ ATM, data = unique2010)
+points(unique2010$ATM, fitted.p, col = "red", pch = 16)
+abline(fit, col = "blue", lwd = 2)
+```
+
+## Residual Plots
+
+### Residuals vs Predictor
+
+```{r}
+## Residuals vs Predictor
+xx <- unique2010$ATM
+yy <- residuals(fit)
+# two plots in one row
+par(mfrow = c(1,2))
+
+plot(xx, yy, xlab = "ATM", ylab ="Residuals", pch = 20)
+title("Residuals vs Predictor ATM")
+lines(loess.smooth(xx, yy), col = "red", lwd = 2)
+abline(h = 0, col = "grey")
+
+# Residual vs Predictor = Tukey-Anscombe Plot
+plot(fitted.p, yy, xlab = "Fitted", ylab = "Residuals", pch = 20)
+title("Residuals vs Fitted Values - Tukey-Anscombe")
+lines(loess.smooth(fitted.p, yy), col = "red", lwd = 2)
+abline(h = 0, col = "grey")
+```
+
+Die Residuen für den Fit für ATM sollten insgesamt Null ergeben da gilt: $$
+E[E_{i}] = 0
+$$
+
+Da der LOESS Fit oben vom Horizont (graue Linie) abweicht ist dies nicht ganz erfüllt.
+
+Die Residuen sollten normal verteilt sein, da angenommen wird: $$
+E_{i} \approx N(0, \sigma^{2}_{E})
+$$
+
+```{r}
+qqnorm(residuals(fit))
+qqline(residuals(fit))
+```
+
+Aus dieser Grafik kann interpretiert werden, dass die Residuen hinreichend genau normal verteilt sind.
+
+Ausserdem wird für OLS vorausgesetzt:
+
+$$
+Cov(E_{i}, E_{j}) = 0
+$$ für all $$i\neq j$$
+
+Das bedeutet, dass die Beobachtungen unabhängig von einander sind. Dies lässt sich jedoch schwer nachweisen und wird bei den multiplen linearen Regressionen thematisiert.
+
+## schnelle graphische Übersicht mit `r plot(fit)`
+
+```{r}
+par(mar = c(4,4,2,2))
+par(mfrow = c(2,2))
+plot(fit)
+```

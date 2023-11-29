@@ -1,0 +1,236 @@
+# Übungsblatt 09 {.unnumbered}
+
+---
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
+editor: visual
+lang: de
+language: 
+  title-block-author-single: "Autor:"
+  title-block-published: "Version vom:"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    theme: sandstone
+    fig-width: 8
+    fig-height: 6
+    fig-align: "center"
+    fig-caption: true
+    df-print: kable
+    highlight: "monochrome"
+---
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Das Bundesamt für Statistik hat eine Studie zur Abhängigkeit des jährlichen Brutto-Einkommens für eine 100%-Stelle von Körpergrösse und Geschlecht durchgeführt. Die ersten paar Beobachtungen präsentieren sich wie folgt:
+
+| Earning | Height | Sex    |
+|---------|--------|--------|
+| 190'343 | 167    | Female |
+| 213'625 | 181    | Male   |
+| 72'047  | 167    | Female |
+| ...     | ...    | ...    |
+
+Sie finden die Daten im Data Frame `income`, welches sie im File `income.rda` finden können. Sie sollen die Daten zuerst grafisch darstellen, danach Modelle anpassen und die gestellten Fragen beantworten. Im Einzelnen:
+
+```{r, echo=F, eval=T}
+load("income.rda")
+```
+
+### Teilaufgabe a)
+
+Erzeugen sie einen Scatterplot vom `log(earning)` als Zielgrösse gegen `height` als Prädiktorvariable und färben sie die Punkte nach dem Geschlecht ein.\
+Hinweis: `plot(log(earning)~height, col=sex, pch=20, data=…)`
+
+```{r}
+sc <- c("Female" = "orange", "Male" = "navy")
+plot(earning ~ height, col = sc[sex], pch = 20, data = income)
+plot(log(earning) ~ height, col = sc[sex], pch = 20, data = income) 
+```
+
+### Teilaufgabe b)
+
+Erklären sie die Zusammenhänge zwischen den Variablen `log(earning)`, `height` und `sex` aufgrund der Erkenntnisse aus dem Scatterplot in einigen wenigen Sätzen qualitativ und klar.
+
+### Teilaufgabe c)
+
+Passen sie das Modell `log(earning) ~ height` an die Daten an. Beantworten sie dann aufgrund der Resultate die folgenden Fragen:
+
+i)  Zeichnen sie die Regressionsgerade in den Scatterplot ein.
+
+```{r}
+fit.in <- lm(log(earning) ~ height, data = income)
+plot(log(earning) ~ height, col = sc[sex], pch = 20, data = income) 
+abline(fit.in, col = "#00008B")
+```
+
+ii) Geben sie den Schätzwert $\hat{\beta}_{height}$ aus dem obigen Modell an und erklären sie die Bedeutung dieses Werts einerseits für die logarithmierte Zielgrösse und andererseits für die Originalskala der Zielgrösse?
+
+```{r}
+summary(fit.in)
+coef(fit.in)
+exp(coef(fit.in))
+```
+Nimmt die Grösse und eine Einheit zu, dann nimmt das lagarithmierte Gehalt (income) um 0.038 zu. In der originla Skala ist die Gehaltszunahme 1.038, also 3.8%.
+
+
+iii) Bestimmen sie ein 95%-Vertrauensintervall für den Koeffizienten $\hat{\beta}_{height}$ Begründen sie: ist der Einfluss der Körpergrösse auf das Einkommen im obigen Regressionsmodell signifikant?
+
+```{r}
+
+confint(fit.in, parm = "height")
+```
+0 liegt nicht innerhalb des CI, also signifikant, dies wird auch durch den p-Wert im Summery gestützt.
+
+iv) Machen die Resultate von i)-iii) aus einer angewandten Perspektive Sinn? Ist es nachvollziehbar, dass die Körpergrösse einen solch grossen Einfluss auf das Einkommen hat? Wie entsteht der Effekt?
+
+[Der Founder wird das Geschlecht sein. Männer erhalten strukturell mehr Lohn. Da Männer aus dem Geschlechts-Dimophismus im Schnitt grösser sind als Frauen, erscheint es, dass die Körpergrösse das Gehalt beeinflusst]{style="color:#00008B"}
+
+### Teilaufgabe d)
+
+Verwenden sie nun das Modell `log(earning) ~ height + sex` und zeichnen sie das Resultat in geeigneter Form in den Scatterplot ein. Beschreiben sie das Resultat in qualitativer Form. Wie sieht es nun mit dem Einfluss der Körpergrösse auf das Einkommen aus?
+
+```{r}
+fit.in.s  <- lm(log(earning) ~ height + sex, data = income)
+plot(log(earning) ~ height, col = sc[sex], pch = 20, data = income)
+abline(fit.in.s$coefficients[1], fit.in.s$coefficients[2], col = "orange", lwd = 2)
+abline((fit.in.s$coefficients[3] + fit.in.s$coefficients[1]), fit.in.s$coefficients[2], col = "#00008B", lwd = 2)
+legend("bottomright", pch = c(20,20), col = 2:1, c("Female", "Male"), bty = "n")
+title("log income vs height & sex")
+```
+
+```{r}
+summary(fit.in.s)
+exp(coef(fit.in.s))
+```
+
+[Männer verdienen also 1.57 Mal soviel wie Frauen. Die Grösse hat noch einen kleinen Einfluss: pro cm grösserer Körpergrösse 1% mehr Gehalt, dies ist jedoch nicht mehr statistisch signifikant.]{style="color:#00008B"}
+
+
+### Teilaufgabe e)
+
+Bestimmen sie im multiplen Modell nochmals das 95%-Vertrauensintervall für den Koeffizienten $\hat{\beta}_{height}$ und vergleichen sie dessen Länge gegenüber der Lösung von c.iii). Können sie erklären, wie der Unterschied in der Länge zustande kommt?
+```{r}
+exp(coef(fit.in.s))
+ci.in.s <- exp(confint(fit.in.s, parm = "height")) 
+ci.in <- exp(confint(fit.in, parm = "height"))
+
+ci.in[2] - ci.in[1]
+ci.in.s[2] - ci.in.s[1]
+```
+
+[Das zweite model ist etwas komplexer, hat jedoch die selbe Anzahl n an Beobachtungen, dadurch sinkt die Genauigkeit der Koeffizienten-Schätzung]{style="color:#00008B"}
+
+Frauen: 1.02, CI [0.997, 1.04]
+Männer: 1.57, CI [1.23, 2.04]
+
+### Teilaufgabe f)
+
+Geben sie eine erwartungstreue Schätzung für das Jahreseinkommen einer Frau mit 170cm Körpergrösse an. Geben sie zusätzlich ein 95%-Vertrauensintervall für diesen Vorhersagewert an.
+```{r}
+ff <- data.frame(height = 170, sex = "Female")
+pr.ff <- predict(fit.in.s, newdata = ff, interval = "confidence")
+E.pr.ff <- exp(pr.ff[1]) + mean(exp(fit.in.s$residuals)) # duan's smearing estimate
+Ee.pr.ff <- exp(pr.ff[1] + 0.5*summary(fit.in.s)$sigma^2)
+E.pr.ff
+Ee.pr.ff
+exp(pr.ff)
+exp(pr.ff)[2:3]
+
+```
+
+
+### Teilaufgabe g)
+
+Beschreiben sie, wie die in f) berechneten Werte $e^{\hat{y}}$ und $e^{\hat{y}+0.5 \cdot \hat{\sigma}^2_E}$ das Jahreseinkommen von 170cm grossen Frauen beschreiben. Was ist die genaue Bedeutung der Werte, welche berechnet wurden?
+
+[$e^{\hat{y}}$ gibt den Median an, d.h. 50% der Frauen mit 170cm KG verdienen weniger als 156'400CHF 50% der Frauen mit 170cm KG verdienen mehr, insgesamt zwischen 133'900 und 182'680. Diese Verteilung ist rechtsschief, der Erwartungswert liegt bei 174'500, in der praxis wird dieser vorzugsweise mit duan bestimmt, da dann nicht zu sehr ins gewicht fällt ob die Residuen normal verteilt sind.]{style="color:#00008B"}
+
+
+### Teilaufgabe h)
+
+Wir bauen nun das obige Modell aus und fügen einen Interaktionsterm hinzu, d.h. `log(earning) ~ height + sex + height:sex`. Es zeigt sich, dass der Koeffizient $\hat{\beta}_{height:sex}$ positiv ist. Erklären sie, was das in Bezug auf Einkommen, Körpergrösse und Geschlecht bedeutet. Mit einem p-Wert von 0.74 ist der Interaktionsterm nicht signifikant. Wie muss man die obige Erklärung ergänzen?
+
+```{r}
+fit.in.s.i <- lm(log(earning) ~ height * sex, data = income)
+par(mfrow = c(2,2))
+plot(fit.in.s.i)
+summary(fit.in.s.i)
+```
+```{r}
+plot(log(earning) ~ height, col = sc[sex], pch = 20, data = income)
+abline(fit.in.s.i$coefficients[1], fit.in.s.i$coefficients[2], col = "orange", lwd = 2)
+abline((fit.in.s.i$coefficients[3] + fit.in.s.i$coefficients[1]), (fit.in.s.i$coefficients[2]+fit.in.s.i$coefficients[4]), col = "#00008B", lwd = 2)
+legend("bottomright", pch = c(20,20), col = 2:1, c("Female", "Male"), bty = "n")
+title("log income vs height & sex")
+
+```
+
+
+[Das EinkommensNiveau der Männer ist noch etwas höher als beim Model ohne Interaktionsterm. und es steigt mit zunehmender Grösse auch etwas stärker an.]{style="color:#00008B"}
+
+### Teilaufgabe i)
+
+Wie viele verschiedene Modelle kann man für die Zielgrösse `log(earning)` mit den Prädiktoren `height`, `sex` und `height:sex` konstruieren, wenn man mit den gängigen Hierarchieregeln jeden Term ins Modell aufnehmen kann oder nicht? Bestimmen sie dann Adjusted $R^2$ für alle Modelle aus f). Ordnen sie diese nach deren Güte.
+
+```{r, message=FALSE}
+library(stargazer)
+fit1 <- lm(log(earning)~1, data = income)
+fit2 <- lm(log(earning) ~ height, data = income)
+fit3 <- lm(log(earning) ~ sex, data = income)
+fit4 <- fit.in.s
+fit5 <- fit.in.s.i
+```
+
+
+```{r}
+stargazer(fit1, fit2, fit3, fit4, fit5, 
+          type  = "text", 
+          report = "vc*p",
+          intercept.bottom = F,
+          intercept.top = T,
+          font.size = "tiny")
+          
+```
+
+
+## Aufgabe 2 {.justify}
+
+Diese Aufgabe ist eine Fortsetzung zum Conconi-Test. Wie bereits damals erwähnt, wurde nicht nur ein einzelner, sondern mehrere Läufer getestet. Mit einem Ad-Hoc-Test durch Vergleich der Vertrauensintervalle für die geschätzten Koeffizienten wurde damals geprüft, ob zwischen Dani und Marcel ein signifikanter Unterschied im Pulsanstieg besteht. Nun soll die Sache systematischer untersucht werden. Zur Verfügung steht im File `conconi2.rda` der Export aus einem Excel-Spreadsheet.
+
+```{r, echo=F, eval=T}
+load("conconi2.rda")
+```
+
+### Teilaufgabe a)
+
+Die Daten befinden sich in keiner geeigneten Form, um eine Regressionsanalyse durchzuführen und müssen zuerst entsprechend aufbereitet werden! Erzeugen sie ein Data Frame, welches alle vorhandenen Beobachtungen (Hinweis: 39 Stück) der Variablen `puls`, `speed` und `runner` enthält. Letztere soll eine kategorielle Variable mit den Ausprägungen „Dani" und „Marcel" sein und bezeichnet, von welcher Person die entsprechende Messung stammt.
+
+### Teilaufgabe b)
+
+Passen sie nun das Haupteffekte-Modell `puls ~ speed + runner` mit dem KQ-Algorithmus an. Von welchen Voraussetzungen in Bezug auf Initialpuls und Pulsanstieg der beiden Läufer geht es aus?
+
+### Teilaufgabe c)
+
+Führen sie eine Residuenanalyse durch, indem sie `Residuals vs. Fitted` und den Normal Plot darstellen. Welche groben Modellverletzungen zeigen sich, und woher könnten diese rühren?
+
+### Teilaufgabe d)
+
+Um dem Problem auf die Spur zu kommen, modifizieren wir den Plot von `Residuals vs. Fitted`. Färben sie die Punkte von Marcel bzw. Dani mit zwei unterschiedlichen Farben ein!
+
+### Teilaufgabe e)
+
+Passen sie nun ein Modell mit Interaktionsterm zwischen `speed` und `runner` an. Von welchen Voraussetzungen in Bezug auf Initialpuls und Pulsanstieg geht dieses aus? Prüfen sie die Residuen mit den beiden Plots -- passt das Modell?
+
+### Teilaufgabe f)
+
+Geben sie die Schätzwerte für den Initialpuls (d.h. bei `speed=0`) sowohl für Dani wie auch für Marcel an, sowie auch wie stark bei den beiden der Puls pro zusätzlichen km/h an Geschwindigkeit zunimmt. Ist der Unterschied signifikant?

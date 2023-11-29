@@ -1,0 +1,131 @@
+# Übungsblatt 07 {.unnumbered}
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+Der Datensatz `no2basel.rda` enthält meteorologische Daten und Messungen der Konzentration von Stickstoffdioxid $[\mu g / m^3]$ in Basel im Februar 1991. Enthalten sind die Variablen `NO2`, `Wind`, `Temp` und `Tag`. Der Tagesgrenzwert für Stickstoffdioxid liegt bei $80 \ [\mu g / m^3]$ . Wir laden zuerst die Daten:
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("no2basel.rda")
+```
+
+### Teilaufgabe a)
+
+Passen sie die beiden einfachen linearen Regressionsmodelle an:
+
+1)  $NO2 = \beta_0+\beta_1 \cdot Wind+E$
+
+2)  $NO2 = \beta_0 + \beta_2 \cdot Temp + E$
+
+Halten sie die geschätzten Koeffizienten und deren Standard Errors fest.
+```{r}
+par(mfrow = c(1,3))
+hist(no2basel$Wind)
+hist(no2basel$Temp)
+hist(no2basel$NO2)
+
+```
+und mit pairs:
+```{r}
+pairs(no2basel)
+```
+Wind kann nicht negativ sein, ist theoretisch nach oben offen und erscheint rechtsschief verteilt. 
+Dehr log- transformieren:
+```{r}
+par(mfrow = c(3,2), mar = c(2, 2, 2, 2))
+
+fit.log.w = lm(log(Wind) ~ Tag, data = no2basel)
+plot(log(Wind) ~ Tag, data = no2basel, pch = 20)
+abline(fit.log.w, col = "red")
+
+xw <- data.frame(Tag = c(min(no2basel$Tag):max(no2basel$Tag)))
+yw <- exp(predict(fit.log.w, newdata = xw))
+plot(Wind ~ Tag, data = no2basel, pch = 20)
+lines(xw$Tag, yw , col="red", lwd = 2)
+
+plot(fit.log.w, which = 1:2)
+
+fit.w <- lm(Wind ~ Tag, data = no2basel)
+plot(fit.w, which = 1:2)
+title(main = "ohne Transformation")
+
+```
+Temperatur scheint eher normal verteilt, kann negativ und positiv werden. Daher erst mal nicht transforieren:
+```{r}
+fit.log.t <- lm
+```
+
+
+### Teilaufgabe b)
+
+Passen sie nun das multiple lineare Regressionsmodell mit beiden Prädiktoren an:
+
+$NO2 = \beta_0 +\beta_1 \cdot Wind + \beta_2 \cdot Temp+E$
+
+Vergleichen sie die geschätzten Koeffizienten und deren Standard Errors mit den entsprechenden Schätzungen aus Teilaufgabe a). Vergleichen sie auch die jeweiligen Werte der geschätzten Standardabweichungen der Residuen über die verschiedenen Modelle hinweg.
+
+### Teilaufgabe c)
+
+Zeigen die beiden Prädiktoren `Wind` und `Temp` in den einfachen linearen Regressionen einen signifikanten Zusammenhang mit der Zielgrösse? Lässt sich daraus ableiten, ob beide Variablen für die Beschreibung der StickstoffdioxidKonzentration nötig sind?
+
+## Aufgabe 2 {.justify}
+
+Laden sie das Data Frame `pima`, das sie im File `pima.rda` finden. Mit diesem Datensatz soll vorhergesagt werden, ob eine Person dem Risiko ausgesetzt ist, an Diabetes zu erkranken. Die folgende Information steht zur Verfügung: *The National Institute of Diabetes and Digestive and Kidney Diseases conducted a study on 768 adult female Pima Indians living near Phoenix (Arizona, USA). The following variables were recorded:*
+
+| Variable    | Description                                                               |
+|------------------|------------------------------------------------------|
+| `pregnant`  | Number of times pregnant                                                  |
+| `glucose`   | Plasma glucose concentration at 2 hours in an oral glucose tolerance test |
+| `diastolic` | Diastolic blood pressure (mm Hg)                                          |
+| `triceps`   | Triceps skin fold thickness (inches)                                      |
+| `insulin`   | 2-Hour serum insulin (mu U/ml)                                            |
+| `bmi`       | Body mass index (weight in kg/(height in meters squared))                 |
+| `diabetes`  | Diabetes pedigree function                                                |
+| `age`       | Age (years)                                                               |
+
+In diesem Datensatz ist `glucose` die Zielgrösse. Alle anderen Variablen kommen als Prädiktoren in Frage. Nicht alle sind in der richtigen Form, nicht alle werden gebraucht.
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("pima.rda")
+```
+
+### Teilaufgabe a)
+
+Wie viele Beobachtungen und Variablen sind in diesem Datensatz enthalten?
+
+### Teilaufgabe b)
+
+Stellen sie sicher, dass alle Variablen in R vom korrekten Datentyp sind. Setzen sie die R-Befehle wie `summary()`, `hist()`, `plot()` und allenfalls auch `pairs()` ein, um die Daten kennen zu lernen. Beurteilen sie sie im Hinblick auf systematisch und nicht-systematisch fehlende sowie zweifelhafte Werte, Fehlcodierungen, unübliche Verteilungen und andere Probleme.
+
+### Teilaufgabe c)
+
+Reparieren sie den Datensatz, d.h. bereinigen sie oben erkannte Probleme so, dass sie den Datensatz mit gutem Gewissen als Input für statistische Methoden verwenden können. Sie müssen unter Umständen Werte ersetzen, oder Beobachtungen von der Analyse ausschliessen, et cetera. Wie viele Variablen erachten sie als wirklich brauchbar für die Analyse?
+
+### Teilaufgabe d)
+
+Führen sie nun wo nötig lineare Transformationen durch, so dass alle Variablen in uns vertrauten und gut interpretierbaren Einheiten vorhanden sind. Mit linearen Transformationen ist aber längst nicht alles erledigt. Es gibt diverse Variablen, welche Kandidaten für eine Log-Transformation sind. Identifizieren sie diese und führen sie die Transformationen aus
+
+### Teilaufgabe e)
+
+Führen sie nun eine Regressionsanalyse durch, wo sie die Zielgrösse `glucose` mit den Prädiktoren `pregnant`, `diastolic`, `triceps`, `bmi`, `diabetes` und `age` (aber ohne `insulin`) erklären. Verwenden sie dazu die geeignet aufbereiteten Daten inklusive Reparaturen und Transformationen. Schätzen und interpretieren sie die geschätzten Koeffizienten, d.h. geben sie an, welches die Risikofaktoren für Diabetes sind, und wie diese wirken.
+
+### Teilaufgabe f)
+
+Erklären sie in kurzen Worten, ob eine Regression mit den jeweiligen Variablen singulär ist oder nicht, bzw. warum dies der Fall ist und warum nicht.
+
+i)  Wenn die Prädiktoren Körpergrösse in Meter und in Zentimeter dabei sind.
+
+ii) Wenn das Alter in Monaten und das Alter in Jahren dabei sind.
+
+iii) Wenn die Prädiktoren `triceps` und `log(triceps)` dabei sind.
+
+iv) Wenn die Prädiktoren Grösse, Gewicht und BMI dabei sind.

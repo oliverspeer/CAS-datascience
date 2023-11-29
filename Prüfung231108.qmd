@@ -1,6 +1,51 @@
 # Prüfung 08.11.2023 {.unnumbered}
-coming soon
+```{r}
+load("CAS23-18-MA2LNW.rda")
+```
 
 ```{r}
-# coming soon
+TP <- rbind(c(0, 1, 2, 3, 4), c(109, 65, 22, 3, 1))
+dimnames(TP) <- list(c("k", "frec"), c(1:5))
+TP <- data.frame(t(TP))
+TP
+```
+
+```{r}
+TP.x <- rep(TP$frec, TP$k)
+F.TP <- function(x, ind){
+  xx <- x[ind]
+  var(xx)/mean(xx)
+}
+library(boot)
+set.seed(seed = 141204)
+TP.boot <- boot(TP.x, F.TP, R=4999, stype = "i")
+TP.boot.ci <- boot.ci(TP.boot, conf = 0.95, type = "perc")
+TP.boot.ci
+mu <- sum(TP$k*TP$frec)/sum(TP$frec)
+
+poisson.test(sum(TP$k*TP$frec), sum(TP$frec))
+```
+
+```{r}
+
+binom.test(x=64, n=160, conf.level = 0.9)
+chisq.test(WB)
+```
+
+```{r}
+mean(MVJ$zuvor)
+sd(MVJ$zuvor)
+t.test(MVJ$zuvor, conf.level = 0.99)
+source("RFn-qqnormSim.R")
+qqnormSim(MVJ$zuvor, rob=T, SEED = 8173)
+
+```
+
+```{r}
+MVJ$diff <- MVJ$zuvor-MVJ$danach
+t.test(MVJ$zuvor, MVJ$danach, paired = T, conf.level = )
+```
+
+```{r}
+mosaicplot(WB)
 ```

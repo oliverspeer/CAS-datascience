@@ -1,5 +1,72 @@
-# Lösungen B2 03 {.unnumbered}
+# Lösung 03 {.unnumbered}
 
-## Aufgabe 1 coming soon
+author: "Marcel Dettling" date: "`r Sys.Date()`"
 
-hhhnnnvvvvv
+## Aufgabe 1 {.justify}
+
+Der Conconi-Test dient zur Messung der Ausdauer-Leistungsfähigkeit. Er findet auf der 400m-Bahn statt, wo man gemütlich (mit 9km/h) zu laufen beginnt. Alle 200m wird das Tempo um 0.5km/h erhöht. Am Ende jedes 200m-Abschnitts wird die Herzfrequenz gemessen. Der Test geht so lange weiter, bis das Tempo nicht mehr erhöht werden kann. Beim Dozenten wurde im Sommer 2012 ein solcher Test durchgeführt. Die Daten stehen im File `conconi.rda` zur Verfügung:
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("conconi.rda")
+```
+
+### Teilaufgabe a)
+
+Stellen sie die Daten in einem Scatterplot dar, passen sie mit dem Befehl `lm()` die Regressionsgerade an und zeichnen sie diese ein.
+
+```{r, echo=T, eval=T}
+## Scatterplot
+plot(puls ~ speed, data=conconi, pch=20, xlim=c(8.5,18.5), ylim=c(140,205))
+title("Conconi-Test: Puls vs. Speed")
+
+## Regressionsgerade bestimmen und einzeichnen
+fit <- lm(puls ~ speed, data=conconi)
+abline(fit, col="red")
+```
+
+[Siehe Code und grafischer Output.]{style="color:#3C5AB4"}
+
+### Teilaufgabe b)
+
+Erzeugen sie die beiden Plots zur Residuenanalyse, d.h. *Residuen vs. Prädiktor* sowie den *Normal Plot* der Residuen.
+
+```{r, echo=T, eval=T}
+## Residuen vs. Prädiktor mit Loess-Smoother
+plot(conconi$speed, resid(fit), pch=20)
+lines(loess.smooth(conconi$speed, resid(fit)), col="red")
+title("Residuen vs. Prädiktor Speed")
+abline(h=0, col="grey", lty=2)
+
+## Normal Plot
+qqnorm(resid(fit), pch=20)
+qqline(resid(fit), col="grey")
+
+## Alternative, welche die Funktion plot.lm() nutzt
+# plot(fit, which=1, pch=20, id.n=5)
+# plot(fit, which=2, pch=20)
+```
+
+[Siehe Code und grafischer Output. Wie wir später im Kapitel zur multiplen linearen Regression sehen werden, können diese beiden Residuenplots auch direkt und bequem mit der Funktion `plot.lm()` erzeugt werden. Es genügt dafür der Funktionsaufruf mit `plot(fit)`. Weil die Funktion `plot()` in R eine sogenannte generische Funktion ist, erkennt sie, von welcher Klasse das Input-Objekt `fit` ist und führt entsprechend die Funktion `plot.lm()` zur Darstellung der Residuenplots aus.]{style="color:#3C5AB4"}
+
+### Teilaufgabe c)
+
+Entscheiden sie sich dann, welche der 4 Annahmen für die KQ-Regression, d.h.:
+
+-   Die Gerade erfasst den Zusammenhang korrekt, d.h. $E[E_i]=0$
+
+-   Die Streuung der Fehler ist konstant, d.h. $Var(E_i) = \sigma^2_E$
+
+-   Die Fehler folgen einer Normalverteilung, d.h. $\mathcal{N}(0,\sigma^2_E)$
+
+-   Die Fehler sind unkorreliert, d.h. $Cor(E_i, E_j)=0 \ \ für \ \ i \neq j$
+
+in diesem Problem erfüllt sind, und welche nicht. Wo und wie erkennen sie allfällige Verletzungen der Annahmen, und worin könnten diese begründet sein?
+
+[Der Glätter im Plot von Residuen vs. Prädiktor weicht relativ klar von der Horizontalen ab. Es stellt sich die Frage, ob diese Abweichung systematisch oder rein zufällig ist. Das ist gar nicht so einfach zu entscheiden. Das Phänomen wird in erster Linie von drei Datenpunkten bei mittleren Geschwindigkeiten von 12-14km/h verursacht, welche stark negative Residuen aufweisen.]{style="color:#3C5AB4"}
+
+[Um zu einer Entscheidung zu kommen, hilft mir hier das Hintergrundwissen. Dieses besagt erstens, dass theoretisch zwischen Puls und Tempo eine lineare Beziehung gilt, sofern die Geschwindigkeit exakt eingehalten wird, die körperlichen Voraussetzungen (Aufwärmen, Ermüdung) sowie die äusseren Bedingungen (Wetter, Wind) konstant sind. Zweitens war es so, dass ich bei meinem ConconiTest nur alle 200m ein Feedback zum Tempo erhalten habe, und dieses teilweise nicht korrekt war. Dies erklärt die Abweichungen von der linearen Beziehung und ich komme zur Aussage, dass es hier zwar eine Abweichung gibt, die aber kein systematischer Fehler in der Regressionsbeziehung ist. Dass sie drei Datenpunkte nahe beisammen betrifft, ist in diesem Sinne „Pech". als Zufall anzusehen.]{style="color:#3C5AB4"}
+
+[Die Streuung der Fehler würde ich ebenfalls als konstant ansehen. Es gibt wohl einzelne Residuen, die deutlich grösser sind als der Rest. Andererseits ist keine wirklich systematische Abweichung von der Annahme konstanter Variabilität zu erkennen. Ebenso folgen die Datenpunkte bis auf die 3 Ausreisser nach unten ziemlich gut einer Normalverteilung. Weil es sich bloss um 3 Datenpunkte handelt, sprechen wir auch hier von einem Zufallseffekt. Wir sollten die Annahme von konstanter Varianz und Normalverteilung also aufrechterhalten.]{style="color:#3C5AB4"}
+
+[Bezüglich der Korrelation gilt es zu bemerken, dass die Messungen in einer Sequenz erfolgt sind. Daher besteht immer die Gefahr einer seriellen Korrelation. Diese ist hier tatsächlich gegeben, wie man mit analytischen Methoden (die nicht in diesem Kurs über Regression erklärt werden) feststellen kann. Sie liegt darin begründet, dass es für mich im Testsetup schwierig war, die geforderte Geschwindigkeit einzuhalten. So kam es vor, dass ich für 200m eher etwas zu schnell unterwegs war, mit entsprechend grossem Pulsanstieg. Als mir dies mitgeteilt wurde, lief ich die nächsten 200m-Teilstrecke wiederum etwas gedrosselt, oft dann gar zu langsam. So konnte sich natürlich mein Puls erhöhen. Gleichzeitig war ich danach wieder gezwungen, mein Tempo über Gebühr zu erhöhen, so dass wieder ein Pulssprung nach oben erfolgte, etc.]{style="color:#3C5AB4"}

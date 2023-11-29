@@ -1,24 +1,6 @@
-#  Übungsblatt 04 {.unnumbered}
-author: "Marcel Dettling"
-date:   "`r Sys.Date()`"
-editor: visual
-lang: de
-language: 
-  title-block-author-single: "Autor:"
-  title-block-published: "Version vom:"
-format:
-  html:
-    embed-resources: true
-    toc: true
-    toc-depth: 3
-    theme: sandstone
-    fig-width: 8
-    fig-height: 6
-    fig-align: "center"
-    fig-caption: true
-    df-print: kable
-    highlight: "monochrome"
+# Übungsblatt 04 Aufg 2 - 4 {.unnumbered}
 
+author: "Marcel Dettling" date: "`r Sys.Date()`" editor: visual lang: de language: title-block-author-single: "Autor:" title-block-published: "Version vom:" format: html: embed-resources: true toc: true toc-depth: 3 theme: sandstone fig-width: 8 fig-height: 6 fig-align: "center" fig-caption: true df-print: kable highlight: "monochrome"
 
 ```{css, echo = FALSE}
 .justify {
@@ -47,17 +29,64 @@ abline(fit, col="red")
 
 Zu welchem Prozentanteil lassen sich die Schwankungen in meinem Pulswerten durch die Zunahme der Geschwindigkeit erklären?
 
+```{r}
+fit <- lm(puls ~ speed, data=conconi)
+summary(fit)
+```
+
+Das $R^{2}=0.99$, also zu 99% lässt sich die Pulszunahme mit der Geschwindigkeitszunahme erklären.
+
 ### Teilaufgabe b)
 
 Um wie viel nimmt mein Puls im Schnitt zu, wenn die Geschwindigkeit um 1km/h erhöht wird? Welche anderen Werte für die Pulszunahme sind ebenfalls plausibel?
+
+[Das $\hat{\beta_1}$ ist 6.41. Mit dieser Zunahme des Pulses pro Steigerung von 1km/h wird gerechnet/erwartet.]{style="color:#3C5AB4"}
 
 ### Teilaufgabe c)
 
 Geben sie an, wie hoch mein Ruhepuls (d.h. ohne Vorwärtsbewegung) geschätzt wird. In welchem 95%-Intervall würden sie den entsprechenden Messpunkt erwarten? Kommentieren sie, ob der Wert und das Intervall vertrauenswürdig sind.
 
+```{r}
+coef(fit)
+confint(fit)
+new.x <- data.frame(speed = 0)
+predict(fit, newdata = new.x, interval = "confidence")
+```
+
+[Ruhepuls: $86.6, 95\% CI [81.26; 91.96]$]{style="color:#3C5AB4"}
+
+[Pulszuhname pro 1km/h: $6.41, 95\%CI[6.0; 6.8]$]{style="color:#3C5AB4"}
+
+[Diese Werte sind plausibel.]{style="color:#3C5AB4"}
+
 ### Teilaufgabe d)
 
 Bei meinem Kollegen Dani wurde auch ein Conconi-Test durchgeführt. Wessen Puls steigt bei Geschwindigkeitserhöhung langsamer an? Können sie eine Aussage treffen, ob zwischen seinem und meinem Anstieg ein signifikanter Unterschied besteht? Lässt sich ableiten, wer der besser trainierte Läufer ist?
+
+```{r}
+load("conconi2.rda")
+
+# Scatterplot erzeugen
+plot(Dani.Puls ~ Speed, data=conconi2, pch=20)
+title("Conconi-Test Dani: Puls vs. Speed")
+
+## Regressionsgerade fitten und einzeichnen
+fit.d <- lm(Dani.Puls ~ Speed, data=conconi2)
+abline(fit.d, col="navy")
+abline(fit, col = "red")
+
+```
+
+[Aus der Grafik kann beurteilt werden, dass bei Dani der Puls langsamer bei Geschw. Erhöhung ansteigt.]{style="color:#3C5AB4"}
+
+```{r}
+coef(fit.d)
+confint(fit)
+confint(fit.d)
+summary(fit.d)
+```
+
+[Es können die bei den `CI` für die beiden $\hat{\beta_1}$ verglichen werden. Diese beiden überschneiden sich nicht, daraus kann interpretiert werden, dass sie sich signifikant unterscheiden]{style="color:#3C5AB4"}
 
 ## Aufgabe 2 {.justify}
 
@@ -66,6 +95,14 @@ Im Datensatz `hpfuel.rda` finden sie Angaben zur Leistung (in PS, engl. *horse p
 ### Teilaufgabe a)
 
 Erzeugen sie einen Scatterplot, schätzen sie die Regressionsgerade mit dem KQ-Algorithmus, zeichnen sie die Gerade im Scatterplot ein und generieren sie den Summary-Output.
+
+```{r, echo=FALSE}
+load("hpfuel.rda")
+```
+
+```{r}
+plot(hpfuel$hp, hpfuel$l.100km, pch = 20, col = "#00008B", xlab = "PS", ylab = "Verbrauch l/ 100km")
+```
 
 ### Teilaufgabe b)
 

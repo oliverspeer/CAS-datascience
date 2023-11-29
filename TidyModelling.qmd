@@ -1,0 +1,5 @@
+# Übungen zu Tidy Modelling with R {.unnumbered}
+author: "Oliver Speer"
+
+Ich diesem Teil versuche ich Schritt für Schritt durch das Buch
+"Tidy Modelling with R" zu gehen.

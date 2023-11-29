@@ -1,31 +1,6 @@
-#  Übungsblatt 03 {.unnumbered}
-author: "Marcel Dettling"
-date:   "`r Sys.Date()`"
----
-editor: visual
-lang: de
-language: 
-  title-block-author-single: "Autor:"
-  title-block-published: "Version vom:"
-format:
-  html:
-    embed-resources: true
-    toc: true
-    toc-depth: 3
-    theme: sandstone
-    fig-width: 8
-    fig-height: 6
-    fig-align: "center"
-    fig-caption: true
-    df-print: kable
-    highlight: "monochrome"
----
+# Übungsblatt 03 {.unnumbered}
 
-```{css, echo = FALSE}
-.justify {
-  text-align: justify
-}
-```
+author: "Marcel Dettling" date: "`r Sys.Date()`"
 
 ## Aufgabe 1 {.justify}
 
@@ -40,15 +15,45 @@ plot(puls ~ speed, data=conconi, pch=20, xlim=c(8.5,18.5), ylim=c(140,205), main
 
 Stellen sie die Daten wie oben gezeigt in einem Scatterplot dar, passen sie mit dem Befehl `lm()` die Regressionsgerade an und zeichnen sie diese ein.
 
+```{r}
+plot(puls ~speed, data = conconi, pch = 20)
+abline(lm(puls ~speed, data = conconi))
+
+```
+
 ### Teilaufgabe b)
 
 Erzeugen sie die beiden Plots zur Residuenanalyse, d.h. Residuen vs. Prädiktor sowie den Normal Plot der Residuen.
+
+```{r}
+source("RFn-qqnormSim.R")
+fit <- lm(puls ~speed, data = conconi)
+summary(fit)
+par(mfrow = c(1,2))
+plot(conconi$speed, resid(fit))
+lines(loess.smooth(conconi$speed, resid(fit)), lwd=2, col = "red")
+abline(h=0, col="grey", lty=2)
+
+
+qqnormSim(resid(fit), rob = T, SEED = 8173)
+qqline(resid(fit), col = "grey", lty = 2)
+```
+
+## Alternativ `r plot(fit)`
+```{r}
+## Alternativ
+par(mfrow=c(1,2))
+plot(fit, which=1, pch=20, id.n=5)
+plot(fit, which=2, pch=20)
+
+```
+
 
 ### Teilaufgabe c)
 
 Entscheiden sie sich dann, welche der 4 Annahmen für die KQ-Regression, d.h.:
 
--   Die Gerade erfasst den Zusammenhang korrekt, d.h. $E[E_i]=0$
+-   Die Gerade erfasst den Zusammenhang korrekt, d.h. $$E[E_i]=0$$
 
 -   Die Streuung der Fehler ist konstant, d.h. $Var(E_i) = \sigma^2_E$
 

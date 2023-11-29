@@ -1,0 +1,34 @@
+# Day 11 Nachmittag 29.11.2023 Zeitreihen {.unnumbered}
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+# STL-Zerlegung
+```{r}
+pax.stl.13 <- stl(
+  x= log(AirPassengers),
+  s.window = "periodic",
+  t.window = 13,
+)
+plot(pax.stl.13)
+
+```
+
+```{r}
+library(TSA)
+data("oil.price")
+oil.stl <- stl(
+  x = oil.price,
+  s.window = "periodic",
+  t.window = 30,
+)
+
+plot(oil.stl)
+```
+
+```{r}
+```
+

@@ -1,0 +1,271 @@
+# Übungsblatt 06   log CI PI {.unnumbered}
+
+author: "Marcel Dettling" date: "`r Sys.Date()`"
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+```{r, echo=F, eval=F}
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+```
+
+## Aufgabe 1 {.justify}
+
+Die Schweizerische Sicherheitsuntersuchungsstelle (SUST) untersucht die zeitliche Entwicklung der Sicherheit in der Schweizer Zivilluftfahrt. Dafür stehen für verschiedene Motorflugzeuge bis 5.7t maximalen Abfluggewichts Daten mit jährlichen Werten im Intervall von 2007 bis 2016 zur Verfügung. Bei diesen Reihen handelt es sich um:
+
+-   die Anzahl Unfälle mit erheblich Verletzten oder Toten.\
+-   die Anzahl Bewegungen für Flugabschnitte von der CH in die CH.\
+-   die Unfallrate, d.h. Anzahl Unfälle (wie oben) pro 1 Million Flugbewegungen.
+
+Die Daten finden sie im File `sust.rda`. Sie sollen in dieser Aufgabe die Unfallrate, bzw. genauer die Anzahl Unfälle pro 1 Million Flugbewegungen analysieren. Die Daten präsentieren sich wie folgt:
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("sust.rda")
+
+## Zeitreihe definieren
+rat.ts   <- ts(sust$rate, start=2007)
+
+## Grafische Darstellung der Zeitreihe
+plot(rat.ts, type="o", pch=19, ylim=c(0,12), ylab="Unfallrate pro 1 Mio")
+abline(h=seq(2,12,by=2), lty=1, col="grey")
+lines(rat.ts, type="o", col="blue", pch=15)
+title("Unfallrate Motorflugzeuge bis 5.7t MTOM in der Schweiz")
+```
+
+### Teilaufgabe a)
+
+Passen sie ein geeignete, einfache lineare Regression an, um die zeitliche Entwicklung der Unfallrate zu modellieren. Entscheiden sie sich, ob und wie die Variablen transformiert werden müssen und argumentieren sie auf dem Lösungsblatt (max. 3-4 Sätze), warum sie ihre Entscheidungen getroffen haben. Notieren sie den R-Befehl für die Anpassung dieses Modells auf dem Lösungsblatt.
+
+```{r}
+plot(rate ~ jahr, data = sust, pch = 20)
+fit <- lm(rate ~ jahr, data = sust)
+abline(fit, col = "red", lwd = 2)
+```
+
+```{r}
+summary(fit)
+par(mfrow = c(1, 2))
+plot(fit, which = 1, pch = 20)
+plot(fit, which = 2, pch = 20)
+```
+
+[Die lineare Regrgession macht keinen Sinn bei Zeit-Serien. Diese können nicht negativ werden, die lineare Regression aber schon, man erkennt ausserdem: $R^{2}$ ist sehr nahe bei 0, $\beta_{1}=0$ also Steigung =0 als H0 kann nicht verworfen werden, da p=0.8.]{style="color:#3C5AB4"}
+
+## logarithmieren
+
+```{r}
+plot(rate ~ jahr, data=sust, pch = 20)
+fit.log.su <- lm(log(rate) ~ jahr, data = sust)
+xx <- data.frame(jahr = 2007:2016)
+lines(xx$jahr, exp(predict(fit.log.su, newdata = xx)), col = "red", lwd = 2)
+# add line for linear regression
+lines(xx$jahr, predict(fit, newdata = xx), col = "blue", lwd = 2)
+# legende
+legend("topleft", legend = c("logarithmierte Daten", "lineare Regression"), col = c("red", "blue"), lwd = 2, bty = "n")
+summary(fit.log.su)
+```
+
+### Teilaufgabe b)
+
+Notieren sie den Fitted Value für die Unfallrate im Jahr 2016 auf der Originalskala. Erklären sie mit klaren Worten, wie die entsprechende Zahl interpretiert werden muss. Welche praktische Bedeutung hat sie?
+
+```{r}
+xx16 <- data.frame(jahr = 2016)
+E16 <- exp(predict(fit.log.su, newdata = xx16, interval = "prediction"))
+E16
+
+
+# oder auch so
+
+exp(fitted(fit.log.su)[10])
+
+```
+
+[Dies enstspricht dem Median der Unfallrate im Jahr 2016. D.h. die Unfallrate mit einer Wahrscheinlichkeit von 50% überschirtten. Um den Mittelwert zu berechnen muss korrigiert werden: $\hat y = e^{\hat y' + \frac{\hat\sigma_E^2}{2}}$]{style="color:#3C5AB4"}
+
+```{r}
+exp(fitted(fit.log.su)[10] + summary(fit.log.su)$sigma^2/2)
+
+```
+
+### Teilaufgabe c)
+
+Kommunizieren sie klar, wie sich die Unfallrate auf der Originalskala im Verlauf der Zeit verändert. Verwenden sie für diese Aussage die Punktschätzung. Kommentieren sie dann ebenfalls mit der Angabe von geeigneten Grössen, welche Unsicherheit in ihrer Aussage besteht. Beschreiben sie auf dem Lösungsblatt genau, was sie machen!
+
+```{r}
+confint(fit.log.su, level = 0.95)
+summary(fit.log.su)
+
+exp(coef(fit.log.su))
+# Veränderung pro Jahr in Prozent
+paste(round(100*(1-exp(coef(fit.log.su)[2])), 2), "%")
+exp(confint(fit.log.su))
+
+```
+
+[Die Unfallrate nimmt im Verlauf der Zeit ab: $e^{\hat\beta_1}=-0.954$, d.h. die Unfallrate sinkt pro Jahr um ca 4.53%.]{style="color:#3C5AB4"}
+
+### Teilaufgabe d)
+
+Wenn sie gefragt werden, ob sich die Unfallrate im Verlauf der Zeit verändert, welche Antwort geben sie? Antworten sie mit ja/nein und geben sie eine nachvollziehbare, quantitative Begründung für diese Antwort an (max. 2-3 Sätze).
+
+[Die Daten zeigen die Tendenz eine Abnahme. Allerdings ist diese statistisch nicht signifikant. Ausserdem hat es wenige Datenpunkte, welche zu dem stark streuen. Daher ist die Aussage der Abnahme sehr unsicher.]{style="color:#3C5AB4"}
+
+### Teilaufgabe e)
+
+Wie wird die Unfallrate (auf der Originalskala!) im Jahr 2017 sein? Geben sie die Punktvorhersage sowie ein 95%-Intervall für den Beobachtungswert im 2017 an. Ist die Vorhersage gültig bzw. vertrauenswürdig?
+
+```{r}
+xx17 <- data.frame(jahr = 2017)
+E17 <- exp(predict(fit.log.su, newdata = xx17, interval = "prediction"))
+E17
+```
+
+[Die Die Unfallrate kann mit dem Fit für das JAhr 2017 auf 3.7 Unfälle pro 1Mio Flüge berechnet werden, allerdings ist dies ausserhalb des Datenbereichs der linearen Regression, somit betreiben wir Prognose. Bei 10 Datenpunkten mit einer Einehit über den Beobachtingszeitraum hinaus, ist dies jedoch nur ein milde Prognose, die wir als zulässig betrachten können.]{style="color:#3C5AB4"}
+
+## Aufgabe 2 {.justify}
+
+In einem Experiment wurden Meeresbakterien einer Röntgenstrahlung ausgesetzt. Man begann mit 255 Bakterien und setzte diese dann mehreren Intervallen von 6-minütiger Strahlung aus. Die folgende Tabelle enthält die Anzahl Bakterien:
+
+| Intervall | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  | 11  | 12  | 13  | 14  | 15  |
+|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| Anzahl    | 255 | 211 | 197 | 166 | NA  | 106 | 104 | 60  | 56  | 38  | 36  | 32  | 21  | 19  | 15  |
+
+```{r, echo=T, eval=T}
+## Daten einlesen
+intervall <- 1:15
+anzahl    <- c(255, 211, 197, 166, NA, 106, 104, 60, 56, 38, 36, 32, 21, 19, 15)
+bac.dat <- data.frame(intervall, anzahl)
+```
+
+### Teilaufgabe a)
+
+Zeigen sie den Zusammenhang zwischen der Anzahl überlebender Bakterien und der Anzahl Bestrahlungsintervalle auf. Ist es hier sinnvoll, eine KQ-Gerade in den Scatterplot zu legen?
+
+```{r}
+plot(intervall, anzahl, pch = 20)
+```
+
+[Die Anzahl Bakterien wird wahrscheinlich asymptotisch gegen null laufen, und eventuel auch null werden. Allerdings nicht negativ. Der beste Fit wird also keine Gerade sein.]{style="color:#3C5AB4"}
+
+### Teilaufgabe b)
+
+Passen Sie trotz eventuellen Vorbehalten eine einfache, lineare Regressionsgerade an und prüfen sie die Modellvoraussetzungen mit den Diagnoseplots. Wie stehen Sie zu ihren Aussagen von a)?
+
+```{r}
+fit.bac <- lm(anzahl ~ intervall, data = bac.dat)
+par(mfrow = c(1,3))
+plot(anzahl ~ intervall, data = bac.dat, pch = 20)
+abline(fit.bac, col = "red")
+plot(resid(fit.bac)~fitted(fit.bac), data = bac.dat)
+smo <- loess.smooth(fitted(fit.bac), resid(fit.bac), family = "gaussian")
+lines(smo, col = "red")
+abline(h=0, col = "grey")
+qqnorm(resid(fit.bac))
+qqline(resid(fit.bac))
+
+```
+```{r}
+load("resplot.rda")
+resplot(fit.bac, c(1, 2))
+```
+
+
+### Teilaufgabe c)
+
+Verbessern Sie das Modell durch Transformationen von Zielgrösse und/oder Prädiktor. Hinweis: die Theorie lässt uns vermuten, dass pro Bestrahlungsintervall jeweils ein gleichbleibender Anteil der noch lebenden Bakterien abgetötet wird.
+
+```{r}
+par(mfrow = c(1,2))
+fit.bac.1 <- lm(log(anzahl) ~ intervall, data = bac.dat)
+plot(log(anzahl) ~ intervall, data = bac.dat, pch = 20)
+abline(fit.bac.1, col = "red")
+plot(anzahl ~ intervall, data = bac.dat, xlim = c(-2, 20),  ylim = c(0, 400), pch = 20)
+xx <- data.frame(intervall = 1:15)
+yy <- predict(fit.bac.1, newdata = xx)
+ci <- predict(fit.bac.1, newdata = xx, interval = "confidence")
+pi <- predict(fit.bac.1, newdata = xx, interval = "prediction")
+lines(xx$intervall, exp(ci[,1]), col = "red", lwd = 2)
+lines(xx$intervall, exp(ci[,2]), col = "navy", lty = 2)
+lines(xx$intervall, exp(ci[,3]), col = "navy", lty = 2)
+lines(xx$intervall, exp(pi[,2]), col = "green", lty = 2)
+lines(xx$intervall, exp(pi[,3]), col = "green", lty = 2)
+```
+
+```{r}
+load("resplot.rda")
+resplot(fit.bac.1, plots = c(1,2))
+```
+
+
+### Teilaufgabe d)
+
+Geben Sie die Vorhersage für den fehlenden Wert nach 4 Bestrahlungsintervallen an, zusammen mit dem 95%-PI. Ebenso sollen Sie den Schätzwert für die relative Abnahme der Bakterien pro Intervall zusammen mit einem 95%-VI angeben. Ebenso gefragt ist die erwartete Anzahl Bakterien zum Ausganszeitpunkt, d.h. vor dem ersten Bestrahlungsintervall. Geben Sie auch dafür ein 95%-VI an.
+
+### [Vorhersage fehlender Wert mit 95% PI]{style="color:#3C5AB4"}
+
+```{r}
+paste(c("Median:", "Q2.5:", "Q97.5:"), round(exp(pi[5,]), 2))
+paste("Erwartungswert = ", round(exp(pi[5,1] + (summary(fit.bac.1)$sigma)^2/2),2))
+E5 <- exp(pi[5,1] + (summary(fit.bac.1)$sigma)^2/2)
+```
+
+### [Schätzwert für relative Abnahme mit 95%-VI]{style="color:#3C5AB4"}
+
+```{r}
+paste("Prozentuale Abnahme pro Bestrahlung:", 100- round(exp(coef(fit.bac.1)[2]),4)*100)
+paste("95% CI:", 100 - round(exp(confint(fit.bac.1)[2,]),4)*100)
+
+
+```
+
+### [Vorhersage des Wertes vor Bestrahlung, also Interval 0]{style="color:#3C5AB4"}
+
+```{r}
+xx0 <- data.frame(intervall = c(0))
+yy0 <- predict(fit.bac.1, newdata = xx0, interval = "prediction")
+E0 <- exp(yy0[1] + (summary(fit.bac.1)$sigma)^2/2)
+```
+
+[Vor Bestrahlung werden `r round(E0)` Bakterien erwartet, mit einem 95% CI: \[`r round(exp(yy0[2]))`; `r round(exp(yy0[3]))`\]]{style="color:#3C5AB4"}
+
+### [Model mit Inputation]{style="color:#3C5AB4"}
+
+```{r}
+intervall.i <- 0:15
+anzahl.i    <- c(E0, 255, 211, 197, 166, E5, 106, 104, 60, 56, 38, 36, 32, 21, 19, 15)
+bac.dat.i <- data.frame(intervall.i, anzahl.i)
+
+# fit
+par(mfrow = c(1,3))
+fit.bac.1.i <- lm(log(anzahl.i) ~ intervall.i, data = bac.dat.i)
+plot(log(anzahl.i) ~ intervall.i, data = bac.dat.i, pch = 20)
+abline(fit.bac.1.i, col = "red")
+plot(anzahl.i ~ intervall.i, data = bac.dat.i, xlim = c(-2, 20),  ylim = c(0, 400), pch = 20)
+xx <- data.frame(intervall.i = 0:15)
+yy <- predict(fit.bac.1.i, newdata = xx)
+ci <- predict(fit.bac.1.i, newdata = xx, interval = "confidence")
+pi <- predict(fit.bac.1.i, newdata = xx, interval = "prediction")
+lines(xx$intervall, exp(ci[,1]), col = "red", lwd = 2)
+lines(xx$intervall, exp(ci[,2]), col = "navy", lty = 2)
+lines(xx$intervall, exp(ci[,3]), col = "navy", lty = 2)
+lines(xx$intervall, exp(pi[,2]), col = "green", lty = 2)
+lines(xx$intervall, exp(pi[,3]), col = "green", lty = 2)
+
+fit.bac.1 <- lm(log(anzahl) ~ intervall, data = bac.dat)
+plot(anzahl ~ intervall, data = bac.dat, xlim = c(-2, 20),  ylim = c(0, 400), pch = 20)
+xx <- data.frame(intervall = 1:15)
+yy <- predict(fit.bac.1, newdata = xx)
+ci <- predict(fit.bac.1, newdata = xx, interval = "confidence")
+pi <- predict(fit.bac.1, newdata = xx, interval = "prediction")
+lines(xx$intervall, exp(ci[,1]), col = "red", lwd = 2)
+lines(xx$intervall, exp(ci[,2]), col = "navy", lty = 2)
+lines(xx$intervall, exp(ci[,3]), col = "navy", lty = 2)
+lines(xx$intervall, exp(pi[,2]), col = "green", lty = 2)
+lines(xx$intervall, exp(pi[,3]), col = "green", lty = 2)
+```

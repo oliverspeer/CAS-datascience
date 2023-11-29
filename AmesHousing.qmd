@@ -1,0 +1,84 @@
+# Ames Housing Data {.unnumbered}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(modeldata)
+library(ggplot2)
+ theme_set(theme_bw())
+```
+
+```{r}
+data(ames)
+
+ggplot(ames, aes(x = Sale_Price)) +
+  geom_histogram(bins = 75, col = "white")
+
+
+```
+
+Diese Daten sind rechts schief, daher log transformieren:
+
+```{r}
+ggplot(ames, aes(x = Sale_Price)) +
+  geom_histogram(bins = 75, col = "white") +
+  scale_x_log10()
+
+```
+
+# Daten investieren, Daten aufteilen
+
+```{r, warning=FALSE, message=FALSE}
+library(tidymodels)
+tidymodels_prefer()
+
+set.seed(8173)
+ames_split <- initial_split(ames, prop = 0.8)
+ames_train <- training(ames_split)
+ames_test <- testing(ames_split)
+
+dim(ames_train)
+dim(ames_test)
+
+```
+
+Das Ziel ist es ein Model zu trainieren, das zusammen mit den verschiedenen Faktoren dann den Verkaufspreis vorhersagt. Der Verkaufspreis ist jedoch rechtsschief verteilt. Das kann beim Data-Split berücksichtigt werden:
+
+```{r}
+set.seed(8173)
+ames_split <- initial_split(ames, prop = 0.8, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test <- testing(ames_split)
+
+dim(ames_train)
+dim(ames_test)
+
+```
+
+Eigentlich braucht es auch ein Validations-Set:
+
+```{r}
+set.seed(8173)
+ames_val_split <- initial_validation_split(ames, prop = c(0.6, 0.2), strata = Sale_Price)
+ames_val_split
+ames_train <- training(ames_val_split)
+ames_val <- validation(ames_val_split)
+ames_test <- testing(ames_val_split)
+ames_train
+ames_val
+ames_test
+
+
+```
+
+Die wichtigsten Code-Snippets für die Daten-Vorbereitung:
+
+```{r}
+library(tidymodels)
+data(ames)
+ames <- ames %>% mutate(Sale_Price = log10(Sale_Price))
+
+set.seed(502)
+ames_split <- initial_split(ames, prop = 0.80, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test  <-  testing(ames_split)
+```

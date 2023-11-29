@@ -1,5 +1,96 @@
-# Day 10 22.11.2023 {.unnumbered}
+# Day 10 22.11.2023 Multiple Linear Regression {.unnumbered}
 
-## to be filled
+Im Folgenden wird die Schätzung multipler linearer Regressions-Modelle behandelt, für welche folgendes angenommen wird: $$
+y=\beta_0+\beta_1x_1+...+\beta_px_p\ mit\ E\sim N(0, \sigma_E^2)
+$$ Wir nennen $\beta_0$ Intercept und $\beta_1,...,\beta_p$ Regressionskoeffizienten. Der Koeffizient $\beta_j$ ist die Zunahme um Response $y_j$, wenn der Prädiktor um eine (1) Einheit zunimmt, aber die anderen Prädiktoren unverändert bleiben.
 
-coming soon
+Dies kann nur funktionieren wenn $p<n$.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(flextable)
+library(tidyverse)
+library(data.table)
+```
+
+```{r}
+load("apm.rda")
+DT.apm <- as.data.table(apm, keep.rownames = TRUE) |> setnames("rn","City")
+ft <- as_flextable(DT.apm) 
+ft
+```
+
+Angegeben wir die Mortalität in Todesfälle pro 100.000 Einwohner pro Jahr. Die Daten sind von 1973 und beinhalten 60 Städte in den USA. Die Daten sind in der Datei `apm.rda` gespeichert. HC = Hausbrand (hydrocarbones), NOx = Stickstoffoxide, SO2 = Schwefeldioxid Educ = Durchschnittliche Jahre an Ausbildung NonWhite = Anteil der nicht-weissen Bevölkerung WhiteCollar = Anteil der weissen Bevölkerung mit Bürojobs Dens = Bevölkerungsdichte House = Durchschnittliche Anzahl an Personen pro Haushalt Income = Durchschnittliches Einkommen pro Haushalt Pop = Bevölkerungszahl
+
+```{r}
+## Daten Vorbereiten
+
+### Marginal Plots
+
+par(mfrow=c(4,4))
+par(mar=c(2,2,2,2))
+for (i in 2:15) {
+  hist(apm[[i]], main = names(apm)[i])
+}
+
+```
+
+#### Ist `pairs()`geeignet?
+
+```{r}
+pairs(apm[1:8])
+pairs(apm[9:15])
+```
+
+# Überprüfen ob Daten fehlen:
+
+```{r}
+any(is.na(apm))
+
+```
+
+## Transformieren von °F in °C
+
+```{r}
+apm$JanTemp <- (apm$JanTemp - 32) * 5/9
+apm$JulyTemp <- (apm$JulyTemp - 32) * 5/9
+
+```
+
+## Transformieren des Rain in inches in Rain in cm
+
+```{r}
+apm$Rain <- apm$Rain * 2.54
+```
+
+## multiple lineare Regression
+
+```{r}
+fit <- lm(Mortality ~ ., data = apm)
+fit1 <- lm(Mortality ~ JanTemp + JulyTemp + RelHum + Rain + Educ + Dens + NonWhite + WhiteCollar + log(Pop) + House + Income + log(HC) + log(NOx) + log(SO2), data=apm)
+summary(fit1)
+round(confint(fit1), 2)
+
+
+```
+
+## categorial predictors
+
+```{r}
+load("lathe.rda")
+boxplot(hours ~ tool, data = lathe, col = "lightblue")
+```
+
+## Vergleich zwischen t-test und Regression
+
+#### t-test
+
+```{r}
+t.test(hours ~ tool, data = lathe, var.equal = TRUE)
+```
+
+#### Regression
+
+```{r}
+class(lathe$tool) = "factor"
+summary(lm(hours ~ tool, data = lathe))
+```

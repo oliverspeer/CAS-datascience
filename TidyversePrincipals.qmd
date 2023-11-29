@@ -1,0 +1,39 @@
+# Tidyverse Principals {.unnumbered}
+
+author: "Oliver Speer" date: "`r Sys.Date()`"
+
+This chapter introduced the tidyverse, with a focus on applications for modeling and how tidyverse design principles inform the tidymodels framework. Think of the tidymodels framework as applying tidyverse principles to the domain of building models. We described differences in conventions between the tidyverse and base R, and introduced two important components of the tidyverse system, tibbles and the pipe operator %\>%. Data cleaning and processing can feel mundane at times, but these tasks are important for modeling in the real world; we illustrated how to use tibbles, the pipe, and tidyverse functions in an example data import and processing exercise.[@silge]
+
+Tidyverse versucht intuitive UI zu generieren:
+
+```{r}
+library(dplyr)
+arrange(.data = mtcars, gear, mpg)
+```
+
+# Der `pipe` Operator und funktionale Programmierung
+
+in R base:
+
+```{r}
+small_mtcars <- slice(arrange(mtcars, gear), 1:10)
+```
+
+mit \|\>, der generischen base pipe:
+
+```{r}
+small_mtcars <- 
+  mtcars |> 
+  arrange(gear) |> 
+  slice(1:10)
+
+```
+
+oder der `+`Operator in `ggplot2`:
+
+```{r}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```

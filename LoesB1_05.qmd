@@ -1,5 +1,273 @@
-# Lösungen B2 05 {.unnumbered}
+# Lösung 05 {.unnumbered}
 
-## Aufgabe 1 coming soon
+author: "Marcel Dettling" date: "`r Sys.Date()`"
 
-hhhnnnvvvvv
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+```{r, echo=F, eval=F}
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+```
+
+## Aufgabe 1 {.justify}
+
+Im Artikel *Characterization of Highway Runoff in Austin, Texas, Area* wird untersucht, wie der Zusammenhang zwischen der Zielgrösse Runoff (Abflussmenge in der Kanalisation) und dem Prädiktor Rainfall (Regenmenge) auf den Highways in Texas ist. Die Daten sind in der Tabelle unten dargestellt und im File `hwy.runoff.rda` verfügbar.
+
+| Rainfall | 5   | 12  | 14  | 17  | 23  | 30  | 40  | 47  | 55  | 67  | 72  | 81  | 96  | 112 | 127 |
+|----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| Runoff   | 4   | 10  | 13  | 15  | 15  | 25  | 27  | 46  | 38  | 46  | 53  | 70  | 82  | 99  | 100 |
+
+```{r, echo=F, eval=T}
+load("hwy.runoff.rda")
+```
+
+### Teilaufgabe a)
+
+Erzeugen sie einen Scatterplot, passen sie die KQ-Gerade an, zeichnen sie diese im Scatterplot ein und generieren sie den Summary-Output.
+
+```{r, echo=T, eval=T}
+## Darstellung in einem Scatterplot
+par(mfrow=c(1,1))
+plot(runoff ~ rainfall, data=hwy.runoff, pch=20)
+title("Runoff vs. Rainfall")
+
+## Anpassen einer Regressionsgerade
+fit <- lm(runoff ~ rainfall, data=hwy.runoff)
+abline(fit, col="red")
+
+## Summary
+summary(fit)
+```
+
+### Teilaufgabe b)
+
+Welcher Anteil der beobachteten Variation im Runoff Volume kann dem einfachen linearen Zusammenhang zwischen Runoff und Rainfall zugeordnet werden?
+
+[Hier wird nach dem Multiple R-Squared gefragt. Wie man dem Summary entnehmen kann, beträgt der Anteil 97.53%.]{style="color:#3C5AB4"}
+
+### Teilaufgabe c)
+
+Besteht ein signifikanter linearer Zusammenhang zwischen Runoff und Rainfall? Geben sie auch die anschauliche Interpretation des Regressionskoeffizienten an.
+
+[Ja, der Zusammenhang ist hochsignifikant. Der Test für die Nullhypothese $\beta_1=0$ wird mit einem p-Wert von $7.9 \cdot 10^{-12}$ verworfen. Es ist also statistisch gesichert, dass der lineare Zusammenhang zwischen Runoff und Rainfall existiert.]{style="color:#3C5AB4"}
+
+[Als Schätzungen erhalten wir $\hat{\beta_0}=-1.12$ , d.h. wenn es nicht regnet, so gibt es einen negativen Runoff. Dies kann natürlich nicht sein. Andererseits haben wir auch keine Beobachtungen an der Stelle $x=0$ , d.h. eine Interpretation des Achsenabschnitts ist eine Extrapolation. Diese zeigt aber auf, dass die Gerade nicht zwingend das perfekte Modell sein muss. Immerhin ist die Schätzung des Achsenabschnitts nicht signifikant ausgefallen.]{style="color:#3C5AB4"}
+
+[Die Steigung ergibt sich als $\hat{\beta_1} = 0.827$ . Der Wert ist kleiner als 1 (sogar signifikant kleiner, wie das 95%-VI für die Steigung zeigt). Somit ist statistisch gesichert, dass nicht der ganze Regen über die Kanalisation abfliesst. Das ist durchaus plausibel, da ein Teil verdunsten wird, ein anderer liegen bleibt oder nicht über die Kanalisation abfliesst.]{style="color:#3C5AB4"}
+
+### Teilaufgabe d)
+
+Machen sie eine Vorhersage, wie gross das erwartete Runoff Volume bei einem Rainfall von 50 ist. Geben sie an dieser Stelle auch ein 95%-Prognoseintervall an.
+
+```{r, echo=T, eval=T}
+## Vorhersage für Rainfall=50
+new.x <- data.frame(rainfall=50)
+predict(fit, new.x, interval="prediction")
+```
+
+[Wie man dem Output entnehmen kann, beträgt das Runoff Volume 40.22, und das 95%-Prognoseintervall reicht von 28.525 bis 51.916.]{style="color:#3C5AB4"}
+
+### Teilaufgabe e)
+
+Überprüfen sie die für die KQ-Schätzung getroffenen Annahmen mit den Modelldiagnose-Tools, die wir bereits kennen gelernt haben.
+
+```{r, echo=T, eval=T}
+## Residuenanalyse
+par(mfrow=c(1,2))
+plot(fitted(fit), resid(fit), pch=20, main="Residuen vs. Fitted")
+abline(h=0, lty=2)
+lines(loess.smooth(fitted(fit), resid(fit), span=0.9), col="red")
+qqnorm(resid(fit), pch=20); qqline(resid(fit))
+```
+
+[Wir überprüfen die getroffenen Annahmen (Erwartungswert der Fehler gleich null, konstante Fehlervarianz, approximative Normalverteilung) mit den Plots von Residuen vs. Prädiktor (erste beide Annahmen) und Normal Plot (letzte Annahme). Weiter nehmen wir auch noch unkorrelierte Fehler an. Dazu gibt es (hier) keinen sinnvollen Plot. Aber es gibt auch keinen Grund zur Annahme, dass die Fehler hier korreliert sind.]{style="color:#3C5AB4"}
+
+[Im Normal Plot sind zwar keine gravierenden Abweichungen zu sehen. Dies ist jedoch wenig relevant, weil der Plot von Residuen vs. Fitted Values grössere Fragezeichen aufwirft. Obwohl wir hier ein sehr hohes multiples R-squared haben und auch der Test für die Steigung hochsignifikant ausfällt, scheint der Erwartungswert der Fehler nicht generell gleich null zu sein. Der Glätter weicht auf jeden Fall systematisch von der Horizontalen ab. Ebenso scheint es, als ob die Streuung der Fehler bei grossen Rainfall-Werten grösser ist als bei kleinen. Somit ist auch die Annahme von konstanter Fehlervarianz in Frage gestellt. Wie wir sehen werden, können wir den Zusammenhang zwischen Runoff und Rainfall mit einem anderen (einfachen Regressions-)Modell besser beschreiben.]{style="color:#3C5AB4"}
+
+Verwenden sie nun die neuen Erkenntnisse bzgl. der Logarithmustransformation und passen sie ein anderes (bzw. besseres) Modell als bisher an.
+
+[Um die Frage nach den Transformationen zu beantworten, erzeugen wir für jede Variable ein Histogramm und ziehen dann einige weitere Informationen in Betracht.]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Histogramme für die beiden Variablen
+par(mfrow=c(1,2))
+hist(hwy.runoff$rainfall, col="lightblue", main="Rainfall")
+hist(hwy.runoff$runoff, col="lightblue", main="Runoff")
+
+```
+
+[Rainfall und Runoff zeigen beide eine leichte Rechtsschiefe. Weiter sind beides Grössen, die nur positive Werte annehmen können. Wie die Lösung zur Teilaufgabe e) zeigt, ist der Zusammenhang zwischen den beiden Grössen kaum eine Gerade, sondern eine Kurve. Des Weiteren nimmt auch die Streuung der Residuen mit zunehmendem Rainfall-Wert zu. Alle diese Informationen führen zum Schluss, dass hier für beide Variablen eine Log-Transformation angezeigt ist.]{style="color:#3C5AB4"}
+
+### Teilaufgabe f)
+
+Zeichnen sie die neue Regressionsbeziehung in den Scatterplot auf der Originalskala ein und vergleichen sie gegenüber der ursprünglichen Gerade.
+
+[Die neue Regressionsbeziehung erhalten wir mit:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+f.loglog <- lm(log(runoff)~log(rainfall), data=hwy.runoff) 
+```
+
+[Im Scatterplot auf der Originalskala sieht das wie folgt aus:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Einzeichnen der neuen Regressionsbeziehung
+par(mfrow=c(1,1))
+fit.loglog <- lm(log(runoff) ~ log(rainfall), data=hwy.runoff)
+plot(runoff ~ rainfall, data=hwy.runoff, pch=20, main="Highway")
+abline(fit, col="red")
+xx <- data.frame(rainfall=0:150)
+yy <- predict(fit.loglog, newdata=xx)
+lines(xx$rainfall, exp(yy), col="blue")
+legend("bottomright", lty=1, col=c("red", "blue"), legend=c("ohne Trsf", "mit Trsf"))
+```
+
+### Teilaufgabe g)
+
+Prüfen sie wiederum die Stärke des linearen Zusammenhangs, die Signifikanz zwischen Runoff und Rainfall und geben sie eine Interpretation für den Regressionskoeffizienten an.
+
+[Der Zusammenhang war schon ohne die Transformation sehr stark, mit einem pWert von $10^{-12}$ für die Nullhypothese $\beta_1 = 0$ und einem $R^2 = 0.975$. Diese beiden Werte sind nach der Transformation sogar noch etwas besser, der p-Wert liegt bei $10^{-13}$ und das $R^2 = 0.982.$]{style="color:#3C5AB4"}
+
+[Hinzu kommt, dass das Modell mit Transformation auch aus praktischen Gründen zu bevorzugen ist, da es keine unsinnigen, negativen Runoff-Werte erzeugen kann. Ebenso ist der Koeffizient $\beta_1$ besser zu interpretieren. Ohne Transformation bedeutet $\hat{\beta_1} = 0.827$ , dass pro zusätzliche Einheit an Regen 0.827 zusätzliche Einheiten an Abfluss entstehen. Mit der Transformation ist es hingegen so, dass pro 1% zusätzliche Regenmenge 0.989% zusätzlicher Abfluss entstehen. Oder mit anderen Worten, 98.9% des Regens fliessen im Schnitt über die Kanalisation ab, der Rest wird fortgetragen (Verdunstung, Versickern, etc.).]{style="color:#3C5AB4"}
+
+### Teilaufgabe h)
+
+Machen sie eine Vorhersage, wie gross der erwartete Runoff bei einem Rainfall von 50 ist. Erzeugen sie ebenso ein 95%-PI und vergleichen sie gegenüber der ursprünglichen Lösung. Plotten sie dann das PI für beliebige $x$ in den Scatterplot.
+
+[Der R-Code für die Vorhersage beim $x$-Wert 50 lautet wie folgt:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Vorhersage
+new.x  <- data.frame(rainfall=50)
+pred.y <- predict(fit.loglog, new.x, interval="prediction")
+exp(pred.y)
+```
+
+[Zu beachten ist jedoch, dass die Punkt-Vorhersage nicht der Erwartungswert der Zielgrösse ist, sondern nur deren Median. Wenn wir den ersteren wollen, so müssen wir noch korrigieren.]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+# Median -> Erwartungswert mit theoretischer Korrektur
+exp(pred.y[1] + (summary(fit.loglog)$sigma^2)/2) 
+
+```
+
+[Der Vorhersagewert liegt dann sehr nahe bei jenem aus dem Modell ohne Transformationen. Dies gilt jedoch nicht generell, manchmal kann es zwischen den beiden auch eine grosse Differenz geben. Zu beachten ist ebenfalls, dass das 95%-Prognoseintervall nun nicht mehr symmetrisch ist:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Hinzufügen von Vertrauens- und Prognoseintervall
+plot(runoff ~ rainfall, data=hwy.runoff, pch=20, main="Highway")
+xx <- data.frame(rainfall=0:150)
+yy <- predict(fit.loglog, newdata=xx, interval="confidence")
+lines(xx$rainfall, exp(yy[,1]), col="red")
+lines(xx$rainfall, exp(yy[,2]), col="green")
+lines(xx$rainfall, exp(yy[,3]), col="green")
+yy <- predict(fit.loglog, newdata=xx, interval="prediction")
+lines(xx$rainfall, exp(yy[,2]), col="blue")
+lines(xx$rainfall, exp(yy[,3]), col="blue")
+```
+
+[Die Asymmetrie ist hier allerdings nicht sonderlich stark ausgeprägt. In anderen Regressionsproblemen kann sie viel stärker zu Tage treten.]{style="color:#3C5AB4"}
+
+### Teilaufgabe i)
+
+Führen sie eine Residuenanalyse durch. Beantworten sie anschliessend, welches der beiden Modelle ihnen besser geeignet scheint und begründen sie die Antwort.
+
+[Der rechte Residuenplot (siehe unten, mit Transformation) sieht besser aus wie der linke, welcher ohne Transformation erzeugt wurde. Die Verbesserung scheint zwar nicht allzu gross, trotzdem ist das Modell mit den Transformationen zu bevorzugen. Die Residuenplots sind allerdings nicht das einzige Argument dafür.]{style="color:#3C5AB4"}
+
+[Mindestens ebenso entscheidend ist die Tatsache, dass das Modell mit den Transformationen keine negativen Werte erzeugen kann -- weder als Fitted Values noch in Form des Prognoseintervalls. Zudem sagt es für den Rainfall-Wert 0 auch einen Runoff von 0 vorher, ebenfalls eine erwünschte Eigenschaft. Auch hat der Koeffizient $\beta_1$ eine Interpretation, welche für die Praxis geeigneter scheint.]{style="color:#3C5AB4"}
+
+[Zusammenfassend kann man sagen, dass zwischen den beiden Modellen hier nur relativ geringe Unterschiede in Bezug auf die Kenngrössen und die Residuenplots bestehen. Wobei nochmals gesagt sei, dass das Modell mit den Transformationen auch hier durchwegs besser abschneidet. Weil das Transformations-Modell aber auch sachlich korrekter scheint, sollte man auf jeden Fall dieses verwenden!]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Residuenplots
+par(mfrow=c(1,2))
+xx <- hwy.runoff$rainfall; yy <- resid(fit)
+plot(xx, yy, pch=20, main="Ohne Trsf.")
+abline(h=0, lty=2)
+lines(loess.smooth(xx, yy, span=0.9, family="gaussian"), col="red")
+
+xx <- log(hwy.runoff$rainfall); yy <- resid(fit.loglog)
+plot(xx, yy, pch=20, main="Mit Trsf.")
+abline(h=0, lty=2)
+lines(loess.smooth(xx, yy, span=0.9, family="gaussian"), col="red")
+
+```
+
+[Die beiden Normal Plots (mit und ohne Transformation) sehen vernünftig aus:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Normal Plot
+par(mfrow=c(1,2))
+qqnorm(resid(fit), pch=20, main="Ohne Trsf."); qqline(resid(fit))
+qqnorm(resid(fit.loglog), pch=20, main="Mit Trsf."); qqline(resid(fit.loglog))
+```
+
+## Aufgabe 2 {.justify}
+
+Auf dem Übungsblatt 02 wurde der Zusammenhang zwischen dem Verbrauch verschiedener Fahrzeugmodelle und deren Motorleistung untersucht. In der Residuenanalyse ergaben sich diverse Vorbehalte gegenüber der angepassten KQ-Regressionsgerade. Sie finden die Daten im Datensatz `hpfuel.rda`.
+
+```{r, echo=F, eval=T}
+load("hpfuel.rda")
+```
+
+### Teilaufgabe a)
+
+Führen sie geeignete Variablentransformationen durch, so dass der Zusammenhang zwischen den beiden Grössen korrekt mit einem einfachen linearen Regressionsmodell beschrieben werden kann.
+
+[Wie wir bereits auf dem letzten Übungsblatt erkannt haben, weist der Glätter einen systematischen Durchhang auf, wenn die Variablen ohne Transformation verwendet werden. Ebenso schien es, als ob möglicherweise die Streuung der Residuen für grosse Fitted Values zunimmt. Daher sollte ein besseres Modell angepasst werden. Wir starten mit einer Analyse der Randverteilungen:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Randverteilungen der beiden Variablen
+hist(hpfuel$l.100km, col="limegreen", main="Verbrauch"); box()
+hist(hpfuel$hp, col="limegreen", main="Leistung"); box()
+```
+
+[Der Prädiktor `hp` weist im Histogramm eine Rechtsschiefe auf. Zudem ist er sicher auf einer relativen Skala, welche links mit einem Minimalwert von null abgeschlossen und rechts offen ist. Hier können wir uns ziemlich sicher sein, dass eine log-Transformation hilft.]{style="color:#3C5AB4"}
+
+[Bei der Zielgrösse `l.100km` ist die Situation nicht ganz so eindeutig. Das Histogramm zeigt nur leichte Schiefe an, auch streuen die Beobachtungen in einem deutlich kleineren Wertebereich. Dennoch kann man auch hier davon sprechen, dass sich die Werte auf einer relativen Skala befinden (d.h. eine Senkung des Verbrauchs bei einem Automobil wird vermutlich besser in %, denn als Absolutwert angegeben). Dazu gibt es einen weiteren Punkt, welcher für eine log-Transformation der Zielgrösse spricht: bei der Residuenanalyse vom untransformierten Modell kam der Gedanke auf, dass die Streuung der Fehler für grosse Fitted Values zunimmt -- dieser Umstand wird durch die Transformation ebenfalls entschärft, auch die beiden Ausreisser sind dann weniger gravierend.]{style="color:#3C5AB4"}
+
+### Teilaufgabe b)
+
+Formulieren sie das nach Variablentransformation angepasste Modell als Beziehung zwischen den originalen, untransformierten Grössen. Tragen sie den Fit im Scatterplot auf der Originalskala ein.
+
+```{r, echo=T, eval=T}
+## Modell mit transformierten Grössen
+fit.loglog  <- lm(log(l.100km) ~ log(hp), data=hpfuel)
+summary(fit.loglog)
+```
+
+[Wie wir dem Summary entnehmen können, ergeben sich als Schätzungen für die Regressionskoeffizienten $\hat{\beta^{'}_0} = -0.08488$ , $\hat{\beta^{'}_1}=0.53009$ Das Modell auf der Originalskala lautet also (siehe auch Folien und Skript): $y = 0.919 \cdot x^{0.53} \cdot E$]{style="color:#3C5AB4"}
+
+[In der Residuendiagnostik sieht man, dass der Glätter zwar nicht mehr so stark von der x-Achse abweicht wie zuvor ohne Transformationen. Die Situation als perfekt einzustufen wäre falsch, dennoch ist das Modell nach log-Transformation besser wie jenes ohne. Wir stellen nun die angepasste Beziehung in der Originalskala dar:]{style="color:#3C5AB4"}
+
+```{r, echo=T, eval=T}
+## Darstellung auf der Originalskala
+par(mfrow=c(1,1))
+xx <- data.frame(hp=seq(0,400,length=200))
+yy <- predict(fit.loglog, newdata=xx)
+plot(l.100km~hp, data=hpfuel, pch=20)
+title("Originalskala: Benzinverbrauch vs. Leistung")
+lines(xx$hp, exp(yy), col="red", lwd=2)
+
+```
+
+```{r, echo=T, eval=T}
+## Einzeichnen der Gerade im Log-Log-Plot
+par(mfrow=c(1,1))
+plot(log(l.100km) ~ log(hp), data=hpfuel, pch=20)
+title("Log(Verbrauch) vs. Log(Leistung)")
+abline(fit.loglog, col="red", lwd=2)
+
+## Modelldiagnostik
+par(mfrow=c(1,2))
+plot(fitted(fit.loglog), resid(fit.loglog), pch=20)
+lines(loess.smooth(fitted(fit.loglog), resid(fit.loglog)), col="red")
+title("Residuen vs. Fitted Values")
+abline(h=0, lty=2, col="grey")
+qqnorm(resid(fit.loglog), pch=20);
+qqline(resid(fit.loglog))
+```

@@ -1,5 +1,40 @@
-# Day 11 29.11.2023 {.unnumbered}
+# Day 11 06.12.2023  {.unnumbered}
 
-## to be filled
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Kategorielle Prädiktoren {.justify}
+
+<ul>
+
+<li>
 
 coming soon
+
+<li>
+
+...
+
+</ul>
+
+```{r}
+par(mar = c(1,5,1,5))
+load("lathe.rda")
+boxplot(hours ~tool, data = lathe, col = "lightblue")
+title( "lifetime of cutting tool" )
+
+```
+
+Modelanpassung mit kategoriellen Daten in R ist sehr benutzerfreundlich. R übernimmt die Verwaltung der *Dummy Variablen*.
+
+```{r}
+fit.k <- lm(hours ~ tool, data = lathe)
+
+```
+
+```{r}
+summary(fit.k)
+```

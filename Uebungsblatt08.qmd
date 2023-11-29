@@ -1,0 +1,220 @@
+# Übungsblatt 08 {.unnumbered}
+
+author: "Marcel Dettling"
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Aufgabe 1 {.justify}
+
+In dieser Aufgabe wird der Datensatz `catheter.rda` benützt. Es handelt sich um Daten aus der Medizin. Die Variable `height` ist die Grösse (in cm) eines Patienten, in der Variable `weight` (in kg) ist sein Gewicht enthalten. Die Zielgrösse `catlength` ist die optimale Länge eines Katheters, der für die Untersuchung des Herzens eingesetzt wird. Man möchte gerne diese Länge mit den vorliegenden Patienten-Daten modellieren.
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("catheter.rda")
+```
+
+### Teilaufgabe a)
+
+Untersuchen sie die Randverteilungen der 3 Variablen und kommentieren sie, was hier auffällt. Betrachten sie ebenfalls alle zweidimensionalen Streudiagramme. Was fällt hier auf?
+
+[Vorallem das Gewicht scheint rechts schief verteilt. Insgesamt sind es wenig Beobachtungen für die 3 Variablen: 12:3 \< 5 !]{style="color:#00008B"}
+
+#### Histogramme
+
+```{r}
+par(mfrow = c(1,3))
+hist(catheter$height)
+hist(catheter$weight)
+hist(catheter$catlength)
+```
+
+Logarithmieren wäre möglich aber nicht zwingend nötig.
+
+#### Paired Scatterplots
+
+```{r}
+pairs(catheter)
+
+```
+
+[Ausserdem sind die Variablen scheinbar nicht ganz linear unabhängig voneinander.]{style="color:#00008B"}
+
+### Teilaufgabe b)
+
+Führen sie jeweils eine einfache Regression von `catlength` gegen die beiden Prädiktoren `height` und `weight` durch. Wie sieht es bezüglich der Signifikanz der beiden Prädiktoren aus?
+
+```{r}
+fit.h <- lm(catlength ~ height, data = catheter)
+fit.w <- lm(catlength ~ weight, data = catheter)
+summary(fit.h)
+summary(fit.w) 
+
+
+
+```
+
+[Beide Prädiktoren sind signifikant.]{style="color:#00008B"}
+
+### Teilaufgabe c)
+
+Passen sie nun das multiple Modell `catlength ~ height + weight` an. Gibt es insgesamt einen Einfluss der beiden Prädiktoren auf die Zielgrösse? Wie wird dieser beurteilt?
+
+```{r}
+fit.m <- lm(catlength ~ height + weight, data = catheter)
+summary(fit.m)
+library(stargazer)
+stargazer(fit.h, fit.w, fit.m, type = "text", report = "vc*p")
+
+```
+
+```{r}
+qf(0.95, 2, 9)
+
+```
+
+[Der F-Test liefert einen p-Wert von 0.0006, was kleiner ist als 0.05. Somit braucht es für das das Modell den einen oder den anderen Prädiktor. Die einzelnen p-Werte der jeweilgen Prädiktoren in der multiplen Regression sind \>0.05. Also einer der beiden könnte weg gelassen werden um die Kathether-länge zu erklären. Interessant ist auch der Vergelich der R², dieser ist in der multiplen Regression nicht grösser wie in den einzelnen linearen Regressionen.]{style="color:#00008B; font-weight: bold"}
+
+### Teilaufgabe d)
+
+Testen sie die beiden Nullhypothesen $H_0: \beta_1 = 0$ bzw. $H_0: \beta_2 = 0$ und vergleichen sie die Resultate mit jenen, welche sie in Teilaufgabe b) erzielt haben. Kommentieren und erklären sie allfällige Unterschiede.
+
+### Teilaufgabe e)
+
+Erzeugen sie für ein Kind mit 120cm Grösse und 25kg Gewicht den Vorhersagewert sowie ein 95%-Prognoseintervall, jeweils mit dem multiplen Modell, wie auch mit den beiden einfachen Modellen. In der Praxis würde man einen Prognosefehler von $\pm \ 2cm$ akzeptieren. Lässt sich mit diesen Daten und diesem Modell die Katheter-Länge genügend genau vorhersagen? Ist es sinnvoll, dass beide zur Verfügung stehenden Prädiktoren benützt werden?
+
+```{r}
+new <- data.frame(height = 120, weight = 25)
+predict(fit.m, new, interval = "prediction")
+predict(fit.h, new, interval = "prediction")
+predict(fit.w, new, interval = "prediction")
+
+predict(fit.m, new, interval = "confidence")
+predict(fit.h, new, interval = "confidence")
+predict(fit.w, new, interval = "confidence")
+
+
+```
+
+[Die Prognoseintervalle sind alle sehr gross. Die Vorhersage ist also nicht sehr genau. Dies ändert sich nicht ob Regressionen mit den einzelnen Prädiktoren, bzw die multiple Regression durchgeführt wird. Die mutiple Regression führt eher zu einer grösseren Unsicherheit. Die Vorhersage verliert an Genauigkeit. Dies ist so, da es sich nicht lohnt zum Gewicht zusätzlich die Grösse hinzuzuziehen, da es nicht mehr Information mit sich bringt.]{style="color:#00008B; font-weight: bold"}
+
+## Aufgabe 2 {.justify}
+
+Betrachten sie das Data Frame `highway` im File `highway.rda`. Es beschreibt die Unfallhäufigkeit auf den Highways im US-Staat Minnesota. Die Beobachtungen sind Messungen für einzelne Highway-Abschnitte. Gegeben sind die folgenden Variablen:
+
+| Variable | Beschreibung                            |
+|----------|-----------------------------------------|
+| `Acpt`   | Anzahl Auffahrten pro Meile.            |
+| `ADT`    | Durchschnittlicher Verkehr pro Tag.     |
+| `Lwid`   | Breite der Fahrbahn-Spuren in Feet.     |
+| `Rate`   | Unfallrate pro Million Fahrzeugmeilen.  |
+| `Slim`   | Zulässige Höchstgeschwindigkeit in mph. |
+| `Trks`   | Anteil LKWs am Gesamtaufkommen in %.    |
+
+Führen sie eine multiple lineare Regression mit der Variable `Rate` als Zielgrösse, und den anderen Variablen als Prädiktoren durch. Im Einzelnen:
+
+```{r, echo=F, eval=T}
+## Daten laden
+load("highway.rda")
+```
+
+### Teilaufgabe a)
+
+Entscheiden sie für alle Variablen aufgrund vom Histogramm und weiteren Kriterien, ob eine log-Transformation vorgenommen werden soll oder nicht
+
+```{r}
+par(mfrow=c(3,2))
+par(mar=c(2,2,2,2))
+for (i in 1:6) {
+  hist(highway[[i]], main = names(highway)[i])
+}
+```
+
+### Teilaufgabe b)
+
+Passen sie das Modell mit allen Prädiktoren und betrachten sie die beiden Residuenplots Residuals vs. Fitted und den Normal Plot. Überdenken sie ihre Wahl der Transformationen, falls das dortige Resultat nicht passt.
+
+```{r}
+fit.hw <- lm(Rate ~ Acpt + ADT + Lwid + Slim + Trks, data = highway)
+par(mfrow=c(1,2))
+plot(fitted(fit.hw), residuals(fit.hw))
+abline(h=0)
+smo <- loess.smooth(fitted(fit.hw), residuals(fit.hw), family = "gaussian")
+lines(smo, col="red")
+qqnorm(residuals(fit.hw))
+qqline(residuals(fit.hw))
+```
+
+[Die Residuen sind normalverteilt. Aber die Residuen sind eher heteroskedastisch.]{style="color:#00008B; font-weight: bold"}
+
+```{r}
+
+fit.hw2 <- lm(Rate ~ log(Acpt) + log(ADT) + log(Lwid) + log(Slim) + log(Trks), data = highway)
+par(mfrow=c(1,2))
+plot(fitted(fit.hw2), residuals(fit.hw2))
+abline(h=0)
+loe <- loess.smooth(fitted(fit.hw2), residuals(fit.hw2), family = "gaussian")
+lines(loe, col="red")
+qqnorm(residuals(fit.hw2))
+qqline(residuals(fit.hw2))
+```
+
+```{r}
+library(stargazer)
+stargazer(fit.hw, fit.hw2, type = "text", report = "vc*p")
+summary(fit.hw)
+```
+
+[Die Regression der log-Transformationen führt zu einer besseren Regression. Die Residuen sind normalverteilt und homoskedastisch. Und der Standart Fehler der Residuen ist deutlich kleiner.]{style="color:#00008B; font-weight: bold"}
+
+### Teilaufgabe c)
+
+Betrachten sie den Summary-Output. Eliminieren sie nun schrittweise jeweils die Variable aus dem Modell, welche den höchsten p-Wert aufweist. Dies natürlich nur so lange, bis alle Prädiktoren signifikant sind! Notieren sie sich auch für jedes Modell das Adjusted R-Squared und das Multiple R-Squared. Prüfen sie beim finalen Modell erneut die Residuenplots!
+
+```{r}
+fit.hw2 <- lm(Rate ~ log(Acpt) + log(ADT) + log(Lwid) + log(Slim) + log(Trks), data = highway)
+fit.hw3 <- update(fit.hw2, . ~ . - log(Lwid))
+fit.wd9 <- lm(log(Rate) ~ log(Acpt) + log(ADT) + log(Slim) + log(Trks), data = highway)
+fit.hw4 <- update(fit.hw3, . ~ . - log(ADT))
+fit.hw5 <- update(fit.hw4, . ~ . - log(Acpt))
+fit.wd6 <- lm(Rate ~ Slim + Trks, data = highway)
+fit.wd7 <- lm(log(Rate) ~ log(Slim) + log(Trks), data = highway)
+fit.wd8 <- lm(Rate ~ Slim + Trks + log(ADT) + log(Acpt), data = highway)
+
+stargazer(fit.hw2, fit.hw3, fit.wd9, fit.hw4, fit.hw5, fit.wd7, fit.wd8, type = "text", report = "vc*p")
+
+```
+
+```{r}
+par(mfrow=c(1,2))
+plot(fitted(fit.hw3), residuals(fit.hw3))
+abline(h=0)
+loe <- loess.smooth(fitted(fit.hw3), residuals(fit.hw3), family = "gaussian")
+lines(loe, col="red")
+qqnorm(residuals(fit.hw3))
+qqline(residuals(fit.hw3))
+```
+
+[Von den statitischen Daten her gesehen ist das Model mit log(slim und log(trks) am besten. Aber die Residuen sind weniger homoskedastisch.]{style="color:#00008B; font-weight: bold"}
+
+### Teilaufgabe d)
+
+Welches ist im vorliegenden Regressionsproblem das beste Modell (mit beliebiger Kombination aller Prädiktoren!), wenn sie die Entscheidung treffen nach:
+
+i)  dem Multiple R-Squared?
+
+ii) einer Rückwärtsselektion via die p-Werte?
+
+iii) dem Adjusted R-Squared (Hinweis: effizient programmieren!)
+
+### Teilaufgabe e)
+
+Welches Resultat ergibt ein partieller F-Test, wenn sie das Ausgangsmodell mit allen Prädiktoren gegen das finale Modell aus der Rückwärtsselektion vergleichen? Und wie sieht es im Vergleich zum besten Modell gemäss dem Adjusted R-Squared aus?
+
+```{r}
+anova(fit.hw, fit.hw3)
+
+```

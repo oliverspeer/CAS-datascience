@@ -1,23 +1,6 @@
 # Übungsblatt 02 {.unnumbered}
-author: "Marcel Dettling"
-date:   "`r Sys.Date()`"
-editor: visual
-lang: de
-language: 
-  title-block-author-single: "Autor:"
-  title-block-published: "Version vom:"
-format:
-  html:
-    embed-resources: true
-    toc: true
-    toc-depth: 3
-    theme: sandstone
-    fig-width: 8
-    fig-height: 6
-    fig-align: "center"
-    fig-caption: true
-    df-print: kable
-    highlight: "monochrome"
+
+author: "Marcel Dettling" date: "`r Sys.Date()`" editor: visual lang: de language: title-block-author-single: "Autor:" title-block-published: "Version vom:" format: html: embed-resources: true toc: true toc-depth: 3 theme: sandstone fig-width: 8 fig-height: 6 fig-align: "center" fig-caption: true df-print: kable highlight: "monochrome"
 
 ```{css, echo = FALSE}
 .justify {
@@ -36,6 +19,21 @@ plot(Pax ~ ATM, data=unique2010, pch=20)
 
 Zeichnen sie im Scatterplot intuitiv „nach Augenmass" eine Gerade ein, die „gut zu den Daten passt", d.h. die mutmassliche Regressionsgerade.
 
+```{r}
+# add regression line unique$Pax = a + b*unique$ATM
+plot(Pax ~ ATM, data=unique2010, pch=20)
+reg <- lm(Pax ~ ATM, data=unique2010)
+abline(reg, col="red")
+
+# extract coefficients
+coef(reg)
+
+
+
+```
+
+D.h. pro zusätzlicher Flugbewegung werden 138.8 Passagiere mehr befördert. Die Regressionsgerade schneidet die y-Achse bei -1'197'682. D.h. wenn es keine Flugbewegungen gibt, werden -1'197'682 Passagiere befördert. Dieser Wert ist natürlich nicht sinnvoll interpretierbar, da er ausserhalb des Wertebereichs liegt.
+
 ### Teilaufgabe b)
 
 Diskutieren sie mit ihren Nachbarn, nach welchem Kriterium sie beurteilen, bzw. beurteilt haben, ob die Gerade gut passt.
@@ -46,19 +44,54 @@ Als Schätzungen für die Regressionskoeffizienten erhalten wir durch Berechnung
 
 $\hat{\beta_1} = -138.8 ; \hat{\beta_0}=-1'197'682$
 
-Das Ziel ist es nun, die rechnerisch bestimmte Regressionsgerade in den Scatterplot einzutragen.
+Das Ziel ist es nun, die rechnerisch bestimmte Regressionsgerade in den Scatterplot einzutragen. Siehe oben
 
 ### Teilaufgabe a)
 
 Bestimmen sie den Fitted Value $\hat{y}$ für $x= 20'100$ Flugbewegungen. Wird die Paxzahl in einem Monat mit dieser Anzahl Flugbewegungen tatsächlich so gross sein? Oder anders gefragt: wie muss man den Wert $\hat{y}$ interpretieren?
 
+```{r}
+# calculate Pax for ATM = 20100 with coef(reg)
+P1 <- coef(reg)[1] + coef(reg)[2]*20100
+P1
+```
+
 ### Teilaufgabe b)
 
 Bestimmen sie den Fitted Value $\hat{y}$ nun auch für $x = 24'000$ Flugbewegungen. Wir erhalten so einen weiteren Punkt, der auf der Regressionsgerade liegt. Nun lässt sich diese einzeichnen. Vergleichen sie auch gegenüber der „von Auge" eingezeichneten Lösung auf der Vorderseite.
 
+```{r}
+# calculate Pax for ATM = 20100 with coef(reg)
+P2 <- coef(reg)[1] + coef(reg)[2]*24000
+P2
+
+```
+
+```{r}
+# add regression line unique$Pax = a + b*unique$ATM
+plot(Pax ~ ATM, data=unique2010, pch=20)
+reg <- lm(Pax ~ ATM, data=unique2010)
+abline(reg, col="red")
+
+# without intercept
+fit.wo.intercept <- lm(Pax ~ ATM - 1, data=unique2010)
+abline(fit.wo.intercept, col="blue")
+points(unique2010$ATM, fitted(reg), col = "red", pch = 20)
+
+
+plot(unique2010$ATM, resid(reg), pch = 20, col = "red", xlab = "ATM", ylab = "Residuals")
+
+plot(reg)
+```
+
 ### Teilaufgabe c)
 
 Berechnen sie auch noch den Fitted Value $\hat{y}$ für $x = 5'000$ Flugbewegungen. Wie stufen sie den erhaltenen Wert ein? Wie kann das passieren?
+
+```{r}
+P3 <- coef(reg)[1] + coef(reg)[2]*5000
+P3
+```
 
 ## Aufgabe 3 {.justify}
 

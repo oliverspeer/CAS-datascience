@@ -1,5 +1,115 @@
-# Day 09 15.11.2023 {.unnumbered}
+# Day 09 15.11.2023 PI & CI {.unnumbered}
 
-## to be filled
+## Konfidenz Intervalle und Vorhersage Intervalle = Prediction Intervals
 
-coming soon
+### CI & PI
+
+```{r}
+load("unique2010.rda")
+## fitting ATM vs Pax
+fit <- lm(Pax ~ ATM, data = unique2010)
+# predicting CI & PI für den Fit
+CI <- confint(fit, "ATM")
+CI
+dat <- data.frame(ATM = seq(18000, 26000, length = 200))
+ci <- predict(fit, newdata = dat, interval = "confidence")
+pi <- predict(fit, newdata = dat, interval = "prediction")
+```
+
+Der Befehlt `predict` erzeugt Tabellen mit 3 Spalten: `fit`, `lwr` und `upr`:
+
+```{r}
+head(ci)
+```
+
+Daher werden im folgenden die Spalten `lwr`: `ci[,2]` und `upr`: `ci[,3]` für die untere und obere Grenze der Intervalle verwendet.
+
+```{r}
+# plotting fit line with CI & PI lines
+plot(Pax ~ ATM, data = unique2010, pch = 20, col = "blue")
+title("Pax vs. ATM mit 95%-CI & 95%-PI")
+lines(dat$ATM, ci[,2], col = "darkgreen", lty = 2)
+lines(dat$ATM, ci[,3], col = "darkgreen", lty = 2)
+lines(dat$ATM, pi[,2], col = "blue", lty = 2)
+lines(dat$ATM, pi[,3], col = "blue", lty = 2)
+abline(fit, col = "red", lwd = 2)
+legend("topleft", legend = c("95%-CI", "95%-PI", "Fit"), col = c("darkgreen", "blue", "red"), lty = c(2,2,1), lwd = c(2,2,2))
+
+
+
+
+
+```
+
+## mit ggplot2
+
+```{r}
+library(tidyverse)
+ggplot(unique2010,
+       aes(x = ATM, y = Pax)) +
+  geom_point(size = 2) +
+  geom_smooth(method = lm, se = F, alpha = 0.5)
+```
+
+## Model Erweiterungen
+
+Auch Kurven können gefittet werden.
+
+```{r}
+load("brdist.rda")
+fit <- lm(brdist ~ speed, data = braking)
+plot(braking$brdist ~ braking$speed, pch = 20, xlab = "Geschwindigkeit[km/h]", ylab = "Bremsweg [m]", col = "blue")
+abline(fit, col = "red", lwd = 2)
+title("Bremsweg vs. Geschwindigkeit")
+
+```
+
+Offensichtlich passt der lineare Fit nicht gut zu den Daten.
+
+```{r}
+par(mar = c(4,4,2,2) + 0.1)
+par(mfrow = c(2,2))
+plot(fit, pch = 20, col = "blue")
+
+```
+
+Es wird versucht mit einer quadratischen Funktion zu fitten.
+
+```{r}
+fit.q <- lm(brdist ~ I(speed^2), data = braking)
+plot(brdist ~ speed^2, data = braking,  pch = 20, xlab = "Geschwindigkeit[km/h]", ylab = "Bremsweg [m]", col = "blue")
+abline(fit.q, col = "red", lwd = 2)
+title("Bremsweg vs. Geschwindigkeit")
+
+xx <-  data.frame(speed = seq(18, 125), length = 200)
+brdist.pred <- predict(fit.q, newdata = xx)
+lines(xx$speed, brdist.pred, col = "red")
+```
+
+Problem: nicht kontante Streuung:
+
+```{r}
+plot(fit.q)
+```
+
+```{r}
+load("infantmortality.rda")
+plot(infant ~ income, data = im, pch = 20)
+plot(log(infant) ~log(income), data = im, pch = 20)
+fit <- lm(log(infant) ~ log(income), data = im)
+plot(fit)
+# plot the log log fit
+plot(log(infant) ~ log(income), data = im, pch = 20)
+abline(fit, col = "red", lwd = 2)
+title("Infant Mortality vs. Income")
+
+# plot the log log fit in a linear plot
+plot(infant ~ income, data = im, pch = 20)
+xx <- data.frame(income = seq(0.01, 10000, length = 200))
+infant.pred <- exp(predict(fit, newdata = xx))
+lines(xx$income, infant.pred, col = "red")
+
+
+
+
+```

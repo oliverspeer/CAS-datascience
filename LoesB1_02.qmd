@@ -1,5 +1,79 @@
-# Lösungen B2 02 {.unnumbered}
+# Lösung 02 {.unnumbered}
+author: "Marcel Dettling"
+date:   "`r Sys.Date()`"
 
-## Aufgabe 1 coming soon
 
-hhhnnnvvvvv
+## Aufgabe 1 {.justify}
+
+### Teilaufgabe a)
+
+Zeichnen sie im Scatterplot intuitiv „nach Augenmass" eine Gerade ein, die „gut zu den Daten passt", d.h. die mutmassliche Regressionsgerade.
+
+```{r, echo=T, eval=T}
+## Daten laden
+load("unique2010.rda")
+
+## Scatterplot erzeugen
+plot(Pax ~ ATM, data=unique2010, pch=20)
+title("Pax vs. ATM")
+
+## KQ-Regression rechnen und diese Gerade einzeichnen
+fit <- lm(Pax ~ ATM, data=unique2010)
+abline(fit, col="red", lwd=2)
+```
+
+[Wir stellen hier im Scatterplot die Regressionsgerade dar, welche nach dem Prinzip der Minimierung der Residuenquadratsumme (d.h. Kleinste-Quadrate-Prinzip) identifiziert wurde. Dies stellt sozusagen die Standardlösung dar. Die Diskussion über mögliche Alternativen ist jedoch die eigentliche Denkaufgabe hier.]{style="color:#3C5AB4"}
+
+### Teilaufgabe b)
+
+Diskutieren sie mit ihren Nachbarn, nach welchem Kriterium sie beurteilen, bzw. beurteilt haben, ob die Gerade gut passt.
+
+[Gemäss Diskussion im Plenum.]{style="color:#3C5AB4"}
+
+## Aufgabe 2 {.justify}
+
+Als Schätzungen für die Regressionskoeffizienten erhalten wir durch Berechnung mit dem Kleinste-Quadrate-Algorithmus:
+
+$\hat{\beta_1} = -138.8 ; \hat{\beta_0}=-1'197'682$\
+
+Das Ziel ist es nun, die rechnerisch bestimmte Regressionsgerade in den Scatterplot einzutragen.
+
+### Teilaufgabe a)
+
+Bestimmen sie den Fitted Value $\hat{y}$ für $x=20'100$ Flugbewegungen. Wird die Paxzahl in einem Monat mit dieser Anzahl Flugbewegungen tatsächlich so gross sein? Oder anders gefragt: wie muss man $\hat{y}$ interpretieren?
+
+```{r, echo=T, eval=T}
+## Bestimmung des Fitted Value mit "Handrechnung"
+coef(fit)[1]+coef(fit)[2]*20100
+
+## Bequeme Variante mit der R-Funktion predict()
+predict(fit, newdata=data.frame(ATM=20100))
+```
+
+[Der angepasste Wert für 20'100 Flugbewegungen ist 1'591'427 Passagiere. Natürlich wird die tatsächliche Anzahl nicht (bzw. nur in einem aussergewöhnlichen Ausnahmefall) exakt so gross sein. $\hat{y}$ ist der Erwartungswert für die Anzahl Passagiere, wenn wir wissen, dass die Anzahl Flugbewegungen 20'100 beträgt.]{style="color:#3C5AB4"}
+
+### Teilaufgabe b)
+
+Bestimmen sie den Fitted Value $\hat{y}$ nun auch für $x=24'000$ Flugbewegungen. Wir erhalten so einen weiteren Punkt, der auf der Regressionsgerade liegt. Nun lässt sich diese einzeichnen. Vergleichen sie auch gegenüber der „von Auge" eingezeichneten Lösung auf der Vorderseite.
+
+```{r, echo=T, eval=T}
+predict(fit, newdata=data.frame(ATM=24000))
+```
+
+[Der angepasste Wert beträgt hier 2'132'598.]{style="color:#3C5AB4"}
+
+### Teilaufgabe c)
+
+Berechnen sie auch noch den Fitted Value $\hat{y}$ für $x=5'000$ Flugbewegungen. Wie stufen sie den erhaltenen Wert ein? Wie kann das passieren?
+
+```{r, echo=T, eval=T}
+predict(fit, newdata=data.frame(ATM=5000))
+```
+
+[Hier erhalten wir einen Fitted Value von -503'874. Der negative Wert ist vollkommen unsinnig und zeigt auf, dass die Regressionsgerade nicht (weit) über den Bereich der beobachteten x-Werte (18'000-25'000) hinaus gültig ist. Dies sollte uns nicht erstaunen. Wäre am Flughafen tatsächlich viel weniger Betrieb als heute, so würden kaum mehr gleich grosse Flugzeuge eingesetzt. Sondern eher kleinere Maschinen, so dass trotzdem noch eine gewisse Vielfalt an Destinationen angeflogen werden kann.]{style="color:#3C5AB4"}
+
+## Aufgabe 3 {.justify}
+
+Lösen sie das [Online-Quiz](https://forms.office.com/Pages/ResponsePage.aspx?id=nZ8aXR8gEEq5g0Uc9ly8Hr0tg6Asy39BpZuXvQghN2tUMzQ1UkVHUzVBRzBQS0g1STBRTFMwVEhPVC4u) mit 8 Fragen zum Verständnis des einfachen linearen Regressionsmodells.
+
+[Die Lösungen sind direkt im Quiz ersichtlich.]{style="color:#3C5AB4"}
