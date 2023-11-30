@@ -87,6 +87,8 @@ book:
         - parsnip.qmd
         - workflow.qmd
         
+    - part: GAM_Intro.qmd
+        
     - summary.qmd
     - references.qmd
     

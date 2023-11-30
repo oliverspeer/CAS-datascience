@@ -1,0 +1,88 @@
+# Introduction to Generalized Additive Models GAM {.unnumbered}
+
+---
+title: "Introduction to GAM"
+jupyter: python3
+---
+
+
+```{css, echo = FALSE}
+.justify {
+  text-align: justify
+}
+```
+
+## Ressourcen und Quellen {.justify}
+
+<ul>
+  <li> <https://noamross.github.io/gams-in-r-course>
+  
+  
+  ## Motorcycle crash data {.justify}
+```{r}
+mcycle <- MASS::mcycle
+head(mcycle)
+plot(mcycle)
+
+```
+  
+  # lineares Modell
+```{r}
+lm.mod <- lm(accel ~ times, data = mcycle)
+termplot(lm.mod, partial.resid = TRUE, se = TRUE, rug = TRUE)
+```
+  
+  # nicht lineares Modell
+```{r}
+library(mgcv)
+gam.mod <- gam(accel ~ s(times), data = mcycle)
+plot(gam.mod, residuals = TRUE, pch = 1)
+```
+  
+# Vergleich der Modelle
+```{r}
+plot(mcycle$times, mcycle$accel, pch = 1)
+lines(mcycle$times, predict(lm.mod), col = "red")
+lines(mcycle$times, predict(gam.mod), col = "blue")
+```
+```{r}
+library(stargazer)
+stargazer(lm.mod, gam.mod, type = "text", report = "vc*p")
+coef(lm.mod)
+coef(gam.mod)
+summary(gam.mod)
+
+
+```
+  ## Anpassen der Anzahl Basis Funktionen{.justify}
+```{r}
+gam.mod3 <- gam(accel ~ s(times, k = 3), data = mcycle, method = "REML")
+gam.mod20 <- gam(accel ~ s(times, k = 20), data = mcycle, method = "REML")
+par(mfrow = c(1, 2))
+plot(gam.mod3, residuals = TRUE, pch = 1)
+plot(gam.mod20, residuals = TRUE, pch = 1)
+```
+
+## extrahieren der Glättungsparameter {.justify}
+```{r}
+
+gam.mod$sp
+  
+```
+## Anpassen der Glättungsparameter {.justify}
+```{r}
+gam.mods1 <- gam(accel ~ s(times, k = 20, sp = 0.1), data = mcycle, method = "REML")
+gam.mods2 <- gam(accel ~ s(times, k = 20, sp = 0.0001), data = mcycle, method = "REML")
+
+par(mfrow = c(1, 2))
+plot(gam.mods1, residuals = TRUE, pch = 1)
+plot(gam.mods2, residuals = TRUE, pch = 1)
+
+
+gam.mods3 <- gam(accel ~ s(times, k = 50, sp = 0.0001), data = mcycle, method = "REML")
+gam.mods4 <- gam(accel ~ s(times, k = 15, sp = 0.01), data = mcycle, method = "REML")
+plot(gam.mods3, residuals = TRUE, pch = 1)
+plot(gam.mods4, residuals = TRUE, pch = 1)
+
+```
+
