@@ -1,0 +1,56 @@
+---
+title: "OllisCheatSheet"
+author: "olli speer"
+---
+### example data
+
+```{r}
+load("SteuerKantonZHtrsf.rda")
+```
+
+
+
+# Erwartungstreuer Schätzer Norm
+```{r}
+fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, data = steuerTrsf_data)
+
+new.data <- steuerTrsf_data[steuerTrsf_data$Gemeinde == "Seuzach",]
+
+pred.new.data.ci <- predict(fit, newdata = new.data, interval = "confidence")
+
+pred.new.data.pi <- predict(fit, newdata = new.data, interval = "prediction")
+
+erwrtr.schtzr <- exp(pred.new.data.ci[1] +0.5 * summary(fit)$sigma^2)
+
+```
+
+# Erwatungstreuer Schätzer
+## Duan's Smearing Estimator
+
+```{r}
+fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, data = steuerTrsf_data)
+
+new.data <- steuerTrsf_data[steuerTrsf_data$Gemeinde == "Seuzach",]
+
+pred.new.data.ci <- predict(fit, newdata = new.data, interval = "confidence")
+
+pred.new.data.pi <- predict(fit, newdata = new.data, interval = "prediction")
+
+# Duan's Smearing Estimator
+erwrtr.schtzr <- exp(pred.new.data.ci[1]) * mean(exp(fit$residuals))
+
+```
+
+# Überprüfen der Modellannahmen
+## Modellannahmen
+
+-     Erwartungswert der Residuen ist 0
+$E(E_i) = 0$
+
+-     Residuen sind normalverteilt
+$E_i \sim N(0, \sigma^2)$
+
+-     Varianz der Residuen ist konstant
+$Var(E_i) = \sigma^2$
+
+
