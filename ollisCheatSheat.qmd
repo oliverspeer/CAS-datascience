@@ -2,15 +2,15 @@
 title: "OllisCheatSheet"
 author: "olli speer"
 ---
+
 ### example data
 
 ```{r}
 load("SteuerKantonZHtrsf.rda")
 ```
 
-
-
 # Erwartungstreuer Schätzer Norm
+
 ```{r}
 fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, data = steuerTrsf_data)
 
@@ -25,6 +25,7 @@ erwrtr.schtzr <- exp(pred.new.data.ci[1] +0.5 * summary(fit)$sigma^2)
 ```
 
 # Erwatungstreuer Schätzer
+
 ## Duan's Smearing Estimator
 
 ```{r}
@@ -42,15 +43,66 @@ erwrtr.schtzr <- exp(pred.new.data.ci[1]) * mean(exp(fit$residuals))
 ```
 
 # Überprüfen der Modellannahmen
+
 ## Modellannahmen
 
--     Erwartungswert der Residuen ist 0
+-   Erwartungswert der Residuen ist 0
+
+    $E(E_i) = 0$
+
+-   Residuen sind normalverteilt
+
+    $E_i \sim N(0, \sigma^2)$
+
+-   Varianz der Residuen ist konstant
+
+    $Var(E_i) = \sigma^2$
+    
+-   Residuen sind unabhängig
+
+    $Cov(E_i, E_j) = 0$ für alle $i \neq j$
+    
+
+## Diagnostische Plots
+
 $E(E_i) = 0$
 
--     Residuen sind normalverteilt
+```{r}
+plot(fit, which = 1)
+
+load("resplot.rda")
+resplot(fit, plots = 1)
+```
+
 $E_i \sim N(0, \sigma^2)$
 
--     Varianz der Residuen ist konstant
+```{r}
+plot(fit, which = 2)
+resplot(fit, plots = 2)
+```
+
 $Var(E_i) = \sigma^2$
+
+```{r}
+plot(fit, which = 3)
+resplot(fit, plots = 3)
+
+```
+
+$Cov(E_i, E_j) = 0$ für alle $i \neq j$
+
+```{r}
+plot(fit, which = 5)
+resplot(fit, plots = 4)
+
+```
+```{r}
+plot(fit, which = 4)
+
+
+
+```
+
+
 
 
