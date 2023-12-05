@@ -9,10 +9,13 @@ author: "olli speer"
 load("SteuerKantonZHtrsf.rda")
 ```
 
-# Erwartungstreuer Schätzer Norm
+# Erwartungstreuer Schätzer
+
+## Norm
 
 ```{r}
-fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, data = steuerTrsf_data)
+fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, 
+          data = steuerTrsf_data)
 
 new.data <- steuerTrsf_data[steuerTrsf_data$Gemeinde == "Seuzach",]
 
@@ -24,12 +27,13 @@ erwrtr.schtzr <- exp(pred.new.data.ci[1] +0.5 * summary(fit)$sigma^2)
 
 ```
 
-# Erwatungstreuer Schätzer
+# Erwartungstreuer Schätzer
 
 ## Duan's Smearing Estimator
 
 ```{r}
-fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, data = steuerTrsf_data)
+fit <- lm(T_Steuer ~ T_Bev + P_unter_19 + P_ueber_65 + D_Eink + D_Verm + P_Siedfl, 
+          data = steuerTrsf_data)
 
 new.data <- steuerTrsf_data[steuerTrsf_data$Gemeinde == "Seuzach",]
 
@@ -39,6 +43,22 @@ pred.new.data.pi <- predict(fit, newdata = new.data, interval = "prediction")
 
 # Duan's Smearing Estimator
 erwrtr.schtzr <- exp(pred.new.data.ci[1]) * mean(exp(fit$residuals))
+
+```
+
+# Konfidenzintervall für den Erwartungswert
+
+```{r}
+exp(pred.new.data.ci[2:3])
+
+
+```
+
+# Prädiktionsintervall für den Erwartungswert
+
+```{r}
+exp(pred.new.data.pi[2:3])
+
 
 ```
 
@@ -57,34 +77,38 @@ erwrtr.schtzr <- exp(pred.new.data.ci[1]) * mean(exp(fit$residuals))
 -   Varianz der Residuen ist konstant
 
     $Var(E_i) = \sigma^2$
-    
+
 -   Residuen sind unabhängig
 
     $Cov(E_i, E_j) = 0$ für alle $i \neq j$
-    
 
 ## Diagnostische Plots
 
+**Tukey Anscombe** \
 $E(E_i) = 0$
 
 ```{r}
-plot(fit, which = 1)
+par(mfrow = c(1, 2))
+plot(fit, which = 1, main = "E(Ei) = 0", pch = 20)
 
 load("resplot.rda")
 resplot(fit, plots = 1)
 ```
 
+**QQ-Plot** \
 $E_i \sim N(0, \sigma^2)$
 
 ```{r}
-plot(fit, which = 2)
+par(mfrow = c(1, 2))
+plot(fit, which = 2, main = "Ei ~ N(0, sigma^2)", pch = 20)
 resplot(fit, plots = 2)
 ```
 
 $Var(E_i) = \sigma^2$
 
 ```{r}
-plot(fit, which = 3)
+par(mfrow = c(1, 2))
+plot(fit, which = 3, main = "Var(Ei) = sigma^2", pch = 20)
 resplot(fit, plots = 3)
 
 ```
@@ -92,18 +116,161 @@ resplot(fit, plots = 3)
 $Cov(E_i, E_j) = 0$ für alle $i \neq j$
 
 ```{r}
-plot(fit, which = 5)
+par(mfrow = c(1, 2))
+plot(fit, which = 5, main = "Cov(Ei, Ej) = 0", pch = 20)
 resplot(fit, plots = 4)
 
 ```
+
 ```{r}
-plot(fit, which = 4)
-plot(fit, which = 6)
+par(mfrow = c(1, 2))
+plot(fit, which = 4, pch = 20)
+plot(fit, which = 6, pch = 20)
 
 
 
 ```
 
+## manuell Tukey Anscombe
+
+```{r}
+load("hpfuel.rda")
+fit <- lm(l.100km ~ hp, data=hpfuel)
+
+par(mfrow = c(1,2))
+# plot Tukey Anscombe
+# plot(hpfuel$hp, fit$residuals, pch=20, col = "#00008B")
+# abline(h=0, col="grey")
+# lines(loess.smooth(hpfuel$hp, fit$residuals), col = "red")
+
+plot(residuals(fit) ~ predict.lm(fit), pch=20, col = "#00008B")
+abline(h=0, col="grey")
+lines(loess.smooth(y=residuals(fit), x=predict.lm(fit), col = "red"))
+title("Tukey-Anscombe manuell")
+
+
+## QQ-Plot
+qqnorm(fit$residuals, col = "#00008B", pch = 20)
+qqline(fit$residuals, col = "grey")
+qqline(fit$residuals)
+
+```
+
+# Ploteigenschaften, lines, abline, points, pch, col, xlim, ylim, xlab, ylab, main, color code für dritte Dimension
+
+```{r}
+# par(mfrow = c(2, 2))
+plot(T_Steuer ~ T_Bev, 
+     data = steuerTrsf_data, 
+      pch = 16, # filled circle 
+    # pch = 19, # filled circle with border
+    # pch = 1, # circle
+    # pch = 20, # small rectangle
+     # col = "blue",
+     col = Bezirk,
+     xlab = "Bevölkerung", 
+     ylab = "Steuer", 
+     main = "Bevölkerung vs. Steuer", 
+     xlim = c(5, 15), 
+     ylim = c(10, 25)
+     )
+
+abline(lm(T_Steuer ~ T_Bev, data = steuerTrsf_data), 
+       col = "red", 
+       lwd = 2, 
+       #lty = 2, # dashed line
+       #lty = 3, # dotted line
+       lty = 1 # solid line
+       )
+
+# points(T_Steuer ~ T_Bev, data = steuerTrsf_data, pch = 16)
+```
+
+# Regression und Plot mit kategoriellen Variablen
+
+```{r, echo = FALSE}
+load("income.rda")
+
+```
+
+```{r}
+# Regression
+fit <- lm(log(earning) ~ height + sex + height:sex, data=income)
+
+summary(fit)
+
+## Grafische Darstellung
+plot(log(earning) ~ height, 
+     col=sex, 
+     pch=20, 
+     data=income)
+
+
+legend("bottomright", pch=c(20,20), col=2:1, c("Male", "Female"), bty="n")
+#title(" Earning vs. Height & Sex")
+
+# Regressionlinien
+abline(coef(fit)[1], coef(fit)[2], lwd=2)
+abline(coef(fit)[1] + coef(fit)[3], coef(fit)[2] + coef(fit)[4], lwd=2, col="red")
 
 
 
+
+legend("bottomright", 
+       pch=c(20,20), 
+       col=2:1, 
+       c("Male", "Female"), 
+       bty="n")
+
+title("Logged Earning vs. Height & Sex")
+```
+
+# Vergleich zweier Modelle
+
+```{r}
+fit <- lm(log(earning) ~ height + sex + height:sex, data=income)
+fit.s <- lm(log(earning) ~ height, data=income) 
+anova(fit, fit.s)
+
+
+  
+```
+
+# Inferenz mit Faktorvariablen
+
+`drop1()` führt partielle F-Test durch unter Berücksichtigun der Hirarchie der Modelle.
+
+```{r}
+
+fit <- lm(log(earning) ~ height + sex + height:sex, data=income)
+
+drop1(fit, test="F")
+
+
+
+```
+
+# Begründung der log-Transformation
+
+-   Rechtsschiefe Verteilung
+-   Verteilung der Daten über einen grossen Wertebereich (min: max \> 2)
+-   relative Scale der Daten
+-   Daten sind grösser Null
+-   Daten sind nach oben nicht beschränkt
+
+# Quadratische Regression
+
+```{r}
+load("brdist.rda")
+fit <- lm(brdist ~ I(speed^2), data=braking)
+yy <- predict(fit, data.frame(speed=seq(0, 130, 1)))
+plot(brdist ~ speed, 
+     data=braking , 
+     main="Bremsweg vs. Geschwindigkeit", 
+     xlab="Geschwindigkeit", 
+     ylab="Bremsweg", 
+     pch=20)
+
+lines(seq(0, 130, 1), yy, col="red", lwd=2)
+
+```
