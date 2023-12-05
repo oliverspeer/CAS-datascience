@@ -98,6 +98,7 @@ resplot(fit, plots = 4)
 ```
 ```{r}
 plot(fit, which = 4)
+plot(fit, which = 6)
 
 
 
